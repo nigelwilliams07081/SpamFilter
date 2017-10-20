@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<assembly xmlns="urn:schemas-microsoft-com:asm.v1" manifestVersion="1.0">
+    <dependency>
+    <dependentAssembly>
+      <assemblyIdentity type="win32" name="Microsoft.Windows.Common-Controls" version="6.0.0.0" processorArchitecture="x86" publicKeyToken="6595b64144ccf1df" language="*"></assemblyIdentity>
+    </dependentAssembly>
+  </dependency>
+  <file name="EAGetMailObj.dll" hashalg="SHA1">
+    <comClass clsid="{953EFD7C-8FCE-4D9C-9BD9-E6F19A1B7FC9}" tlbid="{5FA52C10-18FC-4D81-8542-50F9A2DC60A3}" description="MailClient Class"></comClass>
+    <comClass clsid="{AD59203B-0C25-4192-98F2-C680D6A16738}" tlbid="{5FA52C10-18FC-4D81-8542-50F9A2DC60A3}" description="Attachment Class"></comClass>
+    <comClass clsid="{76BB6AA2-49D5-4452-97A0-C5F7B8910D12}" tlbid="{5FA52C10-18FC-4D81-8542-50F9A2DC60A3}" description="Certificate Class"></comClass>
+    <comClass clsid="{3F46EBC3-9D7F-4F73-B779-F2FC6C0B6EE7}" tlbid="{5FA52C10-18FC-4D81-8542-50F9A2DC60A3}" description="HeaderCollection Class"></comClass>
+    <comClass clsid="{206AF1CC-DF89-4E4E-96EB-40D7641FACFD}" tlbid="{5FA52C10-18FC-4D81-8542-50F9A2DC60A3}" description="HeaderItem Class"></comClass>
+    <comClass clsid="{C06966A4-9F1D-497F-84B9-9204F31994A3}" tlbid="{5FA52C10-18FC-4D81-8542-50F9A2DC60A3}" description="Imap4Folder Class"></comClass>
+    <comClass clsid="{AE30137E-07C8-403F-8772-07AF79C1DD2E}" tlbid="{5FA52C10-18FC-4D81-8542-50F9A2DC60A3}" description="Mail Class"></comClass>
+    <comClass clsid="{D6DA04B9-6D72-424A-9582-9752409AAD9C}" tlbid="{5FA52C10-18FC-4D81-8542-50F9A2DC60A3}" description="MailAddress Class"></comClass>
+    <comClass clsid="{CFED4866-F709-481F-89C1-4D1BF0F830D3}" tlbid="{5FA52C10-18FC-4D81-8542-50F9A2DC60A3}" description="MailInfo Class"></comClass>
+    <comClass clsid="{65ACB9B1-68E6-460B-9738-720E0E3A6DD3}" tlbid="{5FA52C10-18FC-4D81-8542-50F9A2DC60A3}" description="MailServer Class"></comClass>
+    <comClass clsid="{029033B3-0CFF-452E-8832-8101FDE8D0B4}" tlbid="{5FA52C10-18FC-4D81-8542-50F9A2DC60A3}" description="MailReport Class"></comClass>
+    <comClass clsid="{8B092B61-AE66-4413-B4D0-6B97FBE6DA08}" tlbid="{5FA52C10-18FC-4D81-8542-50F9A2DC60A3}" description="Tools Class"></comClass>
+    <comClass clsid="{440B896B-8AAD-4FEE-8F39-066F79F73E5C}" tlbid="{5FA52C10-18FC-4D81-8542-50F9A2DC60A3}" description="UIDLManager Class"></comClass>
+    <comClass clsid="{7096722C-E10D-42D9-A284-1E582D2B27B3}" tlbid="{5FA52C10-18FC-4D81-8542-50F9A2DC60A3}" description="UIDLItem Class"></comClass>
+    <comClass clsid="{B511D930-097E-4E90-9753-956A067D9E0E}" tlbid="{5FA52C10-18FC-4D81-8542-50F9A2DC60A3}" description="GetMailInfosParamType Class"></comClass>
+    <comClass clsid="{624D5C57-88A2-4F35-9F3A-5D7CFB18D048}" tlbid="{5FA52C10-18FC-4D81-8542-50F9A2DC60A3}" description="AddressCollection Class"></comClass>
+    <comClass clsid="{149A39C9-6C10-49D7-8B8A-D46F5E529315}" tlbid="{5FA52C10-18FC-4D81-8542-50F9A2DC60A3}" description="AttachmentCollection Class"></comClass>
+    <comClass clsid="{77072FF5-D841-4B03-BFD0-BD0D038E71CB}" tlbid="{5FA52C10-18FC-4D81-8542-50F9A2DC60A3}" description="MailInfoCollection Class"></comClass>
+    <comClass clsid="{59A2F86B-1007-4262-A8AF-D4A912C2A5DD}" tlbid="{5FA52C10-18FC-4D81-8542-50F9A2DC60A3}" description="FolderCollection Class"></comClass>
+    <comClass clsid="{05F813DF-CAE6-43C0-AF72-738869697FC0}" tlbid="{5FA52C10-18FC-4D81-8542-50F9A2DC60A3}" description="CategoryCollection Class"></comClass>
+    <comClass clsid="{0565E510-02C1-4A2A-AAF6-42A0AEA7C5D0}" tlbid="{5FA52C10-18FC-4D81-8542-50F9A2DC60A3}" description="Category Class"></comClass>
+    <comClass clsid="{704C7CE4-C00B-4784-80EA-79F865B3ADCC}" tlbid="{5FA52C10-18FC-4D81-8542-50F9A2DC60A3}" description="SimpleJsonArray Class"></comClass>
+    <comClass clsid="{A308FA17-B94E-4881-9C1E-E30B936E42C2}" tlbid="{5FA52C10-18FC-4D81-8542-50F9A2DC60A3}" description="SimpleJsonParser Class"></comClass>
+    <typelib tlbid="{5FA52C10-18FC-4D81-8542-50F9A2DC60A3}" version="1.0" helpdir="" flags="HASDISKIMAGE"></typelib>
+  </file>
+  <trustInfo xmlns="urn:schemas-microsoft-com:asm.v3">
+    <security>
+      <requestedPrivileges>
+        <requestedExecutionLevel level="asInvoker" uiAccess="false"></requestedExecutionLevel>
+      </requestedPrivileges>
+    </security>
+  </trustInfo>
+</assembly>

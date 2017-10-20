@@ -1,7 +1,6 @@
-﻿  EmailReceiver.cpp
-  Generating Code...
-  Skipping... (no relevant changes detected)
-  SpamFilter.cpp
+﻿  SpamFilter.cpp
   Main.cpp
+  EmailReceiver.cpp
   Bayesian.cpp
+  Generating Code...
   SpamFilterApplication.vcxproj -> C:\Users\Nigel\Documents\SpamFilter\SpamFilterApplication\Debug\SpamFilterApplication.exe

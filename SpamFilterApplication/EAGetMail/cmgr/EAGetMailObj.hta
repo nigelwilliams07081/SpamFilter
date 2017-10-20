@@ -1,0 +1,471 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>EAGetMail Component Manager</title>
+    <hta:application id="oHTA" applicationname="EAGetMail Component Manager" border="thick" borderstyle="normal"
+        caption="yes" icon="" maximizebutton="yes" minimizebutton="yes" showintaskbar="yes"
+        singleinstance="no" sysmenu="yes" version="1.0" windowstate="maximize" />
+
+    <meta content="text/html; charset=utf-8" http-equiv="content-type" />
+    <link href="mgr.css" rel="stylesheet" type="text/css" />
+    <script src="jquery-1.7.1.min.js" type="text/javascript"></script>
+    <script src="mgr.js" type="text/javascript"></script>
+</head>
+<body>
+    <div id="header">
+        <h1 id="header_title">Welcome to EAGetMail Component <span id="displayinst"></span></h1>
+        <span id="header_desc">Retrieve email and parse email with this powerful email component ...</span>
+    </div>
+    <div id="page">
+        <div id="menu">
+            <ul>
+                <li><a href="#" id="menu_1" class="menu_selected">Getting Started</a></li>
+                <li><a href="#" id="menu_2" class="link_menu">SDK Documentation</a></li>
+                <li><a href="#" id="menu_3" class="link_menu">Samples</a></li>
+                <li><a href="#" id="menu_4" class="link_menu">EAGetMail Service</a></li>
+                <li><a href="#" id="menu_5" class="link_menu">Appendix</a></li>
+                <li><a href="#" id="menu_6" class="link_menu">Uninstall</a></li>
+            </ul>
+        </div>
+        <div id="content">
+            <div id="content_1">
+                <div class="content_header">
+                    Getting Started
+                </div>
+                <div class="content_desc">
+                    <div style="padding: 10px;">
+                        <p>
+                            EAGetMail POP3 & IMAP4 component allows developers to deliver reliable and feature-rich email applications in VB6, ASP, C++, C#, VB.NET, JScript.NET, ASP.NET or other .NET framework more easily. Many advanced features are supported including TNEF parser (winmail.dat) and S/MIME.
+                        </p>
+                        <p>
+                            <a href="http://www.emailarchitect.net/eagetmail" target="_blank">EAGetMail POP3/IMAP4 Component
+                                (ActiveX Object/.NET)</a><br />
+                            Retrieve email from POP3 server, IMAP4 server, Exchange server Web Service or WebDAV and parse email in ASP, VB, VBA, VC++, Managed C++, C#, VB.NET, JScript, ASP.NET, Delphi or other COM/.NET environment applications.
+                        </p>
+                        <div id="startmenu">
+                            <ul>
+                                <li><a href="#" id="sub_menu1">SDK Documentation</a></li>
+                                <li><a href="#" id="sub_menu2">Samples</a></li>
+                                <li><a href="#" id="sub_menu3">EAGetMail Service</a></li>
+                                <li><a href="#" id="sub_menu4">Appendix</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="content_2" style="display: none">
+                <div class="content_header">
+                    SDK Documentation
+                </div>
+                <div class="content_desc">
+                    <div style="padding: 10px;">
+                        <div><b>May 2016 - EAGetMail 4.6</b></div>
+                        <div id="com_news">
+                            <ul>
+                                <li>Gmail IMAP4 OAUTH</li>
+                                <li>Supports Exchange 2016 EWS</li>
+                                <li>Universal Windows Class for Windows 8.1 and Windows 10</li> 
+                            </ul>
+                        </div>
+
+                        <p>
+                            EAGetMail Component Online Documentation<br />
+                            <a href="http://www.emailarchitect.net/eagetmail/sdk/" target="_blank">http://www.emailarchitect.net/eagetmail/sdk
+                            </a>
+                        </p>
+                        <p>
+                            EAGetMail Component Developer Center (Tutorials, Example Codes)<br />
+                           <a href="http://www.emailarchitect.net/eagetmail/kb/" target="_blank">http://www.emailarchitect.net/eagetmail/kb/</a>
+                        </p>
+                        <p>
+                            Server Online Forum
+                            <br />
+                            <a href="http://www.emailarchitect.net/forum/" target="_blank">http://www.emailarchitect.net/forum/
+                            </a>
+                        </p>
+                    </div>
+
+                </div>
+            </div>
+            <div id="content_3" style="display: none">
+                <div class="content_header">
+                    Samples
+                </div>
+                <div class="content_desc">
+                    <div style="padding: 10px;">
+                        <div style="margin-bottom: 20px;">
+                            All the samples locate at "EAGetMail Installation Folder". Please click <a href="../" id="openinstall" target="_blank">here</a> to open installation folder.
+                        </div>
+                        <div style="margin-bottom: 20px;">
+                            <b>.NET Framework Sample Projects:</b><br />
+                            Samples_VS2003 requires .NET 1.1 or later version.<br />
+                            Samples_VS2008 requires .NET 2.0 or later version.<br />
+                            Samples_VS2010 requires .NET 4.0 or later version.<br />
+                            Samples_VS2012 requires .NET 4.5 or later version.<br />
+                            <p>
+                                <b>Project Version</b>
+                            </p>
+                            <p>
+                                All the samples are built with Visual Studio 2003/2008/2010/2012. If you use different
+            (elder) version of Visual Studio, those projects may not be openned properly. In
+            this case, you need to create a new project in your Visual Studio and copy the code
+            in the sample to overwrite your code. For example, if you can't open simple.vb project
+            with your Visual Studio, create a project with your Visual Studio, then copy form1.vb
+            to overwrite the form1.vb in your project. Re-open your project, and finally add
+            the reference of EAGetMail.dll to your project.
+                            </p>
+                        </div>
+                        <table width="100%" bgcolor="#cccccc" cellpadding="8" cellspacing="1">
+
+                            <tr bgcolor="#ffffff">
+                                <td width="30%">
+                                    <b>asp_net</b>
+                                </td>
+                                <td>Read email and parse email from POP3/IMAP4/Exchange Web Service/WebDAV with ASP.NET.(ASP.NET, C#, .NET)
+                                </td>
+                            </tr>
+                            <tr bgcolor="#ffffff">
+                                <td width="30%">
+                                    <b>asp_net_queue</b>
+                                </td>
+                                <td>Read email from POP3/IMAP4/Exchange Web Service/WebDAV with EAGetMail Service.(ASP.NET, C#, .NET)
+                                </td>
+                            </tr>
+                            
+                            <tr bgcolor="#ffffff">
+                                <td width="30%">
+                                    <b>pop3_imap4_simple.vb</b>
+                                </td>
+                                <td>Read email and parse email from POP3/IMAP4/Exchange Web Service/WebDAV in VB.NET. This sample also demonstrates parsing winmail.dat, digital signature verify and email decryption. (VB, .NET)
+                                </td>
+                            </tr>
+
+                            <tr bgcolor="#ffffff">
+                                <td width="30%">
+                                    <b>pop3_imap4_simple.csharp.csharp</b>
+                                </td>
+                                <td>Read email and parse email from POP3/IMAP4/Exchange Web Service/WebDAV in C#. This sample also demonstrates parsing winmail.dat, digital signature verify and email decryption. (C#, .NET)
+                                </td>
+                            </tr>
+                            <tr bgcolor="#ffffff">
+                                <td width="30%">
+                                    <b>pop3_imap4_simple.csharp.vc</b>
+                                </td>
+                                <td>Read email and parse email from POP3/IMAP4/Exchange Web Service/WebDAV in C++/CLI. This sample also demonstrates parsing winmail.dat, digital signature verify and email decryption. (C++/CLI, .NET)
+                                </td>
+                            </tr>
+                            <tr bgcolor="#ffffff">
+                                <td width="30%">
+                                    <b>parse_report.vb</b>
+                                </td>
+                                <td>Read and parse email delivery report from POP3/IMAP4/Exchange Web Service/WebDAV in VB. (VB, .NET)
+                                </td>
+
+                            </tr>
+                            <tr bgcolor="#ffffff">
+                                <td width="30%">
+                                    <b>parse_report.csharp</b>
+                                </td>
+                                <td>Read and parse email delivery report from POP3/IMAP4/Exchange Web Service/WebDAV in C#. (C#, .NET)
+                                </td>
+
+                            </tr>
+                            <tr bgcolor="#ffffff">
+                                <td width="30%">
+                                    <b>imap4_full.vb</b>
+                                </td>
+                                <td>Full functionality of IMAP4/Exchange Web Service/WebDAV including folder management, email moving and mail flags. This sample also demonstrates parsing winmail.dat, digital signature verify and email decryption. (VB, .NET)
+                                </td>
+                            </tr>
+                            <tr bgcolor="#ffffff">
+                                <td width="30%">
+                                    <b>imap4_full.csharp</b>
+                                </td>
+                                <td>Full functionality of IMAP4/Exchange Web Service/WebDAV including folder management, email moving and mail flags. This sample also demonstrates parsing winmail.dat, digital signature verify and email decryption. (C#, .NET)
+                                </td>
+                            </tr>
+                            <tr bgcolor="#ffffff">
+                                    <td width="30%">
+                                        <b>GmailOAUTH.vb</b>
+                                    </td>
+                                    <td>Retreives emails from Gmail IMAP server with Google OAUTH authentication. This sample also demonstrates parsing winmail.dat, digital signature verify and email decryption. (VB, .NET)
+                                    </td>
+                            </tr>
+                            <tr bgcolor="#ffffff">
+                                    <td width="30%">
+                                        <b>GmailOAUTH.csharp</b>
+                                    </td>
+                                    <td>Retreives emails from Gmail IMAP server with Google OAUTH authentication. This sample also demonstrates parsing winmail.dat, digital signature verify and email decryption. (C#, .NET)
+                                    </td>
+                            </tr>
+
+                            <tr bgcolor="#ffffff">
+                                <td width="30%">
+                                    <b>Samples_VS2008\pocketpc.mobile.cs</b>
+                                </td>
+                                <td>Receives and parses email from POP3 & IMAP4 in C# on Windows Mobile Platform.(C#, .NET)
+                                </td>
+                            </tr>
+
+                            <tr bgcolor="#ffffff">
+                                <td width="30%">
+                                    <b>Samples_VS2008\pocketpc.mobile.vb</b>
+                                </td>
+                                <td>Receives and parses email from POP3 & IMAP4 in VB on Windows Mobile Platform.(VB, .NET)
+                                </td>
+                            </tr>
+
+                        </table>
+
+                        <div style="margin-bottom: 20px; margin-top: 20px;">
+                            <b>.ActiveX Object/COM Sample Projects:</b><br />
+                            Samples_VB6 requires Visual Basic 6.0.<br />
+                            Samples_Delphi requires Delphi 7.0 or later version.<br />
+                            Samples_VC requires Visual Studio 2008 (C++) or later version.<br />
+                            Samples_ASP requires IIS.<br />
+                            Samples_Script - VBScript/Javascript.<br />
+                            
+                        </div>
+                        <table width="100%" bgcolor="#cccccc" cellpadding="8" cellspacing="1">
+                            <tr bgcolor="#ffffff">
+                                <td width="30%">
+                                    <b>asp</b>
+                                </td>
+                                <td>Read email and parse email from POP3/IMAP4/Exchange Web Service/WebDAV with ASP.(ASP, VBScript, ActiveX/COM)
+                                </td>
+                            </tr>
+                            <tr bgcolor="#ffffff">
+                                <td width="30%">
+                                    <b>asp_queue</b>
+                                </td>
+                                <td>Read email from POP3/IMAP4/Exchange Web Service/WebDAV with EAGetMail Service.(ASP, VBScript, ActiveX/COM)
+                                </td>
+                            </tr>
+                            
+                            <tr bgcolor="#ffffff">
+                                <td width="30%">
+                                    <b>pop3_imap4_simple.vb6</b>
+                                </td>
+                                <td>Read email and parse email from POP3/IMAP4/Exchange Web Service/WebDAV in VB 6.0. This sample also demonstrates parsing winmail.dat, digital signature verify and email decryption. (VB6, ActiveX/COM)
+                                </td>
+                            </tr>
+                            <tr bgcolor="#ffffff">
+                                <td width="30%">
+                                    <b>pop3_imap4_simple.delphi</b>
+                                </td>
+                                <td>Read email and parse email from POP3/IMAP4/Exchange Web Service/WebDAV in Delphi. This sample also demonstrates parsing winmail.dat, digital signature verify and email decryption. (Delphi, ActiveX/COM)
+                                </td>
+                            </tr>
+                            <tr bgcolor="#ffffff">
+                                <td width="30%">
+                                    <b>pop3_imap4_simple.vcNative</b>
+                                </td>
+                                <td>Read email and parse email from POP3/IMAP4/Exchange Web Service/WebDAV in VC++. This sample also demonstrates parsing winmail.dat, digital signature verify and email decryption. (Visual C++, ActiveX/COM)
+                                </td>
+                            </tr>
+                            <tr bgcolor="#ffffff">
+                                <td width="30%">
+                                    <b>imap4_full.vb6</b>
+                                </td>
+                                <td>Full functionality of IMAP4/Exchange Web Service/WebDAV including folder management, mail flags. This sample also demonstrates parsing winmail.dat, digital signature verify and email decryption. (VB6, ActiveX/COM)
+                                </td>
+                            </tr>
+                            <tr bgcolor="#ffffff">
+                                <td width="30%">
+                                    <b>imap4_full.vcNative</b>
+                                </td>
+                                <td>Full functionality of IMAP4/Exchange Web Service/WebDAV including folder management, mail flags. This sample also demonstrates parsing winmail.dat, digital signature verify and email decryption. (Visual C++, ActiveX/COM)
+                                </td>
+                            </tr>
+
+                            <tr bgcolor="#ffffff">
+                                <td width="30%">
+                                    <b>imap4_full.delphi</b>
+                                </td>
+                                <td>Full functionality of IMAP4/Exchange Web Service/WebDAV including folder management, mail flags. This sample also demonstrates parsing winmail.dat, digital signature verify and email decryption. (Delphi, ActiveX/COM)
+                                </td>
+                            </tr>
+                            <tr bgcolor="#ffffff">
+                                <td width="30%">
+                                    <b>parse_report.vb6</b>
+                                </td>
+                                <td>Read and parse email delivery report from POP3/IMAP4/Exchange Web Service/WebDAV in VB 6.0. (VB6, ActiveX/COM)
+                                </td>
+
+                            </tr>
+                            <tr bgcolor="#ffffff">
+                                <td width="30%">
+                                    <b>parse_report.vcNative</b>
+                                </td>
+                                <td>Read and parse email delivery report from POP3/IMAP4/Exchange Web Service/WebDAV in VC++. (Visual C++, ActiveX/COM)
+                                </td>
+
+                            </tr>
+                            <tr bgcolor="#ffffff">
+                                <td width="30%">
+                                    <b>parse_report.delphi</b>
+                                </td>
+                                <td>Read and parse email delivery report from POP3/IMAP4/Exchange Web Service/WebDAV in Delphi. (Delphi, ActiveX/COM)
+                                </td>
+                            </tr>
+                            <tr bgcolor="#ffffff">
+                                <td width="30%">
+                                    <b>GmailOAUTH.vb6</b>
+                                </td>
+                                <td>Retrieves email from Gmail IMAP4 server with Google OAUTH authentication. This sample also demonstrates parsing winmail.dat, digital signature verify and email decryption. (VB6, ActiveX/COM)
+                                </td>
+                            </tr>
+                            <tr bgcolor="#ffffff">
+                                <td width="30%">
+                                    <b>GmailOAUTH.vcNative</b>
+                                </td>
+                                <td>Retrieves email from Gmail IMAP4 server with Google OAUTH authentication. This sample also demonstrates parsing winmail.dat, digital signature verify and email decryption. (VC++, ActiveX/COM)
+                                </td>
+                            </tr>
+                            <tr bgcolor="#ffffff">
+                                <td width="30%">
+                                    <b>GmailOAUTH.delphi</b>
+                                </td>
+                                <td>Retrieves email from Gmail IMAP4 server with Google OAUTH authentication. This sample also demonstrates parsing winmail.dat, digital signature verify and email decryption. (Delphi, ActiveX/COM)
+                                </td>
+                            </tr>
+
+                            <tr bgcolor="#ffffff">
+                                <td width="30%">
+                                    <b>ParseEmail.js/ParseEmail.vbs</b>
+                                </td>
+                                <td>Parse email file by JScript/VBScript.(Jscript, VBScript, ActiveX/COM)
+                                </td>
+                            </tr>
+                            <tr bgcolor="#ffffff">
+                                <td width="30%">
+                                    <b>PreviewEmail.js/PreviewEmail.vbs</b>
+                                </td>
+                                <td>Download email header from POP3/IMAP4/Exchange Web Service/WebDAV server by JScript/VBScript.(Jscript, VBScript, ActiveX/COM)
+                                </td>
+                            </tr>
+                        </table>
+
+                    </div>
+                </div>
+
+            </div>
+            <div id="content_4" style="display: none">
+                <div class="content_header">
+                    EAGetMail Service
+                </div>
+                <div class="content_desc">
+                    <div style="padding: 15px; padding-bottom: 0px;">
+                        EAGetMail Service is an advanced service which can download emails from POP3/IMAP4 servers in background. It provides many features such as retrieving and saving emails to specified folders in schedule, and starting a specified application to handle downloaded emails.
+                    </div>
+                    <div style="padding: 15px; padding-bottom: 0px">
+                        This service facilitates EAGetMail POP3/IMAP4 Component developers that their applications can now accept an email retrieving request from EAGetMail Application, and then download emails in background. This is particularly useful for ASP/ASP.NET web application.
+                    </div>
+                    <div style="padding: 15px; padding-bottom: 0px;">
+                        To work with EAGetMail Service, please download <a href="http://www.emailarchitect.net/webapp/download/eagetmailservice.exe"
+                            target="_blank">EAGetMail Service</a> and install it on your server. If you
+        are using web hosting service and you don't have permission to install service on
+        that server, EASendMail service is not suitable for you.
+                    </div>
+                    <div style="padding: 15px;">
+                        <a href="http://www.emailarchitect.net/eagetmail/sdk/?ct=svc_default" target="_blank" >EAGetMail Service Document</a>
+                    </div>
+                </div>
+            </div>
+            <div id="content_5" style="display: none">
+                <div class="content_header">
+                    Appendix
+                </div>
+                <div class="content_desc">
+                    <div style="padding: 10px;">
+                        <p>
+                            <a href="http://www.emailarchitect.net/easendmail" target="_blank">EASendMail SMTP Component</a><br />
+                            Send email in ASP, VB, VBA, C#, VB.NET, VC++, Managed C++, JScript, ASP.NET, Delphi
+                            or other COM/.NET environment applications with SMTP component based on SMTP RFC.
+                            SSL, S/MIME, HTML and Embedded Images are supported.
+                        </p>
+                        <p>
+                            <a href="http://www.emailarchitect.net/eagetmail" target="_blank">EAGetMail POP3/IMAP4
+                                Component</a>
+                            <br />
+                            Receive email from POP3 server or IMAP4 server and parse email in ASP, VB, VBA,
+                            VC++, Managed C++, C#, VB.NET, JScript, ASP.NET, Delphi or other COM/.NET environment
+                            applications.
+                        </p>
+                        <p>
+                            <a href="http://www.emailarchitect.net/domainkeys" target="_blank">DKIM and DomainKeys
+                                for Exchange Server and IIS SMTP Service</a>
+                            <br />
+                            Add DKIM/DomainKeys signature to outgoing emails in Exchange Server and IIS SMTP
+                            Service.
+                        </p>
+                        <p>
+                            <a href="http://www.emailarchitect.net/smime" target="_blank">Disclaimer and S/MIME
+                                for Exchange Server and IIS SMTP Service</a>
+                            <br />
+                            Add disclaimer and digital signature to outgoing emails in Exchange Server and IIS
+                            SMTP Service.
+                        </p>
+                        <p>
+                            <a href="http://www.emailarchitect.net/emailserver" target="_blank">EmailArchitect Email
+                                Server</a>
+                            <br />
+                            A full featured Windows Email Server which supports SMTP, POP3, IMAP4, LIST, SSL,
+                            HTTP, Ajax Webmail, RBLS, Anti-Spam, Anti-Virus, Greylisting, DomainKeys, DKIM,
+                            Archive and Plus Addressing.
+                        </p>
+                    </div>
+
+                </div>
+            </div>
+
+
+            <div id="content_6" style="display: none">
+                <div class="content_header">
+                    Uninstall EAGetMail Component
+                </div>
+                <div class="content_desc">
+                    <div style="padding: 10px;">
+                        <p>
+                            Click  <a href="#" id="uninstall">here</a> to uninstall EAGetMail Component from your machine.
+                            <br />
+
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+            <div style="padding: 5px; padding-top: 20px; padding-bottom: 20px;">
+                <a href="http://www.emailarchitect.net" target="_blank">Copyright © 2004-2017 AdminSystem
+                    Software Limited. All rights reserved </a>
+            </div>
+
+        </div>
+    </div>
+    <div id="dg_mask">
+    </div>
+    <div id="update_mask">
+    </div>
+    <div id="loading">
+        <img src="loading.gif" alt="loading" />
+    </div>
+    <div id="s_dg">
+        <div id="close_dg">
+            <a href="#">
+                <img src="x.gif" alt="Close" /></a>
+        </div>
+        <div id="dg_c">
+        </div>
+    </div>
+    <div id="sysinfo">
+        <div id="sysloading">
+            <span id="loading_tips">Loading ...</span><span id="update_tips">Update ...</span>
+        </div>
+        <div id="sysretry">
+            <span class="alert-icon"></span><span id="syserror">Failed to connect service, please
+                make sure EAGetMail Service is running!</span>
+        </div>
+    </div>
+
+</body>
+</html>

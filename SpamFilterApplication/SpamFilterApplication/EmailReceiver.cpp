@@ -34,8 +34,8 @@ void EmailReceiver::RetrieveEmail()
 		IMailServerPtr outServer = NULL;
 		outServer.CreateInstance("EAGetMailObj.MailServer");
 		outServer->Server = L"pop.gmail.com";
-		outServer->User = L"biggie199316@gmail.com";
-		outServer->Password = L"";
+		outServer->User = L"cyberthreat1234@gmail.com";
+		outServer->Password = L"paralleldistributed";
 		//outServer->Protocol = MailServerPop3;
 
 		outServer->SSLConnection = VARIANT_TRUE;
