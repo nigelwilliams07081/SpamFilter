@@ -1,7 +1,5 @@
 #pragma once
 
-#include <vector>
-
 class Bayesian
 {
 public:
@@ -94,13 +92,13 @@ public:
 	: (For Multiple Events)
 	*/
 	void CalculateTheoremME();
-	float NumeratorME();
-private:
-	float Numerator();
-	float Denominator();
-
 	
-	float DenominatorME();
+private:
+	void SetNumerator();
+	void SetDenominator();
+
+	void SetNumeratorME();
+	void SetDenominatorME();
 
 	float m_AnyMsgIsSpam;
 	float m_AnyMsgIsNotSpam;
@@ -112,4 +110,9 @@ private:
 
 	float m_GivenMsgIsSpam;
 	float m_GivenMsgIsSpamME;
+	
+	float m_BayesianNumerator;
+	float m_BayesianDenominator;
+	float m_BayesianNumeratorME;
+	float m_BayesianDenominatorME;
 };

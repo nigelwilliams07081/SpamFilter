@@ -1,9 +1,15 @@
-#include "Bayesian.h"
+#include "stdafx.h"
 
 Bayesian::Bayesian() :
-	m_AnyMsgIsSpam(0.0f), m_AnyMsgIsNotSpam(0.0f), m_WordAppearsInSpam(0.0f),
-	m_WordNotAppearsInSpam(0.0f), m_GivenMsgIsSpam(0.0f)
+	m_BayesianNumerator(1.0f), m_BayesianDenominator(1.0f),
+	m_BayesianNumeratorME(1.0f), m_BayesianDenominatorME(1.0f)
 {
+	m_AnyMsgIsSpam = 0.0f;
+	m_AnyMsgIsNotSpam = 0.0f;
+	m_WordAppearsInSpam = 0.0f;
+	m_WordNotAppearsInSpam = 0.0f;
+	m_GivenMsgIsSpam = 0.0f;
+	m_GivenMsgIsSpamME = 0.0f;
 }
 
 float Bayesian::GetAnyMsgIsSpam() const
@@ -66,83 +72,77 @@ void Bayesian::SetWordAppearsInSpam(float inSpam)
 
 void Bayesian::CalculateTheorem()
 {
-	m_GivenMsgIsSpam = Numerator() / Denominator();
+	SetNumerator();
+	SetDenominator();
+
+	m_GivenMsgIsSpam = m_BayesianNumerator / m_BayesianDenominator;
 }
 
 void Bayesian::CalculateTheoremME()
 {
-	m_GivenMsgIsSpamME = NumeratorME() / DenominatorME();
+	SetNumeratorME();
+	SetDenominatorME();
+
+	m_GivenMsgIsSpamME = m_BayesianNumeratorME / m_BayesianDenominatorME;
 }
 
 /**
-: [float]
-: Returns the Numerator of the Bayesian Theorem calculation
+: Sets the Numerator of the Bayesian Theorem calculation
 : Pr(W|S) * Pr(S)
 : (Single Event)
 */
-float Bayesian::Numerator()
+void Bayesian::SetNumerator()
 {
-	return m_WordAppearsInSpam * m_AnyMsgIsSpam;
+	m_BayesianNumerator = m_WordAppearsInSpam * m_AnyMsgIsSpam;
 }
 
 /**
-: [float]
-: Returns the Denominator of the Bayesian Theorem calculation
+: Sets the Denominator of the Bayesian Theorem calculation (MUST BE CALLED AFTER SetNumerator())
 : Pr(W|S) * Pr(S) + ~Pr(W|S) * ~Pr(S)
 : (Single Event)
 */
-float Bayesian::Denominator()
+void Bayesian::SetDenominator()
 {
-	return Numerator() + (m_WordNotAppearsInSpam * m_AnyMsgIsNotSpam);
+	m_BayesianDenominator = m_BayesianNumerator + (m_WordNotAppearsInSpam * m_AnyMsgIsNotSpam);
 }
 
 /**
-: [float]
-: Returns the Numerator of the Bayesian Theorem calculation (Needs to be checked)
-: (Multiple Events)
+: Sets the Numerator of the Bayesian Theorem calculation
+: (Multiple Events) *NEEDS TO BE CHECKED
 */
-float Bayesian::NumeratorME()
+void Bayesian::SetNumeratorME()
 {
-	float tempNumerator = 1.0f;
-
 	if (m_WordAppearsInSpamList.size() > 0)
 	{
-		for (int i = 0; i < m_WordAppearsInSpamList.size(); i++)
+		for (int i = 0; i < static_cast<int>(m_WordAppearsInSpamList.size()); i++)
 		{
-			tempNumerator *= m_WordAppearsInSpamList.at(i);
+			m_BayesianNumeratorME *= m_WordAppearsInSpamList.at(i);
 		}
-		tempNumerator *= m_AnyMsgIsSpam;
+		m_BayesianNumeratorME *= m_AnyMsgIsSpam;
 	}
 	else
 	{
 		printf("%s", "Could not calculate numerator m_WordAppearsInSpamList is empty");
 	}
-
-	return tempNumerator;
 }
 
 /**
-: [float]
-: Returns the Denominator of the Bayesian Theorem calculation (Needs to be checked)
-: (Multiple Events)
+: Sets the Denominator of the Bayesian Theorem calculation (MUST BE CALLED AFTER SetNumeratorME())
+: (Multiple Events) *NEEDS TO BE CHECKED
 */
-float Bayesian::DenominatorME()
+void Bayesian::SetDenominatorME()
 {
-	float tempDenominator = 1.0f;
-	
 	if (m_WordNotAppearsInSpamList.size() > 0)
 	{
-		for (int i = 0; i < m_WordNotAppearsInSpamList.size(); i++)
+		for (int i = 0; i < static_cast<int>(m_WordNotAppearsInSpamList.size()); i++)
 		{
-			tempDenominator *= m_WordNotAppearsInSpamList.at(i);
+			m_BayesianDenominatorME *= m_WordNotAppearsInSpamList.at(i);
 		}
-		tempDenominator *= m_AnyMsgIsNotSpam;
-		tempDenominator += NumeratorME();
+		m_BayesianDenominatorME *= m_AnyMsgIsNotSpam;
+		m_BayesianDenominatorME += m_BayesianNumeratorME;
 	}
 	else
 	{
 		printf("%s", "Could not calculate numerator m_WordNotAppearsInSpamList is empty");
 	}
-
-	return tempDenominator;
 }

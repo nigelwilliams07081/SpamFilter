@@ -1,4 +1,4 @@
-#include "SpamFilter.h"
+#include "stdafx.h"
 
 SpamFilter::SpamFilter() :
 	m_SpamConfidence(0.0f)

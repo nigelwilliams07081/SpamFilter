@@ -24,12 +24,21 @@
     <ClCompile Include="Bayesian.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="EmailReceiver.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SpamFilter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Bayesian.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="EmailReceiver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
