@@ -1,1 +1,0 @@
-Please refer to Samples_VS2008/2010/2012/GmailOAUTH.vb

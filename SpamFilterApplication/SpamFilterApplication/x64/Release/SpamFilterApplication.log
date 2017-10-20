@@ -1,0 +1,8 @@
+﻿  Bayesian.cpp
+  EmailReceiver.cpp
+  Main.cpp
+  SpamFilter.cpp
+  Generating code
+  All 271 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finished generating code
+  SpamFilterApplication.vcxproj -> C:\Users\Nigel\Documents\SpamFilter\SpamFilterApplication\x64\Release\SpamFilterApplication.exe
