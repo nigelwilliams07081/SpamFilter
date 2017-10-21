@@ -10,52 +10,23 @@ EmailReceiver::EmailReceiver()
 
 void EmailReceiver::RetrieveEmail()
 {
-	CoInitialize(NULL);
-
-	TCHAR sizeOfPath[MAX_PATH + 1];
-	memset(sizeOfPath, 0, sizeof(sizeOfPath));
-	GetModuleFileName(NULL, sizeOfPath, MAX_PATH);
-
-	LPCTSTR pathSize = _tcsrchr(sizeOfPath, L'\\');
-
-	if (pathSize != NULL)
-	{
-		sizeOfPath[pathSize - sizeOfPath] = L'\0';
-	}
-
+	
 	TCHAR sizeOfMailBox[MAX_PATH + 1];
-	memset(sizeOfMailBox, 0, sizeof(sizeOfMailBox));
-	wsprintf(sizeOfMailBox, L"%s\\inbox", sizeOfPath);
-
-	CreateDirectory(sizeOfMailBox, NULL);
+	InitializeInfo(*sizeOfMailBox);
 
 	try
 	{
 		IMailServerPtr outServer = NULL;
-		outServer.CreateInstance("EAGetMailObj.MailServer");
-		outServer->Server = L"pop.gmail.com";
-		outServer->User = L"cyberthreat1234@gmail.com";
-		outServer->Password = L"paralleldistributed";
-		//outServer->Protocol = MailServerPop3;
-
-		outServer->SSLConnection = VARIANT_TRUE;
-		outServer->Port = 995;
-
 		IMailClientPtr outClient = NULL;
-		outClient.CreateInstance("EAGetMailObj.MailClient");
-		outClient->LicenseCode = L"TryIt";
 
-		outClient->Connect(outServer);
-		wprintf(L"Connected\r\n");
-
+		SetEmailServerInfo(outServer);
+		SetEmailClientInfo(outClient, outServer);
+		
 		_variant_t info = outClient->GetMailInfos();
 		SAFEARRAY *pSafeArray = info.parray;
 		long LBound = 0, UBound = 0;
-		SafeArrayGetLBound(pSafeArray, 1, &LBound);
-		SafeArrayGetUBound(pSafeArray, 1, &UBound);
 
-		INT count = UBound - LBound + 1;
-		wprintf(L"Total %d emails\r\n", count);
+		InitializeMailArrayInfo(info, pSafeArray, LBound, UBound);
 
 		for (long i = LBound; i <= UBound; i++)
 		{
@@ -88,4 +59,55 @@ void EmailReceiver::RetrieveEmail()
 	{
 		wprintf(L"Error: %s", (const TCHAR*)errorParameter.Description());
 	}
+}
+
+void EmailReceiver::InitializeInfo(TCHAR & mailbox)
+{
+	CoInitialize(NULL);
+
+	TCHAR sizeOfPath[MAX_PATH + 1];
+	memset(sizeOfPath, 0, sizeof(sizeOfPath));
+	GetModuleFileName(NULL, sizeOfPath, MAX_PATH);
+
+	LPCTSTR pathSize = _tcsrchr(sizeOfPath, L'\\');
+
+	if (pathSize != NULL)
+	{
+		sizeOfPath[pathSize - sizeOfPath] = L'\0';
+	}
+
+	memset(&mailbox, 0, sizeof(mailbox));
+	wsprintf(&mailbox, L"%s\\inbox", sizeOfPath);
+
+	CreateDirectory(&mailbox, NULL);
+}
+
+void EmailReceiver::InitializeMailArrayInfo(_variant_t & mailInfo, SAFEARRAY* & safeArray, long & lBound, long & uBound)
+{
+	SafeArrayGetLBound(safeArray, 1, &lBound);
+	SafeArrayGetUBound(safeArray, 1, &uBound);
+
+	INT count = uBound - lBound + 1;
+	wprintf(L"Total %d emails\r\n", count);
+}
+
+void EmailReceiver::SetEmailServerInfo(IMailServerPtr & server)
+{
+	server.CreateInstance("EAGetMailObj.MailServer");
+	server->Server = L"pop.gmail.com";
+	server->User = L"cyberthreat1234@gmail.com";
+	server->Password = L"paralleldistributed";
+	//outServer->Protocol = MailServerPop3;
+
+	server->SSLConnection = VARIANT_TRUE;
+	server->Port = 995;
+}
+
+void EmailReceiver::SetEmailClientInfo(IMailClientPtr & client, IMailServerPtr & server)
+{
+	client.CreateInstance("EAGetMailObj.MailClient");
+	client->LicenseCode = L"TryIt";
+
+	client->Connect(server);
+	wprintf(L"Connected\r\n");
 }

@@ -3,6 +3,8 @@
   Main.cpp
   SpamFilter.cpp
   Generating code
-  All 271 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  10 of 275 functions ( 3.6%) were compiled, the rest were copied from previous compilation.
+    4 functions were new in current compilation
+    19 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
   SpamFilterApplication.vcxproj -> C:\Users\Nigel\Documents\SpamFilter\SpamFilterApplication\x64\Release\SpamFilterApplication.exe
