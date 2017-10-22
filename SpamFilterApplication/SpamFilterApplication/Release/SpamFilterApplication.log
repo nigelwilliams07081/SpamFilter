@@ -1,7 +1,10 @@
-﻿  EmailReceiver.cpp
+﻿  Bayesian.cpp
+  EmailReceiver.cpp
+  Main.cpp
+  SpamFilter.cpp
   Generating code
-  3 of 274 functions ( 1.1%) were compiled, the rest were copied from previous compilation.
-    0 functions were new in current compilation
-    0 functions had inline decision re-evaluated but remain unchanged
+  261 of 337 functions (77.4%) were compiled, the rest were copied from previous compilation.
+    141 functions were new in current compilation
+    11 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
   SpamFilterApplication.vcxproj -> C:\Users\Nigel\Documents\SpamFilter\SpamFilterApplication\Release\SpamFilterApplication.exe

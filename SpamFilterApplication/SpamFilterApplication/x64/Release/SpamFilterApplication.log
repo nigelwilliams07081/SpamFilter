@@ -3,8 +3,8 @@
   Main.cpp
   SpamFilter.cpp
   Generating code
-  10 of 275 functions ( 3.6%) were compiled, the rest were copied from previous compilation.
-    4 functions were new in current compilation
-    19 functions had inline decision re-evaluated but remain unchanged
+  259 of 337 functions (76.9%) were compiled, the rest were copied from previous compilation.
+    140 functions were new in current compilation
+    12 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
   SpamFilterApplication.vcxproj -> C:\Users\Nigel\Documents\SpamFilter\SpamFilterApplication\x64\Release\SpamFilterApplication.exe

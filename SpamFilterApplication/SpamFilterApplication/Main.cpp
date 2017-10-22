@@ -5,17 +5,15 @@ using namespace EAGetMailObjLib;
 
 int main()
 {
-	SpamFilter spamFilter;
-	Bayesian bayesian;
+	//Bayesian bayesian;
 	EmailReceiver emailReceiver;
-	spamFilter.OpenFile("File.txt");
-	bayesian.SetAnyMsgIsSpam(0.8f);
+	/*bayesian.SetAnyMsgIsSpam(0.8f);
 	
 	bayesian.SetWordAppearsInSpam(0.505f);
 
 	bayesian.CalculateTheorem();
 
-	printf("%f\n", bayesian.GetGivenMsgIsSpam());
+	printf("%f\n", bayesian.GetGivenMsgIsSpam());*/
 
 	emailReceiver.RetrieveEmail();
 

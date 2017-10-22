@@ -28,28 +28,40 @@ void EmailReceiver::RetrieveEmail()
 
 		InitializeMailArrayInfo(info, pSafeArray, LBound, UBound);
 
-		for (long i = LBound; i <= UBound; i++)
+		std::ofstream textFile;
+		textFile.open("File.txt");
+
+		if (textFile.is_open())
 		{
-			_variant_t variantInfo;
-			SafeArrayGetElement(pSafeArray, &i, &variantInfo);
+			for (long i = LBound; i <= UBound; i++)
+			{
+				_variant_t variantInfo;
+				SafeArrayGetElement(pSafeArray, &i, &variantInfo);
 
-			IMailInfoPtr pInfo;
-			variantInfo.pdispVal->QueryInterface(__uuidof(IMailInfo), (void**)&pInfo);
+				IMailInfoPtr pInfo;
+				variantInfo.pdispVal->QueryInterface(__uuidof(IMailInfo), (void**)&pInfo);
 
-			TCHAR sizeOfFile[MAX_PATH + 1];
-			memset(sizeOfFile, 0, sizeof(sizeOfFile));
+				TCHAR sizeOfFile[MAX_PATH + 1];
+				memset(sizeOfFile, 0, sizeof(sizeOfFile));
 
-			SYSTEMTIME currentTime;
-			GetLocalTime(&currentTime);
-			wsprintf(sizeOfFile, L"%s\\%04d%02d%02d%02d%02d%02d%03d%d.eml", sizeOfMailBox,
-				currentTime.wYear, currentTime.wMonth, currentTime.wDay, currentTime.wHour,
-				currentTime.wMinute, currentTime.wSecond, currentTime.wMilliseconds, i);
+				SYSTEMTIME currentTime;
+				GetLocalTime(&currentTime);
+				wsprintf(sizeOfFile, L"%s\\%04d%02d%02d%02d%02d%02d%03d%d.eml", sizeOfMailBox,
+					currentTime.wYear, currentTime.wMonth, currentTime.wDay, currentTime.wHour,
+					currentTime.wMinute, currentTime.wSecond, currentTime.wMilliseconds, i);
 
-			IMailPtr outMail = outClient->GetMail(pInfo);
+				IMailPtr outMail = outClient->GetMail(pInfo);
 
-			outMail->SaveAs(sizeOfFile, VARIANT_TRUE);
+				AddToFileFromEmail(outMail, textFile);
 
-			outClient->Delete(pInfo);
+				outMail->SaveAs(sizeOfFile, VARIANT_TRUE);
+
+				outClient->Delete(pInfo);
+			}
+		}
+		else
+		{
+			printf("Could not open file");
 		}
 
 		info.Clear();
@@ -110,4 +122,23 @@ void EmailReceiver::SetEmailClientInfo(IMailClientPtr & client, IMailServerPtr &
 
 	client->Connect(server);
 	wprintf(L"Connected\r\n");
+}
+
+void EmailReceiver::AddToFileFromEmail(IMailPtr & mail, std::ofstream & targetFile)
+{
+	if (mail->IsEncrypted == VARIANT_TRUE)
+	{
+		mail = mail->Decrypt(NULL);
+	}
+
+	if (mail->IsSigned == VARIANT_TRUE)
+	{
+		ICertificatePtr certificate = mail->VerifySignature();
+		_tprintf(L"This email contains a valid digital signature.\r\n");
+	}
+
+	mail->DecodeTNEF();
+
+	targetFile << mail->From->Name << "\n" << mail->From->Address << "\n" <<
+		mail->GetTextBody() << "\n\n";
 }
