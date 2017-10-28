@@ -5,18 +5,29 @@ using namespace EAGetMailObjLib;
 
 int main()
 {
-	//Bayesian bayesian;
 	EmailReceiver emailReceiver;
-	/*bayesian.SetAnyMsgIsSpam(0.8f);
-	
-	bayesian.SetWordAppearsInSpam(0.505f);
 
-	bayesian.CalculateTheorem();
-
-	printf("%f\n", bayesian.GetGivenMsgIsSpam());*/
-
+	// Retrieve email from server and assign parts of it to Email struct
 	emailReceiver.RetrieveEmail();
 
+	if (emailReceiver.GetEmail().IsValid)
+	{
+		printf("Sender:\n%s\nSubject:\n%s\nBody:\n%s\n", emailReceiver.GetEmail().Sender, emailReceiver.GetEmail().Subject,
+			emailReceiver.GetEmail().Body);
+
+		for (int i = 0; i < sizeof(emailReceiver.GetEmail().Attachments) / sizeof(emailReceiver.GetEmail().Attachments[0]); i++)
+		{
+			if (emailReceiver.GetEmail().Attachments[i] != "")
+			{
+				printf("Attachments:\n%s\n", emailReceiver.GetEmail().Attachments[i]);
+			}
+		}
+	}
+	else
+	{
+		printf("%s\n", "This is not a valid email");
+	}
+	
 	system("pause");
 	return 0;
 }
