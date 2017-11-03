@@ -81,7 +81,7 @@ void EmailReceiver::RetrieveEmail()
 void EmailReceiver::CreateLocalInboxFolder(TCHAR & mailbox)
 {
 	CoInitialize(NULL);
-
+	
 	TCHAR nameOfPath[MAX_PATH + 1];
 	memset(nameOfPath, 0, sizeof(nameOfPath));
 	GetModuleFileName(NULL, nameOfPath, MAX_PATH);
