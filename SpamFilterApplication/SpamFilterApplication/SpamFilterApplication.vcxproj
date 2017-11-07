@@ -155,6 +155,7 @@
   <ItemGroup>
     <ClInclude Include="Bayesian.h" />
     <ClInclude Include="EmailReceiver.h" />
+    <ClInclude Include="FileNames.h" />
     <ClInclude Include="SpamFilter.h" />
     <ClInclude Include="stdafx.h" />
   </ItemGroup>

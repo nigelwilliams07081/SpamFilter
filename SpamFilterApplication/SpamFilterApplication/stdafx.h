@@ -10,3 +10,4 @@
 #include "Bayesian.h"
 #include "SpamFilter.h"
 #include "EmailReceiver.h"
+#include "FileNames.h"

@@ -1,14 +1,25 @@
 #include "stdafx.h"
 #include <time.h>
 
-using namespace EAGetMailObjLib;
-
 int main()
 {
 	EmailReceiver emailReceiver;
+	SpamFilter spamFilter;
+	Bayesian bayesianCalculator;
+
+	spamFilter.PerformSpamSearch();
+	std::cout << "Our Overall Spam Confidence: " << spamFilter.GetOverallSpamConfidence() << std::endl;
+
+	bayesianCalculator.SetAnyMsgIsSpam(0.8f);
+
+	bayesianCalculator.SetWordAppearsInSpam(spamFilter.GetOverallSpamConfidence());
+
+	bayesianCalculator.CalculateTheorem();
+
+	std::cout << "The Overall Spam Confidence After Calculation: " << bayesianCalculator.GetGivenMsgIsSpam() << std::endl;
 
 	// Retrieve email from server and assign parts of it to Email struct
-	emailReceiver.RetrieveEmail();
+	/*emailReceiver.RetrieveEmail();
 
 	if (emailReceiver.GetEmail().IsValid)
 	{
@@ -26,7 +37,7 @@ int main()
 	else
 	{
 		printf("%s\n", "This is not a valid email");
-	}
+	}*/
 	
 	system("pause");
 	return 0;

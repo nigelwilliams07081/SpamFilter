@@ -5,12 +5,10 @@ using namespace EAGetMailObjLib;
 
 EmailReceiver::EmailReceiver()
 {
-	
 }
 
 void EmailReceiver::RetrieveEmail()
 {
-	
 	TCHAR sizeOfMailBox[MAX_PATH + 1];
 	CreateLocalInboxFolder(*sizeOfMailBox);
 
