@@ -20,6 +20,9 @@ public:
 	: You must enable the "Allow Less Secure Apps" Option in your Gmail account for this to work
 	*/
 	void RetrieveEmail();
+	const bool HasRetrievedEmail();
+	const bool HasAttachment();
+	const int NumberOfAttachments();
 	const Email GetEmail();
 
 private:
@@ -32,4 +35,7 @@ private:
 	void SetEmail(EAGetMailObjLib::IMailPtr& mail);
 
 	Email m_Email;
+	bool m_HasRetrievedEmail;
+	bool m_HasAttachment;
+	int m_NumberOfAttachments;
 };

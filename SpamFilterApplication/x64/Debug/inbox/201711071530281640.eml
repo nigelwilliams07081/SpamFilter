@@ -1,0 +1,23 @@
+MIME-Version: 1.0
+Received: by 10.28.178.143 with HTTP; Tue, 7 Nov 2017 12:28:57 -0800 (PST)
+Date: Tue, 7 Nov 2017 15:28:57 -0500
+Delivered-To: cyberthreat1234@gmail.com
+Message-ID: <CAAqRF4QtC+zUurCTw0_xphfZWYon4kdNV2LV+rMybbJAU+db+w@mail.gmail.com>
+Subject: Test Email Basic Algorithm 11
+From: Cyber Threat <cyberthreat1234@gmail.com>
+To: Cyber Threat <cyberthreat1234@gmail.com>
+Content-Type: multipart/alternative; boundary="001a114b115ca34c3a055d6a6b86"
+
+--001a114b115ca34c3a055d6a6b86
+Content-Type: text/plain; charset="UTF-8"
+
+Congratulations! You have won an all expense paid trip to Fiji! It is
+urgent that you respond quickly to get your money! We need your name, date
+of birth, and credit card information. Please respond ASAP!
+
+--001a114b115ca34c3a055d6a6b86
+Content-Type: text/html; charset="UTF-8"
+
+<div dir="ltr">Congratulations! You have won an all expense paid trip to Fiji! It is urgent that you respond quickly to get your money! We need your name, date of birth, and credit card information. Please respond ASAP!</div>
+
+--001a114b115ca34c3a055d6a6b86--

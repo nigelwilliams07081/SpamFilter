@@ -7,6 +7,7 @@
 */
 struct FileNames {
 	const std::string SpamSenderAddressesFile = "spam_email_addresses.txt";
+	const std::string SpamSubjectFile = "spam_subjects.txt";
 	const std::string SpamWordsFile = "spam_words.txt";
 	const std::string SpamAttachmentsFile = "spam_attachments.txt";
 };

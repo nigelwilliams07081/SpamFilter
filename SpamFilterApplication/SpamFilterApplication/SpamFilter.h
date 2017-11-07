@@ -1,5 +1,6 @@
 #pragma once
 
+#include "EmailReceiver.h"
 class SpamFilter
 {
 public:
@@ -54,6 +55,11 @@ public:
 	*/
 	void NotifyUserOfPossibleSpam();
 
+	/**
+	: Used for testing to see if the body is lowercase
+	*/
+	void PrintEmailBody();
+
 	const float POSSIBLE_SPAM_THRESHOLD = 0.3f;
 	const float SPAM_THRESHOLD = 0.6f;
 
@@ -77,4 +83,6 @@ private:
 	float m_SpamPhraseConfidence;
 	float m_SpamAttachmentConfidence;
 	float m_OverallSpamConfidence;
+
+	EmailReceiver m_EmailReceiver;
 };

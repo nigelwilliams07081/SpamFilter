@@ -1,0 +1,21 @@
+MIME-Version: 1.0
+Received: by 10.28.178.143 with HTTP; Tue, 7 Nov 2017 12:44:20 -0800 (PST)
+Date: Tue, 7 Nov 2017 15:44:20 -0500
+Delivered-To: cyberthreat1234@gmail.com
+Message-ID: <CAAqRF4Ssz_eq-utaRLcmd4TPe8qHY8zT6GsqOJp_uk5Ug4f=iw@mail.gmail.com>
+Subject: Test Email Basic Algorithm 12
+From: Cyber Threat <cyberthreat1234@gmail.com>
+To: Cyber Threat <cyberthreat1234@gmail.com>
+Content-Type: multipart/alternative; boundary="001a114b2e80a5e261055d6aa2b4"
+
+--001a114b2e80a5e261055d6aa2b4
+Content-Type: text/plain; charset="UTF-8"
+
+congratulations!
+
+--001a114b2e80a5e261055d6aa2b4
+Content-Type: text/html; charset="UTF-8"
+
+<div dir="ltr">congratulations!</div>
+
+--001a114b2e80a5e261055d6aa2b4--

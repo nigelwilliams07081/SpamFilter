@@ -3,7 +3,8 @@
 
 using namespace EAGetMailObjLib;
 
-EmailReceiver::EmailReceiver()
+EmailReceiver::EmailReceiver() :
+	m_NumberOfAttachments(0), m_HasAttachment(false), m_HasRetrievedEmail(false)
 {
 }
 
@@ -74,6 +75,21 @@ void EmailReceiver::RetrieveEmail()
 	{
 		wprintf(L"Error: %s", (const TCHAR*)errorParameter.Description());
 	}
+}
+
+const bool EmailReceiver::HasRetrievedEmail()
+{
+	return m_HasRetrievedEmail;
+}
+
+const bool EmailReceiver::HasAttachment()
+{
+	return m_HasAttachment;
+}
+
+const int EmailReceiver::NumberOfAttachments()
+{
+	return m_NumberOfAttachments;
 }
 
 void EmailReceiver::CreateLocalInboxFolder(TCHAR & mailbox)
@@ -167,22 +183,49 @@ void EmailReceiver::SetEmail(EAGetMailObjLib::IMailPtr & mail)
 
 	mail->DecodeTNEF();
 
+	std::string stringBody = std::string(mail->TextBody);
+	size_t bodySize = stringBody.size();
+
+	// Check if any characters are upper case and convert them to lowercase
+	for (int i = 0; i < bodySize; i++)
+	{
+		if (stringBody[i] >= 'A' && stringBody[i] <= 'Z')
+		{
+			stringBody[i] += ('a' - 'A');
+		}
+	}
+
 	strcpy_s(m_Email.Sender, _com_util::ConvertBSTRToString(mail->From->Address));
 	strcpy_s(m_Email.Subject, _com_util::ConvertBSTRToString(mail->Subject));
-	strcpy_s(m_Email.Body, _com_util::ConvertBSTRToString(mail->TextBody));
+	strcpy_s(m_Email.Body, stringBody.c_str());
 	
 	if (mail->GetAttachmentList() != nullptr)
 	{
-		// Assign the name of the attachments in the email
-		for (int i = 0; i < mail->GetAttachmentList()->Length; i++)
+		if (mail->GetAttachmentList()->Length != 0)
 		{
-			strcpy_s(m_Email.Attachments[i], _com_util::ConvertBSTRToString(mail->GetAttachmentList()->GetItem(i)->Name));
+			m_NumberOfAttachments = mail->GetAttachmentList()->Length;
+			// Assign the name of the attachments in the email
+			for (int i = 0; i < mail->GetAttachmentList()->Length; i++)
+			{
+				// Checks if the attachment has a name
+				if (mail->GetAttachmentList()->Item[i]->Name.length() != 0)
+				{
+					strcpy_s(m_Email.Attachments[i], _com_util::ConvertBSTRToString(mail->GetAttachmentList()->Item[i]->Name));
+					if (!m_HasAttachment)
+					{
+						m_HasAttachment = true;
+					}
+				}
+			}
 		}
-		// Assign an empty string to the rest of the attachments
-		for (int i = mail->GetAttachmentList()->Length; i < sizeof(m_Email.Attachments) / sizeof(m_Email.Attachments[0]); i++)
+		else
 		{
-			strcpy_s(m_Email.Attachments[i], "");
+			m_HasAttachment = false;
 		}
+	}
+	else
+	{
+		m_HasAttachment = false;
 	}
 
 	// Used for making sure the Email struct is not null

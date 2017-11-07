@@ -51,15 +51,15 @@ bool SpamFilter::OpenFile(std::string fileString)
 
 void SpamFilter::PerformSpamSearch()
 {
-	EmailReceiver emailReceiver;
-	emailReceiver.RetrieveEmail();
+	m_EmailReceiver.RetrieveEmail();
 
 	FileNames fileNames;
 
-	if (emailReceiver.GetEmail().IsValid)
+	if (m_EmailReceiver.GetEmail().IsValid)
 	{
-		PerformSenderSearch(emailReceiver.GetEmail().Sender, fileNames.SpamSenderAddressesFile);
-		PerformPhraseSearch(emailReceiver.GetEmail().Body, fileNames.SpamWordsFile);
+		PerformSenderSearch(m_EmailReceiver.GetEmail().Sender, fileNames.SpamSenderAddressesFile);
+		PerformPhraseSearch(m_EmailReceiver.GetEmail().Body, fileNames.SpamWordsFile);
+		PerformAttachmentSearch(m_EmailReceiver.GetEmail().Attachments, fileNames.SpamAttachmentsFile);
 	}
 	else
 	{
@@ -71,6 +71,17 @@ void SpamFilter::PerformSpamSearch()
 void SpamFilter::NotifyUserOfPossibleSpam()
 {
 	// TODO
+}
+
+void SpamFilter::PrintEmailBody()
+{
+	if (m_EmailReceiver.HasRetrievedEmail())
+	{
+		for (int i = 0; i < std::string(m_EmailReceiver.GetEmail().Body).size(); i++)
+		{
+			std::cout << m_EmailReceiver.GetEmail().Body[i];
+		}
+	}
 }
 
 /**
@@ -96,15 +107,10 @@ void SpamFilter::GrabLinesFromFile(std::string fileString, std::vector<std::stri
 
 /**
 : Search through the sender Address file <spamFileName> and see if the <sender> is in that file
+: 15% of the algorithm w/ and w/o attachment
 */
 void SpamFilter::PerformSenderSearch(const char sender[256], const std::string& spamFileName)
 {
-	UNREFERENCED_PARAMETER(sender);
-	UNREFERENCED_PARAMETER(spamFileName);
-
-
-	// TODO
-
 	GrabLinesFromFile(spamFileName, m_SpamAddressList);
 
 	for (int i = 0; i < m_SpamAddressList.size(); i++)
@@ -112,10 +118,7 @@ void SpamFilter::PerformSenderSearch(const char sender[256], const std::string& 
 		if (sender == m_SpamAddressList.data()[i])
 		{
 			std::cout << m_SpamAddressList.data()[i] << std::endl;
-			if (m_SpamAddressConfidence <= 0.1f)
-			{
-				m_SpamAddressConfidence += 0.01f;
-			}
+			m_SpamAddressConfidence = 0.15f;
 		}
 	}
 
@@ -124,6 +127,8 @@ void SpamFilter::PerformSenderSearch(const char sender[256], const std::string& 
 
 /**
 : Search through the subject file <spamFileName> and see if the <subject> is in that file
+: 25% of the algorithm w/ attachment
+: 30% of the algorithm w/o attachment
 */
 void SpamFilter::PerformSubjectSearch(const char subject[998], const std::string& spamFileName)
 {
@@ -134,20 +139,35 @@ void SpamFilter::PerformSubjectSearch(const char subject[998], const std::string
 
 /**
 : Search through the spam-phrase file <spamFileName> and see if any words/phrases in that list match the words/phrases in the <body>
+: 40% of the algorithm w/ attachment
+: 55% of the algorithm w/0 attachment
 */
 void SpamFilter::PerformPhraseSearch(const char body[65535], const std::string& spamFileName)
 {
 	GrabLinesFromFile(spamFileName, m_SpamPhraseList);
 
+	std::string emailBody = std::string(body);
 	for (int i = 0; i < m_SpamPhraseList.size(); i++)
 	{
 		// checks the whole Body to see if it finds the m_PhraseList.data()[i] string
-		if (std::string(body).find(m_SpamPhraseList.data()[i]) != std::string::npos)
+		if (emailBody.find(m_SpamPhraseList.data()[i]) != std::string::npos)
 		{
 			std::cout << m_SpamPhraseList.data()[i] << std::endl;
-			if (m_SpamPhraseConfidence <= 0.1f)
+			if (m_EmailReceiver.HasAttachment())
 			{
-				m_SpamPhraseConfidence += 0.01f;
+				// We will check up to 10 words for full confidence
+				if (m_SpamPhraseConfidence < 0.4f)
+				{
+					m_SpamPhraseConfidence += 0.04f;
+				}
+			}
+			else
+			{
+				// We will check up to 10 words for full convidence
+				if (m_SpamPhraseConfidence < 0.55f)
+				{
+					m_SpamPhraseConfidence += 0.055f;
+				}
 			}
 		}
 	}
@@ -157,31 +177,32 @@ void SpamFilter::PerformPhraseSearch(const char body[65535], const std::string& 
 
 /**
 : Search through the spam attachment file <spamFileName> and see if any of the <attachments> are in that file
+: 20% of the algorithm
 */
 void SpamFilter::PerformAttachmentSearch(const char attachments[10][255], const std::string& spamFileName)
 {
-	UNREFERENCED_PARAMETER(attachments);
-	UNREFERENCED_PARAMETER(spamFileName);
+	std::string attachmentName;
+	size_t position = 0, found = 0;
 
-	// TODO
+	GrabLinesFromFile(spamFileName, m_SpamAttachmentList);
 
-	//std::string tempString;
-	//size_t position = 0, found = 0;
-
-	//GrabLinesFromFile(spamFileName, m_SpamAttachmentList);
-
-	//for (int i = 0; i < m_SpamAttachmentList.size(); i++)
-	//{
-	//	for (int j = 0; j < sizeof(attachments) / sizeof(attachments[0]); j++)
-	//	{
-	//		if (attachments[j] != "")
-	//		{
-	//			// found here https://www.quora.com/How-do-I-split-a-string-by-space-into-an-array-in-c++
-	//			if (found = std::string(attachments[j]).find_first_of('.', position) != std::string::npos)
-	//			{
-	//				std::cout << std::string(attachments[j]).substr(position, found - position) << std::endl;
-	//			}
-	//		}
-	//	}
-	//}
+	for (int i = 0; i < m_SpamAttachmentList.size(); i++)
+	{
+		for (int j = 0; j < m_EmailReceiver.NumberOfAttachments(); j++)
+		{
+			if (attachments[j] != "")
+			{
+				attachmentName = std::string(attachments[j]);
+				if (attachmentName.find(m_SpamAttachmentList.data()[i]) != std::string::npos)
+				{
+					std::cout << attachmentName << " is most likely a spam attachment" << std::endl;
+					m_SpamAttachmentConfidence = 0.2f;
+				}
+				else
+				{
+					std::cout << attachmentName << " is not a spam attachment" << std::endl;
+				}
+			}
+		}
+	}
 }
