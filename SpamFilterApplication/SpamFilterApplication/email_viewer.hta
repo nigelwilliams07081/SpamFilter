@@ -1,0 +1,276 @@
+<!doctype html>
+<html>
+	<head>
+		<style type="text/css">
+		* {
+			box-sizing: border-box;
+		}
+		
+		html, body {
+			font-family: sans-serif;
+			width: 100%;
+			background-color: #ddd;
+			color: #333;
+		}
+		
+		td { 
+			padding: 5px 2px;
+		}
+		
+		hr {
+			margin: 20px 0;
+		}
+		
+		#error {
+			width: 65%;
+			border: 1px solid red;
+			border-radius: 5px;
+			margin: 0 auto;
+			padding: 10px;
+			text-align: center;
+			background-color: #fcfcfc;
+		}
+		
+		#xml-button-container {
+			width: 25%;
+			border: 1px solid #999;
+			border-radius: 5px;
+			margin: 0 auto;
+			padding: 10px;
+			text-align: center;
+			background-color: #fcfcfc;
+		}
+		
+		.button {
+			display: block;
+			padding: 3px;
+			border: 1px solid #999;
+			border-radius: 3px;
+			background-color: #FCFCFC;
+			color: #333;
+			transition: border 0.1s, background-color 0.1s;
+		}
+		
+		.button:hover {
+			cursor: pointer;
+			background-color: #eee;
+			border-color: #333;
+		}
+		
+		.xml-button {
+			margin: 5px auto;
+		}
+		
+		.back-button {
+			width: 5em;
+			margin: 5px;
+			text-align: center;
+		}
+		
+		.refresh-button {
+			width: 5em;
+			margin: 5px auto;
+		}
+		
+		.email {
+			background-color: #fcfcfc;
+			display: table;
+			border: 1px solid #999;
+			border-radius: 5px;
+			margin: 0 auto;
+			margin-bottom: 10px;
+			max-width: 65%;
+			min-width: 650px;
+		}
+		
+		.malformed {
+			text-align: center;
+			font-weight: bold;
+			color: red;
+			padding: 5px;
+		}
+		
+		.spam {
+			background-color: #ECC9C9;
+			border-color: #670606;
+		}
+		
+		.spam:before {
+			display: inline-block;
+			position: absolute;
+			padding: 5px;
+			font-size: 85%;
+			font-weight: thinner;
+			color: #670606;
+			content: 'SPAM';
+		}
+		
+		.notspam {
+			background-color: #B1F1C0;
+			border-color: #125A23;
+		}
+		
+		.notspam:before {
+			display: inline-block;
+			position: absolute;
+			padding: 5px;
+			font-size: 85%;
+			font-weight: thinner;
+			color: #125A23;
+			content: 'NOT SPAM';
+		}
+		
+		.subject-title, .sender-title {
+			color: #AAA;
+			text-align: right;
+		}
+		
+		.body-content {
+			border-top: 1px solid #999;
+			border-bottom: 1px solid #999;
+			white-space: pre-wrap;
+		}
+		
+		.icon {
+			background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAQAAAD8fJRsAAAABGdBTUEAALGOfPtRkwAAAwNpQ0NQUGhvdG9zaG9wIElDQyBwcm9maWxlAAA4jWNgYJ7g6OLkyiTAwFBQVFLkHuQYGREZpcB+noGNgZkBDBKTiwscAwJ8QOy8/LxUBlTAyMDw7RqIZGC4rAsyi4E0wJpcUFTCwMBwgIGBwSgltTiZgYHhCwMDQ3p5SUEJAwNjDAMDg0hSNphdAGJnhwQ5MzAwtjAwMPGUpFaA9DI45xdUFmWmZ5QoGFpaWio4puQnpSoEVxaXpOYWK3jmJecXFeQXJZakpjAwMEDtAAFel/wSBffEzDwFIwNVEt1NEIDCEcJChA9CDAGSS4vKICywIgEGBQYDBgeGAIZEhnqGBQxHGd4wijO6MJYyrmC8xyTGFMQ0gekCszBzJPNC5jcsliwdLLdY9VhbWe+xWbJNY/vGHs6+m0OJo4vjC2ci5wUuR64t3JrcC3ikeKbyCvFO4hPmm8Yvw79YQEdgh6Cr4BWhVKEfwr0iKiJ7RcNFv4hNEjcSvyJRISkneUwqX1pa+oRMmay67C25PnkX+T8KWxULlfSU3iqvVSlQNVH9qXZQvUsjVFNJ84PWAe1JOqm6VnqCeq/0jxgsMKw1ijG2NZE3ZTZ9aXbBfKfFEssJVnXWuTZxtoF2rvbWDsaOOk5qzkouCq7ybgruyh7qnrpeJt42Pu6+wX4J/vkB9YETg5YG7wq5GPoynClCLtIqKiK6ImZm7J64BwlsibpJYckNKWtSb6ZzZFhkZmbNzb6Yy55nn19RsKnwXbF2SVbpqrI3FfqVJVW7ahhrveqm1j9s1GuqaT7bKtdW2H60U7qrqPt0r2pfY//diTaTZk/+OzV+2uEZGjP7Z32fkzD39HzzBUsXiSxuXfJtWebyeytDVp1e47J233rLDds2mWzestVk2/YdVjv373bdc3Zf2P4HB3MO/TzSfkz8+IqT1qfOnUk+++v8pIval45eSbz67/qcmza37t6pv6d8/8TDvMdiT/Y/y3wh8vLg6/y38u8ufGj6ZPr51dcF38N/Cvw69af1n+P//wANAA80ri9qxQAAACBjSFJNAAB6JQAAgIMAAPn/AACA6QAAdTAAAOpgAAA6mAAAF2+SX8VGAAAAq0lEQVQoz13NTQqCUBiFYQduw0FraBJ4hQpqI9o2tInb0NpIwyAImmhhmKEl9kdFG3jDS2l2zuw+3+Eqiqp1hSXMsoZpjFq68o3r85N13B58wPbgxZMbOQ8gijtDCY4HISsWzEjkauxXi4yEiIAlc8Cp4cSRjD0xUQleBSk7tmwICZpwoSCXq7QJd66cKWTB9n7+yDnI+6wGd8pf3En5rmp9YelmXWFpPUV9A7tttnBgyYBiAAAAAElFTkSuQmCC);
+			
+			display: inline-block;
+			width: 12px;
+			height: 12px;
+			margin: 0 5px;
+		}
+		</style>
+  		<title>XML Email Viewer</title>
+		<meta http-equiv="x-ua-compatible" content="ie=edge">
+		
+	</head>
+	<body>
+	</body>
+	<script type="text/javascript" language="JavaScript">
+		window.resizeTo(1000,700);
+		
+		var dElement = function(a,f,d,e){a="string"==typeof a?document.createElement(a):a;(function g(a,c){for(var b in c)c.hasOwnProperty(b)&&"object"==typeof c[b]?g(a[b],c[b]):a[b]=c[b]})(a,f||{});return d?e?d.insertBefore(a,e):d.appendChild(a):a}
+		
+		// Not supported by HTA
+		if (!('endsWith' in String.prototype)) {
+			String.prototype.endsWith = function(target) {
+				return this.substr(target.length * -1) === target;
+			};
+		}
+		
+		function getXMLFiles() {
+			
+			// Ugly ActiveX crap
+			var files = new Enumerator(new ActiveXObject("Scripting.FileSystemObject").GetFolder("./").files); 
+			
+			for (var s = []; !files.atEnd(); files.moveNext()) { 
+				
+				var file = "" + files.item(); // Coerce to string
+				
+				if (file.endsWith(".xml")) {
+					s.push(file.replace(/^.*[\\\/]/, '')); 
+				}
+			}
+			
+			return s; 
+		}
+
+		function loadXMLEmails(filename) {
+			
+			var xmlDoc = new ActiveXObject("Microsoft.XMLDOM");
+			xmlDoc.async = false;
+			xmlDoc.load(filename);
+			
+			if (xmlDoc.parseError.errorCode != 0) {
+				dElement('div', { id : "error", textContent : "XML parse error: " + xmlDoc.parseError.errorCode	}, document.body);
+			} else {
+				
+				var emails = xmlDoc.getElementsByTagName("email");
+				
+				for (var i = 0; i < emails.length; i++) {
+					try {
+						var subject = emails[i].getElementsByTagName('subject')[0].firstChild.nodeValue;
+						var sender  = emails[i].getElementsByTagName('sender')[0].firstChild.nodeValue;
+						var body    = emails[i].getElementsByTagName('body')[0].firstChild.nodeValue;
+						
+						var attachments = [];
+						
+						var attachmentRoot = emails[i].getElementsByTagName('attachments')[0];
+						var filenames = attachmentRoot.getElementsByTagName('file');
+						
+						for (var f = 0; f < filenames.length; f++) {
+							attachments.push(filenames[f].firstChild.nodeValue);
+						}
+						
+						var attachstring = "";
+					
+						for (var a = 0; a < attachments.length; a++) {
+							attachstring += '<span class="icon"></span>' + attachments[a] + '&nbsp;';
+						}
+						
+						var htmlstring = '<tr><td class="subject-title">Subject</td><td class="subject-content">'+subject+'</td></tr><tr><td class="sender-title">From</td><td class="sender-content">'+sender+'</td></tr><tr><td class="body-content" colspan="2">'+body+'</td></tr><tr><td class="attachments-content" colspan="2">'+attachstring+'</td></tr>';
+						
+						var spam = emails[i].getAttribute("spam");
+						var emailclass;
+						
+						switch (spam) {
+								
+							case "yes":
+								emailclass = "email spam";
+								break;
+								
+							case "no":
+								emailclass = "email notspam";
+								break;
+								
+							case null:
+							default:
+								emailclass = "email";
+								break;
+						}
+							
+						dElement("table", { className : emailclass, innerHTML : htmlstring }, document.body);
+					} catch (e) {
+						dElement("div", { className : "email malformed", textContent : "Malformed email!" }, document.body);
+					}
+				}
+			}
+		}
+		
+		var xmls = getXMLFiles();
+		
+		function XMLButtonFunctionFactory(filename) {
+			return function() {
+				document.body.removeChild(document.getElementById('xml-button-container'));
+				dElement("div", { className: "back-button button", textContent: "Go back", onclick: function() { location.reload() } }, document.body);
+				loadXMLEmails(filename);
+			}
+		}
+		
+		switch (xmls.length) {
+			case 0:
+				var error = dElement('div', { id : "error", textContent : "No XML files found!" }, document.body);
+				dElement("div", { className: "refresh-button button", textContent: "Refresh", onclick: function() { location.reload() } }, error);
+				
+				break;
+		
+			case 1:
+				loadXMLEmails(xmls[0]);
+				break
+				
+			default:
+				var container = dElement('div', { id : 'xml-button-container' }, document.body);
+				
+				dElement('h3', { textContent: 'Select a file to load:' }, container);
+				
+				for (var i = 0; i < xmls.length; i++) {
+					dElement('div', { className: "xml-button button", textContent: xmls[i], onclick: XMLButtonFunctionFactory(xmls[i]) }, container);
+				}
+				
+				dElement('hr', {}, container);
+				dElement("div", { className: "refresh-button button", textContent: "Refresh", onclick: function() { location.reload() } }, container);
+				
+				break;
+		}
+	</script>
+</html>
