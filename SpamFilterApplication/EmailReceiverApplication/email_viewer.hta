@@ -151,6 +151,10 @@
 		
 		var dElement = function(a,f,d,e){a="string"==typeof a?document.createElement(a):a;(function g(a,c){for(var b in c)c.hasOwnProperty(b)&&"object"==typeof c[b]?g(a[b],c[b]):a[b]=c[b]})(a,f||{});return d?e?d.insertBefore(a,e):d.appendChild(a):a}
 		
+		function htmlEntities(str) {
+			return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+		}
+
 		// Not supported by HTA
 		if (!('endsWith' in String.prototype)) {
 			String.prototype.endsWith = function(target) {
@@ -189,9 +193,9 @@
 				
 				for (var i = 0; i < emails.length; i++) {
 					try {
-						var subject = emails[i].getElementsByTagName('subject')[0].firstChild.nodeValue;
-						var sender  = emails[i].getElementsByTagName('sender')[0].firstChild.nodeValue;
-						var body    = emails[i].getElementsByTagName('body')[0].firstChild.nodeValue;
+						var subject = htmlEntities(emails[i].getElementsByTagName('subject')[0].firstChild.nodeValue);
+						var sender  = htmlEntities(emails[i].getElementsByTagName('sender')[0].firstChild.nodeValue);
+						var body    = htmlEntities(emails[i].getElementsByTagName('body')[0].firstChild.nodeValue);
 						
 						var attachments = [];
 						

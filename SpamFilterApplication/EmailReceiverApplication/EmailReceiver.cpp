@@ -17,20 +17,20 @@ void EmailReceiver::RetrieveEmail()
 	{
 		IMailServerPtr outServer = NULL;
 		IMailClientPtr outClient = NULL;
-
+		
 		ConnectToServer(outServer);
 		ConnectClientToServer(outClient, outServer);
 		
 		_variant_t info = outClient->GetMailInfos();
 		SAFEARRAY *pSafeArray = info.parray;
 		long LBound = 0, UBound = 0;
-
+		
 		// Tells user how many new emails there are since last checked
 		PrintNumberOfEmails(info, pSafeArray, LBound, UBound);
-
+		
 		std::ofstream textFile;
 		textFile.open("File.txt");
-
+		
 		if (textFile.is_open())
 		{
 			for (long i = LBound; i <= UBound; i++)
@@ -194,9 +194,92 @@ void EmailReceiver::AddEmailToXMLFile(EAGetMailObjLib::IMailPtr & mail, const ch
 
 	mail->DecodeTNEF();
 
-	// Now you can use the "mail" variable for adding its information to the xml file
+	// Check if file exists, create and add root element if it does not
+	std::ifstream test(xmlFileName);
 
-	// Joel, hope this helps some
+	// If the target file does not exist, create it with a root node
+	if (!test.good())
+	{
+		std::ofstream file(xmlFileName);
+		file << "<emailList></emailList>";
+		file.close();
+	}
+	
+	test.close();
+
+	// Stringstream to funnel new contents into
+	std::stringstream newcontents;
+
+	// Local function to replace content in strings
+	auto string_replace = [](std::string &s, const std::string &toReplace, const std::string &replaceWith)
+	{
+		size_t loc;
+		size_t len = toReplace.length();
+
+		while ((loc = s.find(toReplace)) != std::string::npos) {
+			s.replace(loc, len, replaceWith);
+		}
+
+		return s;
+	};
+
+	std::string sender = mail->From->Address;
+	std::string subject = mail->Subject;
+	std::string body = mail->TextBody;
+
+	// We have to escape all the control characters
+	string_replace(sender, "<", "&lt;");
+	string_replace(sender, ">", "&gt;");
+	string_replace(subject, "<", "&lt;");
+	string_replace(subject, ">", "&gt;");
+	string_replace(body, "<", "&lt;");
+	string_replace(body, ">", "&gt;");
+
+	// Pipe all the new data into the file
+	newcontents
+	 << "<email>"
+	 << "<sender>" << sender << "</sender>"
+	 << "<subject>" << subject << "</subject>"
+	 << "<body>" << body << "</body>";
+
+
+	newcontents << "<attachments>";
+
+	// Loop over the attachments and add those
+	for (int i = 0; i < mail->AttachmentList->Count; i++)
+	{
+		if (i == 10) {
+			// We can only have 10 attachments, limited by the email struct we must use later
+			break;
+		}
+
+		std::string name = mail->AttachmentList->Item[i]->Name;
+
+		string_replace(name, "<", "&lt;");
+		string_replace(name, ">", "&gt;");
+
+		newcontents << "<file>" << name << "</file>";
+	}
+
+	// Close root node back up when we're finished
+	newcontents
+		<< "</attachments>"
+		<< "</email>"
+		<< "</emailList>"; 
+
+	// We want to overwrite the last 12 bytes, the '</emailList>', so that we may add new data
+	// To do that, we have to use fopen() file handles and seek to 12 bytes before the EOF
+	// To write to a fopen() handle we have to have a C-style char array
+	std::string temp = newcontents.str();
+	const char* dataToBeWritten = temp.c_str();
+
+	FILE* handle;
+	fopen_s(&handle, xmlFileName, "r+");
+	fseek(handle, -12, SEEK_END);
+	
+	fwrite(dataToBeWritten, sizeof(char), strlen(dataToBeWritten), handle);
+
+	fclose(handle);
 }
 
 void EmailReceiver::SetEmail(EAGetMailObjLib::IMailPtr & mail)
