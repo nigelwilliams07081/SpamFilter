@@ -1,5 +1,6 @@
 #pragma once
 
+#include "EmailReceiver.h"
 class SpamFilter
 {
 public:
@@ -9,24 +10,31 @@ public:
 	: [float]
 	: Returns the confidence level that a given message is spam
 	*/
-	float GetSpamConfidence() const;
+	float GetOverallSpamConfidence() const;
 
 	/**
 	: [vector<string>]
-	: Returns the list of words obtained from previously read file
+	: Returns the list of addresses obtained from the spam_email_addresses.txt file
 	*/
-	std::vector<std::string> GetWorldList() const;
+	std::vector<std::string> GetSpamAddressList() const;
 
 	/**
 	: [vector<string>]
-	: Returns the list of phrases obtained from previously read file
+	: Returns the list of subjects obtained from the spam_email_subjects.txt file
 	*/
-	std::vector<std::string> GetPhraseList() const;
+	std::vector<std::string> GetSpamSubjectList() const;
 
 	/**
-	: Sets the m_SpamConfidence value
+	: [vector<string>]
+	: Returns the list of phrases obtained from the spam_words.txt file
 	*/
-	void SetSpamConfidence(float confidenceLevel);
+	std::vector<std::string> GetSpamPhraseList() const;
+
+	/**
+	: [vector<string>]
+	: Returns the list of attachments obtained from the spam_attachments.txt file
+	*/
+	std::vector<std::string> GetSpamAttachmentList() const;
 
 	/**
 	: [bool]
@@ -47,16 +55,34 @@ public:
 	*/
 	void NotifyUserOfPossibleSpam();
 
+	/**
+	: Used for testing to see if the body is lowercase
+	*/
+	void PrintEmailBody();
+
 	const float POSSIBLE_SPAM_THRESHOLD = 0.3f;
 	const float SPAM_THRESHOLD = 0.6f;
 
 private:
-	void GrabWordsFromFile(std::string fileString);
-	void GrabLinesFromFile(std::string fileString);
+	void GrabLinesFromFile(std::string fileString, std::vector<std::string>& spamList);
+
+	void PerformSenderSearch(const char sender[256], const std::string& spamFileName);
+	void PerformSubjectSearch(const char subject[998], const std::string& spamFileName);
+	void PerformPhraseSearch(const char body[65535], const std::string& spamFileName);
+	void PerformAttachmentSearch(const char attachments[10][255], const std::string& spamFileName);
 
 	std::ifstream m_File;
-	std::vector<std::string> m_WordList;
-	std::vector<std::string> m_PhraseList;
-	std::vector<std::string> m_SpamKeywordRepository;
-	float m_SpamConfidence;
+
+	std::vector<std::string> m_SpamAddressList;
+	std::vector<std::string> m_SpamSubjectList;
+	std::vector<std::string> m_SpamPhraseList;
+	std::vector<std::string> m_SpamAttachmentList;
+
+	float m_SpamAddressConfidence;
+	float m_SpamSubjectConfidence;
+	float m_SpamPhraseConfidence;
+	float m_SpamAttachmentConfidence;
+	float m_OverallSpamConfidence;
+
+	EmailReceiver m_EmailReceiver;
 };

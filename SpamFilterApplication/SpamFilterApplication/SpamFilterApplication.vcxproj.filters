@@ -50,5 +50,11 @@
     <ClInclude Include="rapidxml.hpp">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="FileNames.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
 </Project>

@@ -1,0 +1,25 @@
+MIME-Version: 1.0
+Received: by 10.28.178.143 with HTTP; Mon, 6 Nov 2017 20:36:54 -0800 (PST)
+Date: Mon, 6 Nov 2017 23:36:54 -0500
+Delivered-To: cyberthreat1234@gmail.com
+Message-ID: <CAAqRF4QJuBQ2PRS4OXU6Mm7iKUUK93aFthqtpZbP4KroAi37+Q@mail.gmail.com>
+Subject: Test Email Basic Algorithm 3
+From: Cyber Threat <cyberthreat1234@gmail.com>
+To: Cyber Threat <cyberthreat1234@gmail.com>
+Content-Type: multipart/alternative; boundary="001a114700b2d62dc4055d5d1ef8"
+
+--001a114700b2d62dc4055d5d1ef8
+Content-Type: text/plain; charset="UTF-8"
+
+As seen on
+Amazing
+Spam
+Be amazed
+Bill 1618
+
+--001a114700b2d62dc4055d5d1ef8
+Content-Type: text/html; charset="UTF-8"
+
+<div dir="ltr">As seen on<div>Amazing</div><div>Spam</div><div>Be amazed</div><div>Bill 1618</div></div>
+
+--001a114700b2d62dc4055d5d1ef8--

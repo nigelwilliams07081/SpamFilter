@@ -3,82 +3,69 @@
 
 using namespace EAGetMailObjLib;
 
-EmailReceiver::EmailReceiver()
+EmailReceiver::EmailReceiver() :
+	m_NumberOfAttachments(0), m_HasAttachment(false), m_HasRetrievedEmail(false)
 {
-	
 }
 
 void EmailReceiver::RetrieveEmail()
 {
-	CoInitialize(NULL);
-
-	TCHAR sizeOfPath[MAX_PATH + 1];
-	memset(sizeOfPath, 0, sizeof(sizeOfPath));
-	GetModuleFileName(NULL, sizeOfPath, MAX_PATH);
-
-	LPCTSTR pathSize = _tcsrchr(sizeOfPath, L'\\');
-
-	if (pathSize != NULL)
-	{
-		sizeOfPath[pathSize - sizeOfPath] = L'\0';
-	}
-
 	TCHAR sizeOfMailBox[MAX_PATH + 1];
-	memset(sizeOfMailBox, 0, sizeof(sizeOfMailBox));
-	wsprintf(sizeOfMailBox, L"%s\\inbox", sizeOfPath);
-
-	CreateDirectory(sizeOfMailBox, NULL);
+	CreateLocalInboxFolder(*sizeOfMailBox);
 
 	try
 	{
 		IMailServerPtr outServer = NULL;
-		outServer.CreateInstance("EAGetMailObj.MailServer");
-		outServer->Server = L"pop.gmail.com";
-		outServer->User = L"cyberthreat1234@gmail.com";
-		outServer->Password = L"paralleldistributed";
-		//outServer->Protocol = MailServerPop3;
-
-		outServer->SSLConnection = VARIANT_TRUE;
-		outServer->Port = 995;
-
 		IMailClientPtr outClient = NULL;
-		outClient.CreateInstance("EAGetMailObj.MailClient");
-		outClient->LicenseCode = L"TryIt";
 
-		outClient->Connect(outServer);
-		wprintf(L"Connected\r\n");
-
+		ConnectToServer(outServer);
+		ConnectClientToServer(outClient, outServer);
+		
 		_variant_t info = outClient->GetMailInfos();
 		SAFEARRAY *pSafeArray = info.parray;
 		long LBound = 0, UBound = 0;
-		SafeArrayGetLBound(pSafeArray, 1, &LBound);
-		SafeArrayGetUBound(pSafeArray, 1, &UBound);
 
-		INT count = UBound - LBound + 1;
-		wprintf(L"Total %d emails\r\n", count);
+		// Tells user how many new emails there are since last checked
+		PrintNumberOfEmails(info, pSafeArray, LBound, UBound);
 
-		for (long i = LBound; i <= UBound; i++)
+		std::ofstream textFile;
+		textFile.open("File.txt");
+
+		if (textFile.is_open())
 		{
-			_variant_t variantInfo;
-			SafeArrayGetElement(pSafeArray, &i, &variantInfo);
+			for (long i = LBound; i <= UBound; i++)
+			{
+				_variant_t variantInfo;
+				SafeArrayGetElement(pSafeArray, &i, &variantInfo);
 
-			IMailInfoPtr pInfo;
-			variantInfo.pdispVal->QueryInterface(__uuidof(IMailInfo), (void**)&pInfo);
+				IMailInfoPtr pInfo;
+				variantInfo.pdispVal->QueryInterface(__uuidof(IMailInfo), (void**)&pInfo);
 
-			TCHAR sizeOfFile[MAX_PATH + 1];
-			memset(sizeOfFile, 0, sizeof(sizeOfFile));
+				TCHAR nameOfFile[MAX_PATH + 1];
+				memset(nameOfFile, 0, sizeof(nameOfFile));
 
-			SYSTEMTIME currentTime;
-			GetLocalTime(&currentTime);
-			wsprintf(sizeOfFile, L"%s\\%04d%02d%02d%02d%02d%02d%03d%d.eml", sizeOfMailBox,
-				currentTime.wYear, currentTime.wMonth, currentTime.wDay, currentTime.wHour,
-				currentTime.wMinute, currentTime.wSecond, currentTime.wMilliseconds, i);
+				SYSTEMTIME currentTime;
+				GetLocalTime(&currentTime);
 
-			IMailPtr outMail = outClient->GetMail(pInfo);
+				// Assigns the name of the file to be the "Year,month,day,hour,minute,second,millisecond"
+				wsprintf(nameOfFile, L"%s\\%04d%02d%02d%02d%02d%02d%03d%d.eml", sizeOfMailBox,
+					currentTime.wYear, currentTime.wMonth, currentTime.wDay, currentTime.wHour,
+					currentTime.wMinute, currentTime.wSecond, currentTime.wMilliseconds, i);
 
-			outMail->SaveAs(sizeOfFile, VARIANT_TRUE);
+				IMailPtr outMail = outClient->GetMail(pInfo);
 
-			outClient->Delete(pInfo);
+				// Passes the email information to the Email struct
+				SetEmail(outMail);
+
+				// Saves the email file
+				outMail->SaveAs(nameOfFile, VARIANT_TRUE);
+
+				outClient->Delete(pInfo);
+			}
+		}
+		else
+		{
+			printf("Could not open file");
 		}
 
 		info.Clear();
@@ -88,4 +75,164 @@ void EmailReceiver::RetrieveEmail()
 	{
 		wprintf(L"Error: %s", (const TCHAR*)errorParameter.Description());
 	}
+}
+
+const bool EmailReceiver::HasRetrievedEmail()
+{
+	return m_HasRetrievedEmail;
+}
+
+const bool EmailReceiver::HasAttachment()
+{
+	return m_HasAttachment;
+}
+
+const int EmailReceiver::NumberOfAttachments()
+{
+	return m_NumberOfAttachments;
+}
+
+void EmailReceiver::CreateLocalInboxFolder(TCHAR & mailbox)
+{
+	CoInitialize(NULL);
+	
+	TCHAR nameOfPath[MAX_PATH + 1];
+	memset(nameOfPath, 0, sizeof(nameOfPath));
+	GetModuleFileName(NULL, nameOfPath, MAX_PATH);
+
+	LPCTSTR pathSize = _tcsrchr(nameOfPath, L'\\');
+
+	if (pathSize != NULL)
+	{
+		nameOfPath[pathSize - nameOfPath] = L'\0';
+	}
+
+	memset(&mailbox, 0, sizeof(mailbox));
+	wsprintf(&mailbox, L"%s\\inbox", nameOfPath);
+
+	CreateDirectory(&mailbox, NULL);
+}
+
+void EmailReceiver::PrintNumberOfEmails(_variant_t & mailInfo, SAFEARRAY* & safeArray, long & lBound, long & uBound)
+{
+	SafeArrayGetLBound(safeArray, 1, &lBound);
+	SafeArrayGetUBound(safeArray, 1, &uBound);
+
+	INT count = uBound - lBound + 1;
+	wprintf(L"Total %d emails\r\n", count);
+}
+
+void EmailReceiver::ConnectToServer(IMailServerPtr & server)
+{
+	// Creates instance of email server
+	server.CreateInstance("EAGetMailObj.MailServer");
+	// Sets server information (gmail, username, password)
+	server->Server = L"pop.gmail.com";
+	server->User = L"cyberthreat1234@gmail.com";
+	server->Password = L"paralleldistributed";
+	//outServer->Protocol = MailServerPop3;
+
+	server->SSLConnection = VARIANT_TRUE;
+	server->Port = 995;
+}
+
+void EmailReceiver::ConnectClientToServer(IMailClientPtr & client, IMailServerPtr & server)
+{
+	// Creates instance of email client
+	client.CreateInstance("EAGetMailObj.MailClient");
+	// Assigns license code
+	client->LicenseCode = L"TryIt";
+
+	// Connects to the email server
+	client->Connect(server);
+	wprintf(L"Connected\r\n");
+}
+
+void EmailReceiver::AddToFileFromEmail(IMailPtr & mail, std::ofstream & targetFile)
+{
+	if (mail->IsEncrypted == VARIANT_TRUE)
+	{
+		mail = mail->Decrypt(NULL);
+	}
+
+	if (mail->IsSigned == VARIANT_TRUE)
+	{
+		ICertificatePtr certificate = mail->VerifySignature();
+		_tprintf(L"This email contains a valid digital signature.\r\n");
+	}
+
+	mail->DecodeTNEF();
+
+	// Put the name, email address, and text body of the email into the targetFile
+	targetFile << mail->From->Name << "\n" << mail->From->Address << "\n" <<
+		mail->GetTextBody() << "\n\n";
+}
+
+void EmailReceiver::SetEmail(EAGetMailObjLib::IMailPtr & mail)
+{
+	if (mail->IsEncrypted == VARIANT_TRUE)
+	{
+		mail = mail->Decrypt(NULL);
+	}
+
+	if (mail->IsSigned == VARIANT_TRUE)
+	{
+		ICertificatePtr certificate = mail->VerifySignature();
+		_tprintf(L"This email contains a valid digital signature.\r\n");
+	}
+
+	mail->DecodeTNEF();
+
+	std::string stringBody = std::string(mail->TextBody);
+	size_t bodySize = stringBody.size();
+
+	// Check if any characters are upper case and convert them to lowercase
+	for (int i = 0; i < bodySize; i++)
+	{
+		if (stringBody[i] >= 'A' && stringBody[i] <= 'Z')
+		{
+			stringBody[i] += ('a' - 'A');
+		}
+	}
+
+	strcpy_s(m_Email.Sender, _com_util::ConvertBSTRToString(mail->From->Address));
+	strcpy_s(m_Email.Subject, _com_util::ConvertBSTRToString(mail->Subject));
+	strcpy_s(m_Email.Body, stringBody.c_str());
+	
+	if (mail->GetAttachmentList() != nullptr)
+	{
+		if (mail->GetAttachmentList()->Length != 0)
+		{
+			m_NumberOfAttachments = mail->GetAttachmentList()->Length;
+			// Assign the name of the attachments in the email
+			for (int i = 0; i < mail->GetAttachmentList()->Length; i++)
+			{
+				// Checks if the attachment has a name
+				if (mail->GetAttachmentList()->Item[i]->Name.length() != 0)
+				{
+					strcpy_s(m_Email.Attachments[i], _com_util::ConvertBSTRToString(mail->GetAttachmentList()->Item[i]->Name));
+					if (!m_HasAttachment)
+					{
+						m_HasAttachment = true;
+					}
+				}
+			}
+		}
+		else
+		{
+			m_HasAttachment = false;
+		}
+	}
+	else
+	{
+		m_HasAttachment = false;
+	}
+
+	// Used for making sure the Email struct is not null
+	m_Email.IsValid = true;
+}
+
+const Email EmailReceiver::GetEmail()
+{
+	return m_Email;
 }
