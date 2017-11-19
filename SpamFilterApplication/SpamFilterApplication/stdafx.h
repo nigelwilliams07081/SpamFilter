@@ -9,5 +9,7 @@
 
 #include "Bayesian.h"
 #include "SpamFilter.h"
-#include "EmailReceiver.h"
+//#include "EmailReceiver.h"
+#include "EmailReader.h"
 #include "FileNames.h"
+#include "Email.h"

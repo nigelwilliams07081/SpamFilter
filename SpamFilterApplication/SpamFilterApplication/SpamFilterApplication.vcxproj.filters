@@ -24,9 +24,6 @@
     <ClCompile Include="Bayesian.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="EmailReceiver.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="EmailReader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -38,19 +35,19 @@
     <ClInclude Include="Bayesian.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="EmailReceiver.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="stdafx.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="FileNames.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="EmailReader.h">
-      <Filter>Source Files</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="rapidxml.hpp">
-      <Filter>Source Files</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="FileNames.h">
+    <ClInclude Include="Email.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

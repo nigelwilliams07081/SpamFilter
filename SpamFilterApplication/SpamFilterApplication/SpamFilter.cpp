@@ -51,15 +51,13 @@ bool SpamFilter::OpenFile(std::string fileString)
 
 void SpamFilter::PerformSpamSearch()
 {
-	m_EmailReceiver.RetrieveEmail();
-
 	FileNames fileNames;
 
-	if (m_EmailReceiver.GetEmail().IsValid)
+	if (m_Email.IsValid)
 	{
-		PerformSenderSearch(m_EmailReceiver.GetEmail().Sender, fileNames.SpamSenderAddressesFile);
-		PerformPhraseSearch(m_EmailReceiver.GetEmail().Body, fileNames.SpamWordsFile);
-		PerformAttachmentSearch(m_EmailReceiver.GetEmail().Attachments, fileNames.SpamAttachmentsFile);
+		PerformSenderSearch(m_Email.Sender, fileNames.SpamSenderAddressesFile);
+		PerformPhraseSearch(m_Email.Body, fileNames.SpamWordsFile);
+		PerformAttachmentSearch(m_Email.Attachments, fileNames.SpamAttachmentsFile);
 	}
 	else
 	{
@@ -68,19 +66,11 @@ void SpamFilter::PerformSpamSearch()
 	
 }
 
-void SpamFilter::NotifyUserOfPossibleSpam()
-{
-	// TODO
-}
-
 void SpamFilter::PrintEmailBody()
 {
-	if (m_EmailReceiver.HasRetrievedEmail())
+	for (int i = 0; i < std::string(m_Email.Body).size(); i++)
 	{
-		for (int i = 0; i < std::string(m_EmailReceiver.GetEmail().Body).size(); i++)
-		{
-			std::cout << m_EmailReceiver.GetEmail().Body[i];
-		}
+		std::cout << m_Email.Body[i];
 	}
 }
 
@@ -132,8 +122,7 @@ void SpamFilter::PerformSenderSearch(const char sender[256], const std::string& 
 */
 void SpamFilter::PerformSubjectSearch(const char subject[998], const std::string& spamFileName)
 {
-	UNREFERENCED_PARAMETER(subject);
-	UNREFERENCED_PARAMETER(spamFileName);
+	printf("%s\t%s", subject, spamFileName);
 	// TODO
 }
 
@@ -153,7 +142,7 @@ void SpamFilter::PerformPhraseSearch(const char body[65535], const std::string& 
 		if (emailBody.find(m_SpamPhraseList.data()[i]) != std::string::npos)
 		{
 			std::cout << m_SpamPhraseList.data()[i] << std::endl;
-			if (m_EmailReceiver.HasAttachment())
+			if (m_NumberOfAttachments > 0)
 			{
 				// We will check up to 10 words for full confidence
 				if (m_SpamPhraseConfidence < 0.4f)
@@ -188,7 +177,7 @@ void SpamFilter::PerformAttachmentSearch(const char attachments[10][255], const 
 
 	for (int i = 0; i < m_SpamAttachmentList.size(); i++)
 	{
-		for (int j = 0; j < m_EmailReceiver.NumberOfAttachments(); j++)
+		for (int j = 0; j < m_NumberOfAttachments; j++)
 		{
 			if (attachments[j] != "")
 			{

@@ -1,6 +1,7 @@
 #pragma once
 
-#include "EmailReceiver.h"
+#include "Email.h"
+
 class SpamFilter
 {
 public:
@@ -50,18 +51,12 @@ public:
 	void PerformSpamSearch();
 
 	/**
-	: (No Current Description)
-	: (Not Complete)
-	*/
-	void NotifyUserOfPossibleSpam();
-
-	/**
 	: Used for testing to see if the body is lowercase
 	*/
 	void PrintEmailBody();
 
-	const float POSSIBLE_SPAM_THRESHOLD = 0.3f;
-	const float SPAM_THRESHOLD = 0.6f;
+	const float POSSIBLE_SPAM_THRESHOLD = 0.4f;
+	const float SPAM_THRESHOLD = 0.7f;
 
 private:
 	void GrabLinesFromFile(std::string fileString, std::vector<std::string>& spamList);
@@ -84,5 +79,6 @@ private:
 	float m_SpamAttachmentConfidence;
 	float m_OverallSpamConfidence;
 
-	EmailReceiver m_EmailReceiver;
+	int m_NumberOfAttachments;
+	Email m_Email;
 };

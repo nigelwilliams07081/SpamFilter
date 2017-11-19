@@ -1,4 +1,8 @@
 ﻿  SpamFilter.cpp
+c:\users\nigel\documents\spamfilter\spamfilterapplication\spamfilterapplication\spamfilter.cpp(125): warning C4477: 'printf' : format string '%s' requires an argument of type 'char *', but variadic argument 2 has type 'const std::string'
   Main.cpp
+  EmailReader.cpp
+  Bayesian.cpp
   Generating Code...
+  LINK : C:\Users\Nigel\Documents\SpamFilter\SpamFilterApplication\x64\Debug\SpamFilterApplication.exe not found or not built by the last incremental link; performing full link
   SpamFilterApplication.vcxproj -> C:\Users\Nigel\Documents\SpamFilter\SpamFilterApplication\x64\Debug\SpamFilterApplication.exe
