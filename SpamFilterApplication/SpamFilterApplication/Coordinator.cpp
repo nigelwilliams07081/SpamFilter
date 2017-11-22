@@ -1,7 +1,5 @@
 #include "stdafx.h"
 
-#include <thread>
-
 #define RANK_COORDINATOR 0
 
 int Coordinator::m_emailsSent = 0;
@@ -20,6 +18,7 @@ void Coordinator::mainLoop(const char* emailsource) {
 	int OK;
 	
 	try {
+		printf("Loading XML data")
 		reader.loadFromFile(emailsource);
 		
 		// Make sure every email does not cause any parse errors, also count them all
@@ -32,6 +31,7 @@ void Coordinator::mainLoop(const char* emailsource) {
 		reader.begin();
 		
 		// Everything checks out
+		printf("Success: loaded %i emails", m_totalEmails);
 		OK = (int)true;
 	} catch (const std::exception &e) {
 		// Some exception from the XML parser came up
@@ -43,8 +43,7 @@ void Coordinator::mainLoop(const char* emailsource) {
 	MPI_Bcast(&OK, 1, MPI_INT, RANK_COORDINATOR, MPI_COMM_WORLD);
 	
 	if (!OK) {
-		printf("Error reading XML data. Exiting\n");
-		//MPI_Finalize();
+		printf("Failure. Exiting\n");
 		return;
 	}
 		
@@ -53,13 +52,14 @@ void Coordinator::mainLoop(const char* emailsource) {
 	
 	// Wait for threads to ask for a quantity of emails
 	while (reader.hasNext()) {
+		printf("Waiting for worker node...");
 		
 		MPI_Status status;
-		
 		char dummy;
 		MPI_Recv(&dummy, 1, MPI_CHAR, MPI_ANY_SOURCE, TAG_EMAILS_REQUEST, MPI_COMM_WORLD, &status);
 		
 		// We recieved a request for emails, spawn a new thread to serve it
+		printf("Received a data request from node #%i", status.MPI_SOURCE);
 		std::thread(talkWithNode, status.MPI_SOURCE).detach();
 	}
 	
@@ -78,6 +78,8 @@ void Coordinator::talkWithNode(int nodeId) {
 	int quantity;
 	MPI_Recv(&quantity, 1, MPI_INT, nodeId, TAG_EMAIL_QUANTITY, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 	
+	printf("Received request from node #%i for %i emails", nodeId, quantity);
+	
 	// Calculate how many emails are left, and then use the smaller quantity
 	int emailsRemaining = m_totalEmails - m_emailsSent;
 	int sendingQuantity;
@@ -89,6 +91,7 @@ void Coordinator::talkWithNode(int nodeId) {
 	}
 	
 	// Tell the worker node how many emails to expect
+	printf("Sending %i emails to node #%i", sendingQuantity, nodeId);
 	MPI_Send(&sendingQuantity, 1, MPI_INT, nodeId, TAG_EMAIL_QUANTITY, MPI_COMM_WORLD);
 	
 	// If there are no more emails to send, exit
