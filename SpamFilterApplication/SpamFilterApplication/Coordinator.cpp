@@ -52,14 +52,14 @@ void Coordinator::mainLoop(const char* emailsource) {
 	
 	// Wait for threads to ask for a quantity of emails
 	while (reader.hasNext()) {
-		printf("Waiting for worker node...");
+		printf("Waiting for worker node...\n");
 		
 		MPI_Status status;
 		char dummy;
-		MPI_Recv(&dummy, 1, MPI_CHAR, MPI_ANY_SOURCE, TAG_EMAILS_REQUEST, MPI_COMM_WORLD, &status);
+		MPI_Recv(&dummy, sizeof(char), MPI_CHAR, MPI_ANY_SOURCE, TAG_EMAILS_REQUEST, MPI_COMM_WORLD, &status);
 		
 		// We recieved a request for emails, spawn a new thread to serve it
-		printf("Received a data request from node #%i", status.MPI_SOURCE);
+		printf("Received a data request from node #%i\n", status.MPI_SOURCE);
 		std::thread(talkWithNode, status.MPI_SOURCE).detach();
 	}
 	
@@ -76,9 +76,9 @@ void Coordinator::talkWithNode(int nodeId) {
 	
 	// Receive quantity of emails to send
 	int quantity;
-	MPI_Recv(&quantity, 1, MPI_INT, nodeId, TAG_EMAIL_QUANTITY, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+	MPI_Recv(&quantity, sizeof(int), MPI_INT, nodeId, TAG_EMAIL_QUANTITY, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 	
-	printf("Received request from node #%i for %i emails", nodeId, quantity);
+	printf("Received request from node #%i for %i emails\n", nodeId, quantity);
 	
 	// Calculate how many emails are left, and then use the smaller quantity
 	int emailsRemaining = m_totalEmails - m_emailsSent;
@@ -91,8 +91,8 @@ void Coordinator::talkWithNode(int nodeId) {
 	}
 	
 	// Tell the worker node how many emails to expect
-	printf("Sending %i emails to node #%i", sendingQuantity, nodeId);
-	MPI_Send(&sendingQuantity, 1, MPI_INT, nodeId, TAG_EMAIL_QUANTITY, MPI_COMM_WORLD);
+	printf("Sending %i emails to node #%i\n", sendingQuantity, nodeId);
+	MPI_Send(&sendingQuantity, sizeof(int), MPI_INT, nodeId, TAG_EMAIL_QUANTITY, MPI_COMM_WORLD);
 	
 	// If there are no more emails to send, exit
 	if (sendingQuantity == 0) {
@@ -119,6 +119,7 @@ void Coordinator::receiveResult() {
 		MPI_Recv(&result, sizeof(Email), MPI_BYTE, MPI_ANY_SOURCE, TAG_EMAIL_ANALYZED, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 		repliesReceived++;
 		
+		printf("Analyzed email recieved from node\n");
 		// Result now contains an email that has been analyzed for spam
 		// Do something with it here
 	}
