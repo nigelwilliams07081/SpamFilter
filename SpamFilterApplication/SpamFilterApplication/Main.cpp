@@ -29,17 +29,19 @@
 
 #define RANK_COORDINATOR 0
 
+#define RANK_COORDINATOR 0
+
 int main(int argc, char **argv) {
 
-	if (argc == 0) {
-		printf("%s", "Must specify an absolute path to the email XML file!\n");
+	if (argc == 1) {
+		printf("Must specify an absolute path to the email XML file!\n");
 		return 1;
 	}
-
+	
 	MPI_Init(&argc, &argv);
-
+	
 	int nodeCount;
-
+	
 	MPI_Comm_size(MPI_COMM_WORLD, &nodeCount);
 
 	if (nodeCount == 1) {
@@ -50,17 +52,15 @@ int main(int argc, char **argv) {
 
 	int taskId;
 	MPI_Comm_rank(MPI_COMM_WORLD, &taskId);
-
-	const char *emailSource = argv[1];
-	printf("Will load emails from %s\n", emailSource);
-
+	
 	if (taskId == RANK_COORDINATOR) {
+		const char *emailSource = argv[1];
+		printf("Will load emails from %s\n", emailSource);
 		Coordinator::mainLoop(emailSource);
-	}
-	else {
+	} else {
 		Worker::mainLoop();
 	}
-
+	
 	MPI_Finalize();
 	return 0;
 }
