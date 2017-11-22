@@ -60,16 +60,13 @@ int main(int argc, char **argv) {
 		printf("Will load emails from %s\n", emailSource);
 		Coordinator::mainLoop(emailSource);
 		
-		// Once the coordinator loop finishes, we can broadcast the finish flag
-		// Note that the coordinator will wait for all threads to finish, whereas the worker
-		// will just kill its other threads when the main thread has finished
-		finished = '\0';
-		MPI_Bcast(&finished, sizeof(char), MPI_CHAR, RANK_COORDINATOR, MPI_COMM_WORLD);
+		// Finish
+		MPI_Barrier(MPI_COMM_WORLD);
 	} else {
 		Worker::mainLoop();
 		
-		// Wait here until the coordinator says it's finished
-		MPI_Bcast(&finished, sizeof(char), MPI_CHAR, RANK_COORDINATOR, MPI_COMM_WORLD);
+		// Wait here for the coordinator to receive all the data
+		MPI_Barrier(MPI_COMM_WORLD);
 	}
 	
 	

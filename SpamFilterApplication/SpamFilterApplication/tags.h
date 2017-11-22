@@ -6,4 +6,3 @@
 #define TAG_EMAIL_DATA       256
 #define TAG_EMAIL_ANALYZED   625
 #define TAG_OK               107
-#define TAG_FINISHED         749

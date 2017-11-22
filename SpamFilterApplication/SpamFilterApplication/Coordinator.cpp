@@ -18,7 +18,7 @@ void Coordinator::mainLoop(const char* emailsource) {
 	int OK;
 	
 	try {
-		printf("Loading XML data");
+		printf("Loading XML data\n");
 		reader.loadFromFile(emailsource);
 		
 		// Make sure every email does not cause any parse errors, also count them all
@@ -31,7 +31,7 @@ void Coordinator::mainLoop(const char* emailsource) {
 		reader.begin();
 		
 		// Everything checks out
-		printf("Success: loaded %i emails", m_totalEmails);
+		printf("Success: loaded %i emails\n", m_totalEmails);
 		OK = (int)true;
 	} catch (const std::exception &e) {
 		// Some exception from the XML parser came up
@@ -40,7 +40,7 @@ void Coordinator::mainLoop(const char* emailsource) {
 	}
 	
 	// Broadcast the OK to all nodes
-	MPI_Bcast(&OK, 1, MPI_INT, RANK_COORDINATOR, MPI_COMM_WORLD);
+	MPI_Bcast(&OK, sizeof(int), MPI_INT, RANK_COORDINATOR, MPI_COMM_WORLD);
 	
 	if (!OK) {
 		printf("Failure. Exiting\n");
@@ -119,7 +119,7 @@ void Coordinator::receiveResult() {
 		MPI_Recv(&result, sizeof(Email), MPI_BYTE, MPI_ANY_SOURCE, TAG_EMAIL_ANALYZED, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 		repliesReceived++;
 		
-		printf("Analyzed email recieved from node\n");
+		printf("Analyzed email recieved from node!\n");
 		// Result now contains an email that has been analyzed for spam
 		// Do something with it here
 	}
