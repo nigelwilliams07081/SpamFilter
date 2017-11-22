@@ -18,7 +18,7 @@ void Coordinator::mainLoop(const char* emailsource) {
 	int OK;
 	
 	try {
-		printf("Loading XML data")
+		printf("Loading XML data");
 		reader.loadFromFile(emailsource);
 		
 		// Make sure every email does not cause any parse errors, also count them all
