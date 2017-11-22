@@ -122,7 +122,7 @@ void SpamFilter::PerformSenderSearch(const char sender[256], const std::string& 
 */
 void SpamFilter::PerformSubjectSearch(const char subject[998], const std::string& spamFileName)
 {
-	printf("%s\t%s", subject, spamFileName);
+	printf("%s\t%s", subject, spamFileName.c_str());
 	// TODO
 }
 

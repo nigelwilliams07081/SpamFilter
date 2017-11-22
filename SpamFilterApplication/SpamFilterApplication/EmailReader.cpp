@@ -28,16 +28,16 @@ Email EmailReader::constructEmail(rapidxml::xml_node<> *emailData) {
 	body = body->first_node();
 
 	// Use strcpy to copy data out
-	strcpy_s(result.Sender, sender->value());
-	strcpy_s(result.Subject, subject->value());
-	strcpy_s(result.Body, body->value());
+	strcpy(result.Sender, sender->value());
+	strcpy(result.Subject, subject->value());
+	strcpy(result.Body, body->value());
 
 	auto attachmentroot = emailData->first_node("attachments");
 
 	// Iterate over children of the attachments node to gather attachments
 	int i = 0;
 	for (auto filename = attachmentroot->first_node(); filename != NULL; filename = filename->next_sibling()) {
-		strcpy_s(result.Attachments[i], filename->value());
+		strcpy(result.Attachments[i], filename->value());
 
 		// Break out of the loop after 10 attachments - struct limit
 		if (++i == 10) {
@@ -60,7 +60,7 @@ void EmailReader::loadFromFile(const char* filename) {
 	buffer << xmlFile.rdbuf();
 
 	// Copy file contents into char[] buffer
-	strcpy_s(m_buffer, buffer.str().c_str());
+	strcpy(m_buffer, buffer.str().c_str());
 
 	// Free resources
 	xmlFile.close();

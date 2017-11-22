@@ -27,6 +27,12 @@
     <ClCompile Include="EmailReader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Coordinator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Worker.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SpamFilter.h">
@@ -50,8 +56,20 @@
     <ClInclude Include="Email.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\MPI\Coordinator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\MPI\tags.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\MPI\Worker.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="..\MPI\compile.sh">
+      <Filter>Header Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

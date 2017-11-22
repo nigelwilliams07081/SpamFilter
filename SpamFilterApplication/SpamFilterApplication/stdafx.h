@@ -1,5 +1,6 @@
 #pragma once
-#include <tchar.h>
+#include <mpi.h>
+#include <stdio.h>
 #include <string>
 #include <string.h>
 #include <iostream>
@@ -13,3 +14,6 @@
 #include "EmailReader.h"
 #include "FileNames.h"
 #include "Email.h"
+#include "Worker.h"
+#include "Coordinator.h"
+#include "tags.h"

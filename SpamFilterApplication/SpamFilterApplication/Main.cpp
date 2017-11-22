@@ -1,31 +1,66 @@
 #include "stdafx.h"
-#include <time.h>
 
-int main()
-{
-	EmailReader emailReader;
+//int main()
+//{
+//	EmailReader emailReader;
+//
+//	emailReader.loadFromFile("emails.xml");
+//
+//	emailReader.begin();
+//	Email email = emailReader.next();
+//
+//	printf("Address:%s\n\nSubject:\n%s\n\nBody:\n%s\n\nAttachments:\n%s\n", email.Sender, email.Subject, email.Body, email.Attachments);
+//
+//	/*SpamFilter spamFilter;
+//	Bayesian bayesianCalculator;
+//
+//	spamFilter.PerformSpamSearch();
+//
+//	bayesianCalculator.SetAnyMsgIsSpam(0.8f);
+//	bayesianCalculator.SetWordAppearsInSpam(spamFilter.GetOverallSpamConfidence());
+//	bayesianCalculator.CalculateTheorem();
+//
+//	std::cout << "Our spam confidence is: " << spamFilter.GetOverallSpamConfidence() << " -> " << spamFilter.GetOverallSpamConfidence() * 100.0f << "%" << std::endl;
+//	std::cout << "The Bayesian confidence is: " << bayesianCalculator.GetGivenMsgIsSpam() << " -> " << bayesianCalculator.GetGivenMsgIsSpam() * 100.0f << "%" << std::endl;
+//	*/
+//
+//	return 0;
+//}
 
-	emailReader.loadFromFile("emails.xml");
+#define RANK_COORDINATOR 0
 
-	emailReader.begin();
-	Email email = emailReader.next();
+int main(int argc, char **argv) {
 
-	
+	if (argc == 0) {
+		printf("%s", "Must specify an absolute path to the email XML file!\n");
+		return 1;
+	}
 
-	printf("Address:%s\n\nSubject:\n%s\n\nBody:\n%s\n\nAttachments:\n%s\n", email.Sender, email.Subject, email.Body, email.Attachments);
+	MPI_Init(&argc, &argv);
 
-	/*SpamFilter spamFilter;
-	Bayesian bayesianCalculator;
+	int nodeCount;
 
-	spamFilter.PerformSpamSearch();
+	MPI_Comm_size(MPI_COMM_WORLD, &nodeCount);
 
-	bayesianCalculator.SetAnyMsgIsSpam(0.8f);
-	bayesianCalculator.SetWordAppearsInSpam(spamFilter.GetOverallSpamConfidence());
-	bayesianCalculator.CalculateTheorem();
+	if (nodeCount == 1) {
+		printf("Number of tasks must be more than 1!\n");
+		MPI_Finalize();
+		return 2;
+	}
 
-	std::cout << "Our spam confidence is: " << spamFilter.GetOverallSpamConfidence() << " -> " << spamFilter.GetOverallSpamConfidence() * 100.0f << "%" << std::endl;
-	std::cout << "The Bayesian confidence is: " << bayesianCalculator.GetGivenMsgIsSpam() << " -> " << bayesianCalculator.GetGivenMsgIsSpam() * 100.0f << "%" << std::endl;
-	*/
-	system("pause");
+	int taskId;
+	MPI_Comm_rank(MPI_COMM_WORLD, &taskId);
+
+	const char *emailSource = argv[1];
+	printf("Will load emails from %s\n", emailSource);
+
+	if (taskId == RANK_COORDINATOR) {
+		Coordinator::mainLoop(emailSource);
+	}
+	else {
+		Worker::mainLoop();
+	}
+
+	MPI_Finalize();
 	return 0;
 }
