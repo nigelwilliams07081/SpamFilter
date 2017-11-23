@@ -4,7 +4,7 @@
 class Worker {
 private:
 	Worker();	
-	static void processEmail(Email*);
+	static void processEmail(Email);
 public:
 	static void mainLoop();
 };
