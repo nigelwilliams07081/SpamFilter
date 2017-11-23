@@ -1,5 +1,4 @@
 #include "stdafx.h"
-#include <list>
 
 #define RANK_COORDINATOR 0
 
@@ -107,24 +106,21 @@ void Coordinator::talkWithNode(int nodeId) {
 	
 	m_emailsSent += sendingQuantity;
 	
-	// Preload all the emails here
-	// MPI_Send actually takes a while, and we want this thread-safe
+	
 	printf("Preparing emails...\n");
-	std::list<Email> queue;
+	
+	Email emails[sendingQuantity];
+	
 	for (int i = 0; i < sendingQuantity; i++) {
-		queue.push_back(reader.next());
+		emails[i] = reader.next();
 	}
 	
-	// Now we traverse this list and actually send the emails
-	for (auto iterator = queue.begin(); iterator != queue.end(); ++iterator) {
-		MPI_Send(&iterator, 1, MPI_Email, nodeId, TAG_EMAIL_DATA, MPI_COMM_WORLD);
-	}
+	MPI_Send(emails, 1, MPI_Email, nodeId, TAG_EMAIL_DATA, MPI_COMM_WORLD);
 	
 	return;
 }
 
 void Coordinator::receiveResult() {
-	
 	
 	while (m_repliesReceived < m_totalEmails) {
 		
