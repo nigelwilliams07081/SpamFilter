@@ -63,10 +63,13 @@ void Coordinator::mainLoop(const char* emailsource) {
 	while (m_activeWorkers > 0) {
 		printf("Waiting for worker node...\n");
 		
+		int flag = 0;
 		MPI_Status status;
 		//char dummy;
 		//MPI_Recv(&dummy, sizeof(char), MPI_CHAR, MPI_ANY_SOURCE, TAG_EMAILS_REQUEST, MPI_COMM_WORLD, &status);
-		MPI_Probe(MPI_ANY_SOURCE, TAG_EMAILS_REQUEST, MPI_COMM_WORLD, &status);
+		while (flag == 0) {
+			MPI_Probe(MPI_ANY_SOURCE, TAG_EMAILS_REQUEST, MPI_COMM_WORLD, &flag, &status);
+		}
 		
 		// We recieved a request for emails, spawn a new thread to serve it
 		printf("Received a data request from node #%i\n", status.MPI_SOURCE);
