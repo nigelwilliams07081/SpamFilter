@@ -101,9 +101,14 @@ Email get(int distanceFromStart) {
 	}
 	
 	// Directly get the first last, and current
-	if (distanceFromStart == 0) return m_beginning;
-	if (distanceFromStart == m_emailCount - 1) return m_ending;
-	if (distanceFromStart == m_currentOffset) return m_currentEmail;
+	if (distanceFromStart == 0)
+		return constructEmail(m_beginning);
+		
+	if (distanceFromStart == m_emailCount - 1)
+		return constructEmail(m_ending);
+	
+	if (distanceFromStart == m_currentOffset)
+		return constructEmail(m_currentEmail);
 	
 	
 	// Compute how to find the pointer to the requested element the fastest
