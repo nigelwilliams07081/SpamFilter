@@ -2,8 +2,12 @@
 
 #define RANK_COORDINATOR 0
 
-int Coordinator::m_emailsSent = 0;
-int Coordinator::m_totalEmails = 0;
+int Coordinator::m_emailsSent      = 0;
+int Coordinator::m_totalEmails     = 0;
+int Coordinator::m_repliesReceived = 0;
+
+int Coordinator::m_activeWorkers   = 0;
+
 bool Coordinator::m_finished = false;
 
 EmailReader Coordinator::reader;
@@ -51,14 +55,11 @@ void Coordinator::mainLoop(const char* emailsource) {
 	std::thread worker(receiveResult);
 	
 	// Get the number of other nodes
-	int nodeCount;
-	MPI_Comm_size(MPI_COMM_WORLD, &nodeCount);
-	
-	// Loop a a few extra times to make sure we instruct all nodes to finish
-	int loopCount = nodeCount - 1 + m_totalEmails;
+	MPI_Comm_size(MPI_COMM_WORLD, &m_activeWorkers);
+	m_activeWorkers--; // Minus the coordinator
 	
 	// Wait for threads to ask for a quantity of emails
-	while (m_repliesReceived < m_totalEmails + loopCount) {
+	while (m_activeWorkers > 0) {
 		printf("Waiting for worker node...\n");
 		
 		MPI_Status status;
@@ -98,19 +99,23 @@ void Coordinator::talkWithNode(int nodeId) {
 	}
 	
 	// Tell the worker node how many emails to expect
-	printf("Sending %i emails to node #%i\n", sendingQuantity, nodeId);
 	MPI_Send(&sendingQuantity, sizeof(int), MPI_INT, nodeId, TAG_EMAIL_QUANTITY, MPI_COMM_WORLD);
 	
 	// If there are no more emails to send, exit
 	if (sendingQuantity == 0) {
+		printf("Sent termination signal to node #%i\n", nodeId);
+		m_activeWorkers--;
 		return;
 	}	
 	
 	// Otherwise we send them all
+	printf("Sending %i emails to node #%i\n", sendingQuantity, nodeId);
+	
+	m_emailsSent += sendingQuantity;
+	
 	for (int i = 0; i < sendingQuantity; i++) {
 		Email e = reader.next();
 		MPI_Send(&e, sizeof(Email), MPI_BYTE, nodeId, TAG_EMAIL_DATA, MPI_COMM_WORLD);
-		m_emailsSent++;
 	}
 	
 	return;

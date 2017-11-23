@@ -8,6 +8,7 @@ private:
 	static int m_emailsSent;
 	static int m_totalEmails;
 	static int m_repliesReceived;
+	static int m_activeWorkers;
 	
 	static bool m_finished;
 	
