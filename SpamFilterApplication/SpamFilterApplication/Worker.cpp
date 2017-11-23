@@ -24,13 +24,9 @@ void Worker::mainLoop() {
 	
 	while(true) {
 		
-		// Send request that we would like more emails
-		char dummy = '\0';
-		MPI_Send(&dummy, sizeof(char), MPI_CHAR, RANK_COORDINATOR, TAG_EMAILS_REQUEST, MPI_COMM_WORLD);
-		
 		// Send how many emails we would like
 		int emailsCount = REQUEST_EMAILS_COUNT;
-		MPI_Send(&emailsCount, sizeof(int), MPI_INT, RANK_COORDINATOR, TAG_EMAIL_QUANTITY, MPI_COMM_WORLD);
+		MPI_Send(&emailsCount, sizeof(int), MPI_INT, RANK_COORDINATOR, TAG_EMAILS_REQUEST, MPI_COMM_WORLD);
 		
 		// The coordinator tells us how many emails to expect (may be less than how many we asked for)
 		int quantity;

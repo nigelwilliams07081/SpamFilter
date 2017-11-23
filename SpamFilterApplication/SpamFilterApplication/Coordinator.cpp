@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <list>
 
 #define RANK_COORDINATOR 0
 
@@ -63,8 +64,9 @@ void Coordinator::mainLoop(const char* emailsource) {
 		printf("Waiting for worker node...\n");
 		
 		MPI_Status status;
-		char dummy;
-		MPI_Recv(&dummy, sizeof(char), MPI_CHAR, MPI_ANY_SOURCE, TAG_EMAILS_REQUEST, MPI_COMM_WORLD, &status);
+		//char dummy;
+		//MPI_Recv(&dummy, sizeof(char), MPI_CHAR, MPI_ANY_SOURCE, TAG_EMAILS_REQUEST, MPI_COMM_WORLD, &status);
+		MPI_Probe(MPI_ANY_SOURCE, TAG_EMAILS_REQUEST, MPI_COMM_WORLD, &status);
 		
 		// We recieved a request for emails, spawn a new thread to serve it
 		printf("Received a data request from node #%i\n", status.MPI_SOURCE);
@@ -84,7 +86,7 @@ void Coordinator::talkWithNode(int nodeId) {
 	
 	// Receive quantity of emails to send
 	int quantity;
-	MPI_Recv(&quantity, sizeof(int), MPI_INT, nodeId, TAG_EMAIL_QUANTITY, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+	MPI_Recv(&quantity, sizeof(int), MPI_INT, nodeId, TAG_EMAILS_REQUEST, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 	
 	printf("Received request from node #%i for %i emails\n", nodeId, quantity);
 	
@@ -123,7 +125,7 @@ void Coordinator::talkWithNode(int nodeId) {
 	
 	// Now we traverse this list and actually send the emails
 	for (auto iterator = queue.begin(); iterator != queue.end(); ++iterator) {
-		MPI_Send(iterator, sizeof(Email), MPI_BYTE, nodeId, TAG_EMAIL_DATA, MPI_COMM_WORLD);
+		MPI_Send(&iterator, sizeof(Email), MPI_BYTE, nodeId, TAG_EMAIL_DATA, MPI_COMM_WORLD);
 	}
 	
 	return;
