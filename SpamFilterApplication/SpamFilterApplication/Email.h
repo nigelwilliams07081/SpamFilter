@@ -1,5 +1,6 @@
 #pragma once
 
+// Original Email struct
 struct Email
 {
 	int IsValid = 0;
@@ -7,27 +8,44 @@ struct Email
 	char Subject[998];
 	char Body[65535];
 	char Attachments[10][255];
+	float SpamPercentage;
 };
 
+// Create 'attachment' type, consisting of 255 contiguous chars
+MPI_Datatype MPI_Email_attachment;
+MPI_Type_contiguous(255, MPI_CHAR, &MPI_Email_attachment);
+MPI_Type_commit(&MPI_Email_attachment);
+
+
+// Create 'Email' type
 MPI_Datatype MPI_Email;
 
-const int nitems = 5;
+MPI_Datatype types[] = {
+	MPI_INT, 
+	MPI_CHAR,
+	MPI_CHAR, 
+	MPI_CHAR, 
+	MPI_Email_attachment,
+	MPI_FLOAT
+};
 
-int blocklengths[nitems];
-blocklengths[0] = 1;
-blocklengths[1] = 256;
-blocklengths[2] = 998;
-blocklengths[3] = 65535;
-blocklengths[4] = 10*255;
+int blocklengths[] = {
+	1,
+	256,
+	998,
+	65535,
+	10,
+	1
+};
 
-MPI_Datatype types[nitems] = { MPI_INT, MPI_CHAR, MPI_CHAR, MPI_CHAR, MPI_CHAR };
+MPI_Aint offsets[] {
+	offsetof(Email, isValid),
+	offsetof(Email, Sender),
+	offsetof(Email, Subject),
+	offsetof(Email, Body),
+	offsetof(Email, Attachments),
+	offsetof(Email, SpamPercentage)
+}
 
-MPI_Aint offsets[nitems];
-offsets[0] = offsetof(Email, isValid);
-offsets[1] = offsetof(Email, Sender);
-offsets[2] = offsetof(Email, Subject);
-offsets[3] = offsetof(Email, Body);
-offsets[4] = offsetof(Email, Attachments);
-
-MPI_Type_create_struct(nitems, blocklengths, offsets, types, &MPI_Email);
+MPI_Type_create_struct(6, blocklengths, offsets, types, &MPI_Email);
 MPI_Type_commit(&MPI_Email);
