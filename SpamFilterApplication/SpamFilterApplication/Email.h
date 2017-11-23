@@ -38,7 +38,7 @@ int blocklengths[] = {
 	1
 };
 
-MPI_Aint offsets[] {
+MPI_Aint offsets[] = {
 	offsetof(Email, isValid),
 	offsetof(Email, Sender),
 	offsetof(Email, Subject),
