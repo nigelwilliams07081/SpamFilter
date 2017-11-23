@@ -115,7 +115,8 @@ void Coordinator::talkWithNode(int nodeId) {
 		emails[i] = reader.next();
 	}
 	
-	MPI_Send(emails, 1, MPI_Email, nodeId, TAG_EMAIL_DATA, MPI_COMM_WORLD);
+	MPI_Send(&emails, sendingQuantity, MPI_Email, nodeId, TAG_EMAIL_DATA, MPI_COMM_WORLD);
+	printf("Successfully sent %i emails to node #%i\n", sendingQuantity, nodeId);
 	
 	return;
 }
