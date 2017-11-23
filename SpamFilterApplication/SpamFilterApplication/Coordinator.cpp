@@ -50,8 +50,15 @@ void Coordinator::mainLoop(const char* emailsource) {
 	// Start up a thread to receive spam anaylsis results
 	std::thread worker(receiveResult);
 	
+	// Get the number of other nodes
+	int nodeCount;
+	MPI_Comm_size(MPI_COMM_WORLD, &nodeCount);
+	
+	// Loop a a few extra times to make sure we instruct all nodes to finish
+	int loopCount = nodeCount - 1 + m_totalEmails;
+	
 	// Wait for threads to ask for a quantity of emails
-	while (reader.hasNext()) {
+	while (m_repliesReceived < m_totalEmails + loopCount) {
 		printf("Waiting for worker node...\n");
 		
 		MPI_Status status;
@@ -111,9 +118,8 @@ void Coordinator::talkWithNode(int nodeId) {
 
 void Coordinator::receiveResult() {
 	
-	int repliesReceived = 0;
 	
-	while (!m_finished && repliesReceived < m_emailsSent) {
+	while (!m_finished && m_repliesReceived < m_emailsSent) {
 		
 		Email result;
 		MPI_Recv(&result, sizeof(Email), MPI_BYTE, MPI_ANY_SOURCE, TAG_EMAIL_ANALYZED, MPI_COMM_WORLD, MPI_STATUS_IGNORE);

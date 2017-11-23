@@ -47,12 +47,12 @@ void Worker::mainLoop() {
 			MPI_Recv(&e, sizeof(Email), MPI_BYTE, RANK_COORDINATOR, TAG_EMAIL_DATA, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 			
 			// Spawn a new thread to process the email
-			std::thread(processEmail, &e).detach();
+			std::thread(processEmail, e).detach();
 		}
 	}
 }
 
-void Worker::processEmail(Email *e) {
+void Worker::processEmail(Email e) {
 	// Process the email here
 	//*e.SpamPercentage = doSpamSearch(*e);
 	
