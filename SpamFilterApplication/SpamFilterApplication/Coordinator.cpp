@@ -123,7 +123,7 @@ void Coordinator::receiveResult() {
 		
 		Email result;
 		MPI_Recv(&result, sizeof(Email), MPI_BYTE, MPI_ANY_SOURCE, TAG_EMAIL_ANALYZED, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-		repliesReceived++;
+		m_repliesReceived++;
 		
 		printf("Analyzed email recieved from node!\n");
 		// Result now contains an email that has been analyzed for spam
