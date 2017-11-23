@@ -22,6 +22,9 @@ void Coordinator::mainLoop(const char* emailsource) {
 		printf("Loading XML data\n");
 		reader.loadFromFile(emailsource);
 		
+		#ifdef EMAILREADER_EXPERIMENT
+		m_totalEmails = reader.getEmailCount();
+		#else
 		// Make sure every email does not cause any parse errors, also count them all
 		while (reader.hasNext()) {
 			Email t = reader.next();
@@ -30,9 +33,11 @@ void Coordinator::mainLoop(const char* emailsource) {
 		
 		// Reset reader afterwards
 		reader.begin();
+		#endif
 		
 		// Everything checks out
 		printf("Success: loaded %i emails\n", m_totalEmails);
+	
 		OK = (int)true;
 	} catch (const std::exception &e) {
 		// Some exception from the XML parser came up
@@ -103,16 +108,20 @@ void Coordinator::talkWithNode(int nodeId) {
 	
 	// Otherwise we send them all
 	printf("Will send %i emails to node #%i\n", sendingQuantity, nodeId);
-	
+		
+	// Set this now so other threads will not compete with this one
 	m_emailsSent += sendingQuantity;
-	
 	
 	printf("Preparing emails...\n");
 	
 	Email emails[sendingQuantity];
 	
 	for (int i = 0; i < sendingQuantity; i++) {
+		#ifdef EMAILREADER_EXPERIMENT
+		emails[i] = reader.get(emailStart - sendingQuantity + i)
+		#else
 		emails[i] = reader.next();
+		#endif
 	}
 	
 	// Send these one at a time so the worker can recv them all in parallel
