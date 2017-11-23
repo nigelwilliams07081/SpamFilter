@@ -115,7 +115,11 @@ void Coordinator::talkWithNode(int nodeId) {
 		emails[i] = reader.next();
 	}
 	
-	MPI_Send(&emails, sendingQuantity, MPI_Email, nodeId, TAG_EMAIL_DATA, MPI_COMM_WORLD);
+	// Send these one at a time so the worker can recv them all in parallel
+	for (int i = 0; i <sedingQuantity; i++) {
+		MPI_Send(&(emails[i]), 1, MPI_Email, nodeId, TAG_EMAIL_DATA, MPI_COMM_WORLD);
+	}
+	
 	printf("Successfully sent %i emails to node #%i\n", sendingQuantity, nodeId);
 	
 	return;
