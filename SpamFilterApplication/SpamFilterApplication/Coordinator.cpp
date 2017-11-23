@@ -109,13 +109,21 @@ void Coordinator::talkWithNode(int nodeId) {
 	}	
 	
 	// Otherwise we send them all
-	printf("Sending %i emails to node #%i\n", sendingQuantity, nodeId);
+	printf("Will send %i emails to node #%i\n", sendingQuantity, nodeId);
 	
 	m_emailsSent += sendingQuantity;
 	
+	// Preload all the emails here
+	// MPI_Send actually takes a while, and we want this thread-safe
+	printf("Preparing emails...\n");
+	std::list<Email> queue;
 	for (int i = 0; i < sendingQuantity; i++) {
-		Email e = reader.next();
-		MPI_Send(&e, sizeof(Email), MPI_BYTE, nodeId, TAG_EMAIL_DATA, MPI_COMM_WORLD);
+		queue.push_back(reader.next());
+	}
+	
+	// Now we traverse this list and actually send the emails
+	for (auto iterator = queue.begin(); iterator != queue.end(); ++iterator) {
+		MPI_Send(iterator, sizeof(Email), MPI_BYTE, nodeId, TAG_EMAIL_DATA, MPI_COMM_WORLD);
 	}
 	
 	return;
