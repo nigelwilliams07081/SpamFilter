@@ -29,8 +29,6 @@
 
 #define RANK_COORDINATOR 0
 
-#define RANK_COORDINATOR 0
-
 int main(int argc, char **argv) {
 
 	if (argc == 1) {

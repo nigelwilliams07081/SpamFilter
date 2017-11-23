@@ -6,10 +6,7 @@
 int Coordinator::m_emailsSent      = 0;
 int Coordinator::m_totalEmails     = 0;
 int Coordinator::m_repliesReceived = 0;
-
 int Coordinator::m_activeWorkers   = 0;
-
-bool Coordinator::m_finished = false;
 
 EmailReader Coordinator::reader;
 
@@ -63,21 +60,13 @@ void Coordinator::mainLoop(const char* emailsource) {
 	while (m_activeWorkers > 0) {
 		printf("Waiting for worker node...\n");
 		
-		int flag = 0;
 		MPI_Status status;
-		//char dummy;
-		//MPI_Recv(&dummy, sizeof(char), MPI_CHAR, MPI_ANY_SOURCE, TAG_EMAILS_REQUEST, MPI_COMM_WORLD, &status);
-		while (flag == 0) {
-			MPI_Iprobe(MPI_ANY_SOURCE, TAG_EMAILS_REQUEST, MPI_COMM_WORLD, &flag, &status);
-		}
+		MPI_Probe(MPI_ANY_SOURCE, TAG_EMAILS_REQUEST, MPI_COMM_WORLD, &status);
 		
 		// We recieved a request for emails, spawn a new thread to serve it
-		printf("Received a data request from node #%i\n", status.MPI_SOURCE);
+		printf("Detected a data request from node #%i\n", status.MPI_SOURCE);
 		std::thread(talkWithNode, status.MPI_SOURCE).detach();
 	}
-	
-	// Send a semaphore to the worker to thread using this static variable
-	m_finished = true;
 	
 	// Wait for the worker to finish
 	worker.join();
@@ -137,7 +126,7 @@ void Coordinator::talkWithNode(int nodeId) {
 void Coordinator::receiveResult() {
 	
 	
-	while (!m_finished && m_repliesReceived < m_emailsSent) {
+	while (m_repliesReceived < m_totalEmails) {
 		
 		Email result;
 		MPI_Recv(&result, sizeof(Email), MPI_BYTE, MPI_ANY_SOURCE, TAG_EMAIL_ANALYZED, MPI_COMM_WORLD, MPI_STATUS_IGNORE);

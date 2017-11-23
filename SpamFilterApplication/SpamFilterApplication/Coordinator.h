@@ -10,8 +10,6 @@ private:
 	static int m_repliesReceived;
 	static int m_activeWorkers;
 	
-	static bool m_finished;
-	
 	Coordinator();
 	static void talkWithNode(int);
 	static void receiveResult();
