@@ -40,7 +40,7 @@ void Worker::mainLoop() {
 		// Otherwise, we loop and recieve the emails
 		for (unsigned int i = 0; i < quantity; i++) {
 			Email e;
-			MPI_Recv(&e, sizeof(Email), MPI_BYTE, RANK_COORDINATOR, TAG_EMAIL_DATA, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+			MPI_Recv(&e, 1, MPI_Email, RANK_COORDINATOR, TAG_EMAIL_DATA, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 			
 			// Spawn a new thread to process the email
 			std::thread(processEmail, e).detach();
@@ -53,5 +53,5 @@ void Worker::processEmail(Email e) {
 	//e.SpamPercentage = doSpamSearch(e);
 	
 	// Pass back to coordinator when we're done
-	MPI_Send(&e, sizeof(Email), MPI_BYTE, RANK_COORDINATOR, TAG_EMAIL_ANALYZED, MPI_COMM_WORLD);
+	MPI_Send(&e, 1, MPI_Email, RANK_COORDINATOR, TAG_EMAIL_ANALYZED, MPI_COMM_WORLD);
 }

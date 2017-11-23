@@ -117,7 +117,7 @@ void Coordinator::talkWithNode(int nodeId) {
 	
 	// Now we traverse this list and actually send the emails
 	for (auto iterator = queue.begin(); iterator != queue.end(); ++iterator) {
-		MPI_Send(&iterator, sizeof(Email), MPI_BYTE, nodeId, TAG_EMAIL_DATA, MPI_COMM_WORLD);
+		MPI_Send(&iterator, 1, MPI_Email, nodeId, TAG_EMAIL_DATA, MPI_COMM_WORLD);
 	}
 	
 	return;
@@ -129,7 +129,7 @@ void Coordinator::receiveResult() {
 	while (m_repliesReceived < m_totalEmails) {
 		
 		Email result;
-		MPI_Recv(&result, sizeof(Email), MPI_BYTE, MPI_ANY_SOURCE, TAG_EMAIL_ANALYZED, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+		MPI_Recv(&result, 1, MPI_Email, MPI_ANY_SOURCE, TAG_EMAIL_ANALYZED, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 		m_repliesReceived++;
 		
 		printf("Analyzed email recieved from node!\n");
