@@ -54,8 +54,8 @@ void Worker::mainLoop() {
 
 void Worker::processEmail(Email e) {
 	// Process the email here
-	//*e.SpamPercentage = doSpamSearch(*e);
+	//e.SpamPercentage = doSpamSearch(e);
 	
 	// Pass back to coordinator when we're done
-	MPI_Send(e, sizeof(Email), MPI_BYTE, RANK_COORDINATOR, TAG_EMAIL_ANALYZED, MPI_COMM_WORLD);
+	MPI_Send(&e, sizeof(Email), MPI_BYTE, RANK_COORDINATOR, TAG_EMAIL_ANALYZED, MPI_COMM_WORLD);
 }
