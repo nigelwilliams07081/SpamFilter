@@ -68,7 +68,7 @@ void Coordinator::mainLoop(const char* emailsource) {
 		//char dummy;
 		//MPI_Recv(&dummy, sizeof(char), MPI_CHAR, MPI_ANY_SOURCE, TAG_EMAILS_REQUEST, MPI_COMM_WORLD, &status);
 		while (flag == 0) {
-			MPI_Probe(MPI_ANY_SOURCE, TAG_EMAILS_REQUEST, MPI_COMM_WORLD, &flag, &status);
+			MPI_Iprobe(MPI_ANY_SOURCE, TAG_EMAILS_REQUEST, MPI_COMM_WORLD, &flag, &status);
 		}
 		
 		// We recieved a request for emails, spawn a new thread to serve it
