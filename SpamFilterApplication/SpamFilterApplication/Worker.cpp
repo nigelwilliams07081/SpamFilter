@@ -15,7 +15,7 @@ void Worker::mainLoop() {
 	
 	// Wait for the OK broadcast from the coordinator
 	int OK;
-	MPI_Bcast(&OK, sizeof(int), MPI_INT, RANK_COORDINATOR, MPI_COMM_WORLD);
+	MPI_Bcast(&OK, 1, MPI_INT, RANK_COORDINATOR, MPI_COMM_WORLD);
 	
 	// If something is wrong, just exit right away
 	if (!OK) {
@@ -26,11 +26,11 @@ void Worker::mainLoop() {
 		
 		// Send how many emails we would like
 		int emailsCount = REQUEST_EMAILS_COUNT;
-		MPI_Send(&emailsCount, sizeof(int), MPI_INT, RANK_COORDINATOR, TAG_EMAILS_REQUEST, MPI_COMM_WORLD);
+		MPI_Send(&emailsCount, 1, MPI_INT, RANK_COORDINATOR, TAG_EMAILS_REQUEST, MPI_COMM_WORLD);
 		
 		// The coordinator tells us how many emails to expect (may be less than how many we asked for)
 		int quantity;
-		MPI_Recv(&quantity, sizeof(int), MPI_INT, RANK_COORDINATOR, TAG_EMAIL_QUANTITY, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+		MPI_Recv(&quantity, 1, MPI_INT, RANK_COORDINATOR, TAG_EMAIL_QUANTITY, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 		
 		// If the coordinator is out of emails, we can exit
 		if (quantity == 0) {

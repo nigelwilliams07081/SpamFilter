@@ -77,7 +77,7 @@ void Coordinator::talkWithNode(int nodeId) {
 	
 	// Receive quantity of emails to send
 	int quantity;
-	MPI_Recv(&quantity, sizeof(int), MPI_INT, nodeId, TAG_EMAILS_REQUEST, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+	MPI_Recv(&quantity, 1, MPI_INT, nodeId, TAG_EMAILS_REQUEST, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 	
 	printf("Received request from node #%i for %i emails\n", nodeId, quantity);
 	
@@ -92,7 +92,7 @@ void Coordinator::talkWithNode(int nodeId) {
 	}
 	
 	// Tell the worker node how many emails to expect
-	MPI_Send(&sendingQuantity, sizeof(int), MPI_INT, nodeId, TAG_EMAIL_QUANTITY, MPI_COMM_WORLD);
+	MPI_Send(&sendingQuantity, 1, MPI_INT, nodeId, TAG_EMAIL_QUANTITY, MPI_COMM_WORLD);
 	
 	// If there are no more emails to send, exit
 	if (sendingQuantity == 0) {
