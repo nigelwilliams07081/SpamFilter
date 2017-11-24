@@ -50,8 +50,11 @@ void Worker::mainLoop() {
 			}
 			
 			// Spawn a new thread to process the email
-			//std::thread(processEmail, e).detach();
+			#ifdef SINGLETHREADED
 			processEmail(e);
+			#else
+			std::thread(processEmail, e).detach();
+			#endif
 		}
 	}
 }
@@ -59,7 +62,7 @@ void Worker::mainLoop() {
 void Worker::processEmail(Email e) {
 	// Process the email here
 	//e.SpamPercentage = doSpamSearch(e);
-	printf("Worker processing emails!\n");
+	
 	// Pass back to coordinator when we're done
 	MPI_Send_string(e.Sender,  RANK_COORDINATOR, TAG_RETURN_EMAIL_SENDER);
 	MPI_Send_string(e.Subject, RANK_COORDINATOR, TAG_RETURN_EMAIL_SUBJECT);

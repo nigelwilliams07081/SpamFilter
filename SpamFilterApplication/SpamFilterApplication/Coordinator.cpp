@@ -43,7 +43,9 @@ void Coordinator::mainLoop(const char* emailsource) {
 	}
 		
 	// Start up a thread to receive spam anaylsis results
+	#ifndef SINGLETHREADED
 	std::thread worker(receiveResult);
+	#endif
 	
 	// Get the number of other nodes
 	m_activeWorkers = MPI::COMM_WORLD.Get_size();
@@ -58,12 +60,20 @@ void Coordinator::mainLoop(const char* emailsource) {
 		
 		// We recieved a request for emails, spawn a new thread to serve it
 		printf("Detected a data request from node #%i\n", status.Get_source());
-		//std::thread(talkWithNode, status.Get_source()).detach();
+		
+		#ifdef SINGLETHREADED
 		talkWithNode(status.Get_source());
+		#else
+		std::thread(talkWithNode, status.Get_source()).detach();
+		#endif
 	}
 	
 	// Wait for the worker to finish
+	#ifdef SINGLETHREADED
+	receiveResult();
+	#else
 	worker.join();
+	#endif
 	
 	return;
 }

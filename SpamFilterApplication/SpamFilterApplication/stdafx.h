@@ -18,3 +18,5 @@
 #include "Coordinator.h"
 #include "tags.h"
 #include "MPI_wrappers.h"
+
+#define SINGLETHREADED 1

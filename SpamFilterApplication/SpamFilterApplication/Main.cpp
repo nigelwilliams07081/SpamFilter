@@ -61,11 +61,13 @@ int main(int argc, char **argv) {
 		Coordinator::mainLoop(emailSource);
 		
 		// Finish
+		printf("Coordinator finished\n");
 		MPI::COMM_WORLD.Barrier();
 	} else {
 		Worker::mainLoop();
 		
 		// Wait here for the coordinator to receive all the data
+		printf("Worker finished\n");
 		MPI::COMM_WORLD.Barrier();
 	}
 	
