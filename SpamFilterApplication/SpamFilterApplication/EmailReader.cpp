@@ -1,8 +1,11 @@
 #include "stdafx.h"
+
 #include "EmailReader.h"
+#include <algorithm>
 
 EmailReader::EmailReader() {
 }
+
 
 EmailReader::EmailReader(const char* filename) {
 	loadFromFile(filename);
@@ -26,26 +29,33 @@ Email EmailReader::constructEmail(rapidxml::xml_node<> *emailData) {
 
 	auto body = emailData->first_node("body");
 	body = body->first_node();
-
-	// Use strcpy to copy data out
-	strcpy(result.Sender, sender->value());
-	strcpy(result.Subject, subject->value());
-	strcpy(result.Body, body->value());
+	
+	result.Sender  = sender->value();
+	result.Subject = subject->value();
+	result.Body    = body->value();
 
 	auto attachmentroot = emailData->first_node("attachments");
 
 	// Iterate over children of the attachments node to gather attachments
 	int i = 0;
-	for (auto filename = attachmentroot->first_node(); filename != NULL; filename = filename->next_sibling()) {
-		strcpy(result.Attachments[i], filename->value());
-
-		// Break out of the loop after 10 attachments - struct limit
-		if (++i == 10) {
-			break;
-		}
+	auto filename = attachmentroot->first_node();
+	while (filename != NULL) {
+		filename = filename->next_sibling();
+		i++;
+	}
+	
+	result.NumAttachments = i;
+	result.Attachments = new std::string[i];
+	
+	i = 0;
+	filename = attachmentroot->first_node();
+	while (filename != NULL) {
+		result.Attachments[i++] = filename->value();
+		filename = filename->next_sibling();
 	}
 
 	result.IsValid = true;
+	result.SpamPercentage = -1.;
 	return result;
 }
 
@@ -60,7 +70,10 @@ void EmailReader::loadFromFile(const char* filename) {
 	buffer << xmlFile.rdbuf();
 
 	// Copy file contents into char[] buffer
-	strcpy(m_buffer, buffer.str().c_str());
+	#ifdef WIN32
+	#define strncpy strncpy_s
+	#endif
+	strncpy(m_buffer, buffer.str().c_str(), sizeof(m_buffer)/sizeof(char));
 
 	// Free resources
 	xmlFile.close();
@@ -79,61 +92,85 @@ void EmailReader::loadFromFile(const char* filename) {
 	m_ending = rootNode->last_node();
 
 	m_currentEmail = rootNode->first_node();
-}
-
-void EmailReader::advance() {
-	m_currentEmail = m_currentEmail->next_sibling();
-}
-
-void EmailReader::advance(int amt) {
-
-	if (amt == 0) {
-		return;
+	m_currentOffset = 0;
+	
+	for (auto node = m_beginning; node != NULL; node = node->next_sibling()) {
+		m_emailCount++;
 	}
+}
 
-	if (amt < 0) {
-		amt *= -1;
-		for (int i = 0; i < amt; i++) {
-			m_currentEmail = m_currentEmail->previous_sibling();
+int EmailReader::getEmailCount() {
+	return m_emailCount;
+}
+
+Email EmailReader::get(int distanceFromStart) {
+	
+	// Out of bounds
+	if (distanceFromStart < 0 || distanceFromStart >= m_emailCount) {
+		throw std::exception("Out of bounds access!");
+	}
+	
+	// Directly get the first last, and current
+	if (distanceFromStart == 0)
+		return constructEmail(m_beginning);
+		
+	if (distanceFromStart == m_emailCount - 1)
+		return constructEmail(m_ending);
+	
+	if (distanceFromStart == m_currentOffset)
+		return constructEmail(m_currentEmail);
+	
+	
+	// Compute how to find the pointer to the requested element the fastest
+	int distanceFromEnd     = abs(m_emailCount    - distanceFromStart);
+	int distanceFromCurrent = abs(m_currentOffset - distanceFromStart);
+	
+	int smallest = std::min({distanceFromStart, distanceFromCurrent, distanceFromEnd});
+	
+	// Target is closest to the the start
+	if (smallest == distanceFromStart) {
+		auto node = m_beginning;
+		
+		// Traverse from the start until we reach the target
+		for (int i = 0; i < smallest; i++) {
+			node = node->next_sibling();
 		}
-	} else {
-		for (int i = 0; i < amt; i++) {
-			m_currentEmail = m_currentEmail->next_sibling();
+		
+		m_currentEmail = node;
+	}
+	
+	// Target is closest to the end
+	else if (smallest == distanceFromEnd) {
+		auto node = m_ending;
+		
+		// Traverse from the end until we reach the target
+		for (int i = 0; i < smallest; i++) {
+			node = node->previous_sibling();
+		}
+		
+		m_currentEmail = node;
+	}
+	
+	// Target is closest to the current email
+	else if (smallest == distanceFromCurrent) {
+		
+		// If it is nearer to the start then the current email, traverse back
+		if (distanceFromStart < m_currentOffset) {
+			for (int i = 0; i < distanceFromCurrent; i++) {
+				m_currentEmail = m_currentEmail->previous_sibling();
+			}
+			
+		// Else traverse forward
+		} else {
+			for (int i = 0; i < distanceFromCurrent; i++) {
+				m_currentEmail = m_currentEmail->next_sibling();
+			}
 		}
 	}
-}
-
-void EmailReader::begin() {
-	m_currentEmail = m_beginning;
-}
-
-void EmailReader::end() {
-	m_currentEmail = NULL;
-}
-
-Email EmailReader::next() {
-	Email result = constructEmail(m_currentEmail);
-	m_currentEmail = m_currentEmail->next_sibling();
-	return result;
-}
-
-Email EmailReader::prev() {
-
-	// End of list, going from NULL back to the last email is 
-	// basically going to the previous one from off the end
-	if (m_currentEmail == NULL) {
-		m_currentEmail = m_ending;
-	} else {
-		m_currentEmail = m_currentEmail->previous_sibling();
-	}
-
+	
+	// Set the current offset to match the current email
+	m_currentOffset = distanceFromStart;
+	
+	// Return the Email struct
 	return constructEmail(m_currentEmail);
-}
-
-bool EmailReader::hasNext() {
-	return m_currentEmail != NULL;
-}
-
-bool EmailReader::hasPrev() {
-	return m_currentEmail->previous_sibling() != NULL;
 }

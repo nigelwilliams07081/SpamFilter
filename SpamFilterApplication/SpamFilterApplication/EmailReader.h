@@ -1,6 +1,10 @@
 #pragma once
 #include "rapidxml.hpp"
 
+#define EMAILREADER_EXPERIMENT
+// Experimental changes to the email reader class to make it more thread-friendly
+// Iterator pattern is replaced with simple access
+
 class EmailReader {
 
 private:
@@ -16,6 +20,9 @@ private:
 	rapidxml::xml_node<> *m_currentEmail;
 	rapidxml::xml_node<> *m_beginning;
 	rapidxml::xml_node<> *m_ending;
+	
+	int m_emailCount;
+	int m_currentOffset;
 
 	/**
 	: [Email]
@@ -35,48 +42,16 @@ public:
 	void loadFromFile(const char*);
 
 	/**
-	: Skip forward one place in the iterator.
+	: [int]
+	: Returns the total number of emails. Will return 0 if no file has been loaded.
 	*/
-	void advance();
-
-	/**
-	: Skip forward or backward X places in the iterator.
-	*/
-	void advance(int);
-
-	/**
-	: Used for resetting to the start of the iterator. Calling next() after this
-	: will return the first email.
-	*/
-	void begin();
-
-	/**
-	: Used for jumping to the very end of the iterator. Calling prev() after this
-	: will return the last email.
-	*/
-	void end();
-
+	int getEmailCount();
+	
+	
 	/**
 	: [Email]
-	: Return the next email from the iterator.
+	: Returns the email at position X. Returns NULL for out-of-bounds values.
 	*/
-	Email next();
-
-	/**
-	: [Email]
-	: Return the previous email from the iterator.
-	*/
-	Email prev();
-
-	/**
-	: [bool]
-	: Returns true if there is at least one more email in the iterator.
-	*/
-	bool hasNext();
-
-	/**
-	: [bool]
-	: Returns true if there is at least one previous email in the iterator.
-	*/
-	bool hasPrev();
+	Email get(int);
+	
 };
