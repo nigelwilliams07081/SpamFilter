@@ -55,6 +55,12 @@ int main(int argc, char **argv) {
 		
 		printf("Thread support provided: %i\n", prov);
 		
+		#ifdef SINGLETHREADED
+		printf("This program running in single-threaded mode.\n");
+		#else
+		printf("This program running in fully threaded mode.\n");
+		#endif
+		
 		const char *emailSource = argv[1];
 		printf("Will load emails from %s\n", emailSource);
 		Coordinator::mainLoop(emailSource);
