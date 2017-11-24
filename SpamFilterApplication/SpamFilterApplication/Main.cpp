@@ -53,7 +53,6 @@ int main(int argc, char **argv) {
 	
 	if (taskId == RANK_COORDINATOR) {
 		
-		printf("single: %i\nfunneled: %i\nserialized: %i\nmultiple: %i\n", MPI::THREAD_SINGLE, MPI::THREAD_FUNNELED, MPI::THREAD_SERIALIZED, MPI::THREAD_MULTIPLE);
 		printf("Thread support provided: %i\n", prov);
 		
 		const char *emailSource = argv[1];
