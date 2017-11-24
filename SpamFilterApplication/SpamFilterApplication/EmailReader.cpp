@@ -105,11 +105,6 @@ int EmailReader::getEmailCount() {
 
 Email EmailReader::get(int distanceFromStart) {
 	
-	// Out of bounds
-	if (distanceFromStart < 0 || distanceFromStart >= m_emailCount) {
-		throw std::exception("Out of bounds access!");
-	}
-	
 	// Directly get the first last, and current
 	if (distanceFromStart == 0)
 		return constructEmail(m_beginning);

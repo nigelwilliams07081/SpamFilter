@@ -1,21 +1,36 @@
 #pragma once
 #include "stdafx.h"
 
-int MPI_Send_string(std::string s, int dest, int tag, MPI_Comm comm) {
-	return MPI_Send(s.c_str(), s.size(), MPI_CHAR, dest, tag, comm);
+inline void MPI_Send_string(std::string s, int dest, int tag) {
+	int len = s.size();
+	
+	char* sc = new char[len + 1];
+	std::copy(s.begin(), s.end(), sc);
+	sc[len] = '\0'; // Need this null terminator
+	
+	MPI::COMM_WORLD.Send(sc, len + 1, MPI::CHAR, dest, tag);
 }
 
-std::string MPI_Recv_string(int source, int tag, MPI_Comm comm, MPI_Status *status) {
-	MPI_Status s;
-	int length;
-	
-	MPI_Probe(source, tag, comm, &s);
-	MPI_Get_count(&s, MPI_CHAR, &length);
+inline std::string MPI_Recv_string(int source, int tag, MPI::Status &status) {
+	MPI::Status s;	
+	MPI::COMM_WORLD.Probe(source, tag, s);
+	int length = s.Get_count(MPI::CHAR);
 	
 	char* buffer = new char[length];
-	MPI_Recv(&buffer, length, MPI_CHAR, source, tag, comm, status);
-	std::string result = buffer;
+	MPI::COMM_WORLD.Recv(buffer, length, MPI::CHAR, source, tag, status);
+	std::string result(buffer);
 	delete[] buffer;
 	return result;
 }
+
+inline std::string MPI_Recv_string(int source, int tag) {
+	MPI::Status s;	
+	MPI::COMM_WORLD.Probe(source, tag, s);
+	int length = s.Get_count(MPI::CHAR);
 	
+	char* buffer = new char[length];
+	MPI::COMM_WORLD.Recv(buffer, length, MPI::CHAR, source, tag);
+	std::string result(buffer);
+	delete[] buffer;
+	return result;
+}

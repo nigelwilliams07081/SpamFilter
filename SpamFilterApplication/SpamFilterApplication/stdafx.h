@@ -1,12 +1,12 @@
 #pragma once
-#include <mpi.h>
+#include <mpiCC.h>
 #include <stdio.h>
 #include <string>
-#include <string.h>
 #include <iostream>
 #include <fstream>
 #include <sstream>
 #include <vector>
+#include <thread>
 
 #include "Bayesian.h"
 #include "SpamFilter.h"
