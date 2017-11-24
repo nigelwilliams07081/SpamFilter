@@ -118,7 +118,9 @@ void Coordinator::talkWithNode(int nodeId) {
 	
 	for (int i = 0; i < sendingQuantity; i++) {
 		#ifdef EMAILREADER_EXPERIMENT
-		emails[i] = reader.get(emailStart - sendingQuantity + i)
+		// The worker node is entitled to emails number (emailsSent) till (emailSent + sendingQuantity)
+		// No other nodes should be fighting the node over this
+		emails[i] = reader.get(m_emailsSent - i);
 		#else
 		emails[i] = reader.next();
 		#endif

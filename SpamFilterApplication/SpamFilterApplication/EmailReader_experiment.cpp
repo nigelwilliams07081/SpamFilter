@@ -1,11 +1,15 @@
 #include "stdafx.h"
-#include "EmailReader.h"
-#include <stdlib.h>
+
+#include "EmailReader_experiment.h"
+#include <algorithm>
+
+#ifdef _WIN32
+#define strncpy strncpy_s
+#endif
 
 EmailReader::EmailReader() {
 }
 
-int EmailReader::m_emailCount = 0;
 
 EmailReader::EmailReader(const char* filename) {
 	loadFromFile(filename);
@@ -31,16 +35,16 @@ Email EmailReader::constructEmail(rapidxml::xml_node<> *emailData) {
 	body = body->first_node();
 
 	// Use strcpy to copy data out
-	strcpy(result.Sender, sender->value());
-	strcpy(result.Subject, subject->value());
-	strcpy(result.Body, body->value());
+	strncpy(result.Sender, sender->value(), 256);
+	strncpy(result.Subject, subject->value(), 998);
+	strncpy(result.Body, body->value(), 65535);
 
 	auto attachmentroot = emailData->first_node("attachments");
 
 	// Iterate over children of the attachments node to gather attachments
 	int i = 0;
 	for (auto filename = attachmentroot->first_node(); filename != NULL; filename = filename->next_sibling()) {
-		strcpy(result.Attachments[i], filename->value());
+		strncpy(result.Attachments[i], filename->value(), 255);
 
 		// Break out of the loop after 10 attachments - struct limit
 		if (++i == 10) {
@@ -63,7 +67,7 @@ void EmailReader::loadFromFile(const char* filename) {
 	buffer << xmlFile.rdbuf();
 
 	// Copy file contents into char[] buffer
-	strcpy(m_buffer, buffer.str().c_str());
+	strncpy(m_buffer, buffer.str().c_str(), sizeof(m_buffer)/sizeof(char));
 
 	// Free resources
 	xmlFile.close();
@@ -89,15 +93,15 @@ void EmailReader::loadFromFile(const char* filename) {
 	}
 }
 
-int getEmailCount() {
+int EmailReader::getEmailCount() {
 	return m_emailCount;
 }
 
-Email get(int distanceFromStart) {
+Email EmailReader::get(int distanceFromStart) {
 	
 	// Out of bounds
 	if (distanceFromStart < 0 || distanceFromStart >= m_emailCount) {
-		return NULL;
+		throw std::exception("Out of bounds access!");
 	}
 	
 	// Directly get the first last, and current
@@ -112,8 +116,8 @@ Email get(int distanceFromStart) {
 	
 	
 	// Compute how to find the pointer to the requested element the fastest
-	int distanceFromEnd     = abs(m_emailCount    - item);
-	int distanceFromCurrent = abs(m_currentOffset - item);
+	int distanceFromEnd     = abs(m_emailCount    - distanceFromStart);
+	int distanceFromCurrent = abs(m_currentOffset - distanceFromStart);
 	
 	int smallest = std::min({distanceFromStart, distanceFromCurrent, distanceFromEnd});
 	
@@ -130,7 +134,7 @@ Email get(int distanceFromStart) {
 	}
 	
 	// Target is closest to the end
-	if (smallest == distanceFromEnd) {
+	else if (smallest == distanceFromEnd) {
 		auto node = m_ending;
 		
 		// Traverse from the end until we reach the target
@@ -142,7 +146,7 @@ Email get(int distanceFromStart) {
 	}
 	
 	// Target is closest to the current email
-	if (smallest == distanceFromCurrent) {
+	else if (smallest == distanceFromCurrent) {
 		
 		// If it is nearer to the start then the current email, traverse back
 		if (distanceFromStart < m_currentOffset) {

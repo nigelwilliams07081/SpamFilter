@@ -2,6 +2,8 @@
 #include "rapidxml.hpp"
 
 #define EMAILREADER_EXPERIMENT
+// Experimental changes to the email reader class to make it more thread-friendly
+// Iterator pattern is replaced with simple access
 
 class EmailReader {
 
@@ -20,6 +22,7 @@ private:
 	rapidxml::xml_node<> *m_ending;
 	
 	int m_emailCount;
+	int m_currentOffset;
 
 	/**
 	: [Email]
