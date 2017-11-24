@@ -22,18 +22,7 @@ void Coordinator::mainLoop(const char* emailsource) {
 		printf("Loading XML data\n");
 		reader.loadFromFile(emailsource);
 		
-		#ifdef EMAILREADER_EXPERIMENT
 		m_totalEmails = reader.getEmailCount();
-		#else
-		// Make sure every email does not cause any parse errors, also count them all
-		while (reader.hasNext()) {
-			Email t = reader.next();
-			m_totalEmails++;
-		}
-		
-		// Reset reader afterwards
-		reader.begin();
-		#endif
 		
 		// Everything checks out
 		printf("Success: loaded %i emails\n", m_totalEmails);
@@ -112,26 +101,27 @@ void Coordinator::talkWithNode(int nodeId) {
 	// Set this now so other threads will not compete with this one
 	m_emailsSent += sendingQuantity;
 	
-	printf("Preparing emails...\n");
-	
-	Email emails[sendingQuantity];
+	printf("Sending emails...\n");
 	
 	for (int i = 0; i < sendingQuantity; i++) {
-		#ifdef EMAILREADER_EXPERIMENT
 		// The worker node is entitled to emails number (emailsSent) till (emailSent + sendingQuantity)
 		// No other nodes should be fighting the node over this
-		emails[i] = reader.get(m_emailsSent - i);
-		#else
-		emails[i] = reader.next();
-		#endif
+		Email e = reader.get(m_emailsSent - i);
+		
+		MPI_Send_string(e.Sender,  nodeId, TAG_EMAIL_SENDER,  MPI_COMM_WORLD);
+		MPI_Send_string(e.Subject, nodeId, TAG_EMAIL_SUBJECT, MPI_COMM_WORLD);
+		MPI_Send_string(e.Body,    nodeId, TAG_EMAIL_BODY,    MPI_COMM_WORLD);
+		
+		MPI_Send(&(e.NumAttachments), 1, MPI_INT, nodeId, TAG_EMAIL_NUM_ATTACHMENTS, MPI_COMM_WORLD);
+		
+		for (int i = 0; i < e.NumAttachments; i++) {
+			MPI_Send_string(e.Attachments[i], nodeId, TAG_EMAIL_ATTACHMENT, MPI_COMM_WORLD);
+		}
+		
+		printf("Successfully sent email to node #%i\n", nodeId);
 	}
 	
-	// Send these one at a time so the worker can recv them all in parallel
-	for (int i = 0; i <sedingQuantity; i++) {
-		MPI_Send(&(emails[i]), 1, MPI_Email, nodeId, TAG_EMAIL_DATA, MPI_COMM_WORLD);
-	}
-	
-	printf("Successfully sent %i emails to node #%i\n", sendingQuantity, nodeId);
+	printf("Successfully sent all %i emails to node #%i\n", sendingQuantity, nodeId);
 	
 	return;
 }
@@ -141,7 +131,25 @@ void Coordinator::receiveResult() {
 	while (m_repliesReceived < m_totalEmails) {
 		
 		Email result;
-		MPI_Recv(&result, 1, MPI_Email, MPI_ANY_SOURCE, TAG_EMAIL_ANALYZED, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+		MPI_Status status;
+		
+		// Receive the Sender (first data point) from any source, then follow up with the rest from the same source only
+		result.Sender  = MPI_Recv_string(MPI_ANY_SOURCE,    TAG_RETURN_EMAIL_SENDER,  MPI_COMM_WORLD, &status);
+		result.Subject = MPI_Recv_string(status.MPI_SOURCE, TAG_RETURN_EMAIL_SUBJECT, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+		result.Body    = MPI_Recv_string(status.MPI_SOURCE, TAG_RETURN_EMAIL_BODY,    MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+		
+		result.NumAttachments;
+		MPI_Recv(&(result.NumAttachments), 1, MPI_INT, status.MPI_SOURCE, TAG_RETURN_EMAIL_NUM_ATTACHMENTS, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+		
+		result.Attachments = new std::string[result.NumAttachments];
+		for (int i = 0; i < result.NumAttachments; i++) {
+			result.Attachments[i] = MPI_Recv_string(status.MPI_SOURCE, TAG_RETURN_EMAIL_ATTACHMENT, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+		}
+		
+		float spamPercent;
+		MPI_Recv(&spamPercent, 1, MPI_FLOAT, status.MPI_SOURCE, TAG_RETURN_EMAIL_SPAM_PERCENTAGE, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+		result.SpamPercentage = spamPercent;
+		
 		m_repliesReceived++;
 		
 		printf("Analyzed email recieved from node!\n");

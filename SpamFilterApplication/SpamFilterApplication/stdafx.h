@@ -17,3 +17,4 @@
 #include "Worker.h"
 #include "Coordinator.h"
 #include "tags.h"
+#include "MPI_wrappers.h"
