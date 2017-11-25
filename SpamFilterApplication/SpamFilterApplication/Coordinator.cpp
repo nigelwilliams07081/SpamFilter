@@ -76,6 +76,7 @@ void Coordinator::mainLoop(const char* emailsource) {
 	}
 	
 	// Wait for the worker to finish
+	printf("Email distribution finished, waiting on results...\n");
 	#ifdef SINGLETHREADED
 	receiveResult();
 	#else
@@ -155,6 +156,8 @@ void Coordinator::receiveResult() {
 		
 		int node = status.Get_source();
 		
+		printf("Received email data nonce %i from node #%i\n", nonce, node);
+		
 		result.Sender  = MPI_Recv_string(node, TAG_RETURN_EMAIL_SENDER  + nonce);
 		result.Subject = MPI_Recv_string(node, TAG_RETURN_EMAIL_SUBJECT + nonce);
 		result.Body    = MPI_Recv_string(node, TAG_RETURN_EMAIL_BODY    + nonce);
@@ -164,9 +167,11 @@ void Coordinator::receiveResult() {
 		MPI::COMM_WORLD.Recv(&spamPercent,             1, MPI::FLOAT,    node, TAG_RETURN_EMAIL_SPAM_PERCENTAGE + nonce);
 		result.SpamPercentage = spamPercent;
 		
-		result.Attachments = new std::string[result.NumAttachments];
-		for (int i = 0; i < result.NumAttachments; i++) {
-			result.Attachments[i] = MPI_Recv_string(node, TAG_RETURN_EMAIL_ATTACHMENT + nonce);
+		if (result.NumAttachments != 0) {
+			result.Attachments = new std::string[result.NumAttachments];
+			for (int i = 0; i < result.NumAttachments; i++) {
+				result.Attachments[i] = MPI_Recv_string(node, TAG_RETURN_EMAIL_ATTACHMENT + nonce);
+			}
 		}
 		
 		printf("Analyzed email #%i recieved from node #%i! Subject was %s\n", m_repliesReceived, node, result.Subject.c_str());

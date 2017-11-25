@@ -60,11 +60,13 @@ void Worker::mainLoop() {
 }
 
 void Worker::processEmail(Email e) {
+	
+	// Remember MPI_Send takes time. Reserve the nonce for this thread immediately
+	int reserved = m_nonce;
+	m_nonce = (m_nonce + 1) % 2048;
+	
 	// Process the email here
 	//e.SpamPercentage = doSpamSearch(e);
-	
-	// Sleep to simulate processing time for this email
-	std::this_thread::sleep_for(std::chrono::milliseconds(50));
 	
 	// TODO: pass a status flag, let the coordinator know of any exceptions that occurred?
 	
@@ -73,18 +75,16 @@ void Worker::processEmail(Email e) {
 	// The nonce prevents the coordinator from getting confused when a single node
 	// is sending it 10 emails at once. Just add the nonce to the tags, and use that!
 	// Came up with that at 7am after not sleeping.
-	MPI::COMM_WORLD.Send(&m_nonce, 1, MPI::UNSIGNED, RANK_COORDINATOR, TAG_RETURN_EMAIL_NONCE);
+	MPI::COMM_WORLD.Send(&reserved, 1, MPI::UNSIGNED, RANK_COORDINATOR, TAG_RETURN_EMAIL_NONCE);
 	
-	MPI_Send_string(e.Sender,  RANK_COORDINATOR, TAG_RETURN_EMAIL_SENDER  + m_nonce);
-	MPI_Send_string(e.Subject, RANK_COORDINATOR, TAG_RETURN_EMAIL_SUBJECT + m_nonce);
-	MPI_Send_string(e.Body,    RANK_COORDINATOR, TAG_RETURN_EMAIL_BODY    + m_nonce);
+	MPI_Send_string(e.Sender,  RANK_COORDINATOR, TAG_RETURN_EMAIL_SENDER  + reserved);
+	MPI_Send_string(e.Subject, RANK_COORDINATOR, TAG_RETURN_EMAIL_SUBJECT + reserved);
+	MPI_Send_string(e.Body,    RANK_COORDINATOR, TAG_RETURN_EMAIL_BODY    + reserved);
 	
-	MPI::COMM_WORLD.Send(&(e.SpamPercentage), 1, MPI::FLOAT,    RANK_COORDINATOR, TAG_RETURN_EMAIL_SPAM_PERCENTAGE + m_nonce);
-	MPI::COMM_WORLD.Send(&(e.NumAttachments), 1, MPI::UNSIGNED, RANK_COORDINATOR, TAG_RETURN_EMAIL_NUM_ATTACHMENTS + m_nonce);
+	MPI::COMM_WORLD.Send(&(e.SpamPercentage), 1, MPI::FLOAT,    RANK_COORDINATOR, TAG_RETURN_EMAIL_SPAM_PERCENTAGE + reserved);
+	MPI::COMM_WORLD.Send(&(e.NumAttachments), 1, MPI::UNSIGNED, RANK_COORDINATOR, TAG_RETURN_EMAIL_NUM_ATTACHMENTS + reserved);
 	
 	for (unsigned int i = 0; i < e.NumAttachments; i++) {
-		MPI_Send_string(e.Attachments[i], RANK_COORDINATOR, TAG_RETURN_EMAIL_ATTACHMENT + m_nonce);
+		MPI_Send_string(e.Attachments[i], RANK_COORDINATOR, TAG_RETURN_EMAIL_ATTACHMENT + reserved);
 	}
-	
-	m_nonce = (m_nonce + 1) % 2048; // Careful not to overflow the tag (like that'll ever happen, but it's less likely than 2048 concurrent emails)
 }

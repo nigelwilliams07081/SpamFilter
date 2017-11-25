@@ -31,9 +31,13 @@
 
 int main(int argc, char **argv) {
 	
-	//int prov = MPI::Init_thread(MPI::THREAD_MULTIPLE);
-	int prov;
+	int prov = 0;
+	
+	#ifdef SINGLETHREADED
+	MPI::Init();
+	#else
 	HPMPI_Init_thread(NULL, NULL, MPI_THREAD_MULTIPLE, &prov);
+	#endif
 	
 	int taskId = MPI::COMM_WORLD.Get_rank();
 	
@@ -55,21 +59,23 @@ int main(int argc, char **argv) {
 	}
 	
 	if (taskId == RANK_COORDINATOR) {
+		printf("Spam Filter MPI program version 0.9.00\n");
 		#ifdef SINGLETHREADED
 		printf("This program compiled in single-threaded mode.\n");
 		#else
 		printf("This program compiled in fully threaded mode.\n");
 		#endif
-		printf("Thread support provided: %i\n", prov);
 	}
 	
+	#ifndef SINGLETHREADED
 	if (prov < MPI::THREAD_MULTIPLE) {
 		if (taskId == RANK_COORDINATOR)
-			printf("Insufficient threading support provided!\n");
+			printf("Insufficient threading support provided! MPI_Init_thread returned %i\n", prov);
 		
 		MPI::Finalize();
 		return 3;
 	}
+	#endif
 	
 	if (taskId == RANK_COORDINATOR) {
 		const char *emailSource = argv[1];
