@@ -65,6 +65,9 @@ void Coordinator::mainLoop(const char* emailsource) {
 		talkWithNode(status.Get_source());
 		#else
 		std::thread(talkWithNode, status.Get_source()).detach();
+		
+		// Sleep. We do not want this loop to be too tight.
+		std::this_thread::sleep_for(std::chrono::milliseconds(2));
 		#endif
 	}
 	
@@ -96,28 +99,28 @@ void Coordinator::talkWithNode(int nodeId) {
 		sendingQuantity = quantity;
 	}
 	
-	// Tell the worker node how many emails to expect
-	MPI::COMM_WORLD.Send(&sendingQuantity, 1, MPI::INT, nodeId, TAG_EMAIL_QUANTITY);
-	
-	// If there are no more emails to send, exit
-	if (sendingQuantity == 0) {
-		printf("Sent termination signal to node #%i\n", nodeId);
-		m_activeWorkers--;
-		return;
-	}	
-	
 	// Otherwise we send them all
 	printf("Will send %i emails to node #%i\n", sendingQuantity, nodeId);
 		
 	// Set this now so other threads will not compete with this one
 	m_emailsSent += sendingQuantity;
 	
+	// Tell the worker node how many emails to expect
+	MPI::COMM_WORLD.Send(&sendingQuantity, 1, MPI::INT, nodeId, TAG_EMAIL_QUANTITY);
+	
+	// If there are no more emails to send, exit
+	if (sendingQuantity <= 0) {
+		printf("Sent termination signal to node #%i\n", nodeId);
+		m_activeWorkers--;
+		return;
+	}	
+	
 	printf("Sending emails...\n");
 	
 	for (int i = 0; i < sendingQuantity; i++) {
 		// The worker node is entitled to emails number (emailsSent) till (emailSent + sendingQuantity)
 		// No other nodes should be fighting the node over this
-		Email e = reader.get(m_emailsSent - i);
+		Email e = reader.get(m_emailsSent - i - 1);
 		
 		MPI_Send_string(e.Sender,  nodeId, TAG_EMAIL_SENDER);
 		MPI_Send_string(e.Subject, nodeId, TAG_EMAIL_SUBJECT);
@@ -145,7 +148,7 @@ void Coordinator::receiveResult() {
 		MPI::Status status;
 		
 		// Receive the Sender (first data point) from any source, then follow up with the rest from the same source only
-		result.Sender  = MPI_Recv_string(MPI::ANY_SOURCE,   TAG_RETURN_EMAIL_SENDER, status);
+		result.Sender = MPI_Recv_string(MPI::ANY_SOURCE, TAG_RETURN_EMAIL_SENDER, status);
 		
 		int node = status.Get_source();
 		
@@ -162,12 +165,14 @@ void Coordinator::receiveResult() {
 			result.Attachments[i] = MPI_Recv_string(node, TAG_RETURN_EMAIL_ATTACHMENT);
 		}
 		
+		printf("Analyzed email #%i recieved from node #%i! Subject was %s\n", m_repliesReceived, node, result.Subject.c_str());
 		m_repliesReceived++;
 		
-		printf("Analyzed email recieved from node!\n");
 		// Result now contains an email that has been analyzed for spam
 		// Do something with it here
+		//EmailWriter.add(result);
 	}
+	//EmailWriter.writeToFile("output.xml");
 	
 	return;
 }

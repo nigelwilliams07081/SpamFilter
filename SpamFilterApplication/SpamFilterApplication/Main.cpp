@@ -31,34 +31,39 @@
 
 int main(int argc, char **argv) {
 	
-	int prov = MPI::Init_thread(MPI::THREAD_MULTIPLE);
-	
-	if (argc == 1) {
-		printf("Must specify an absolute path to the email XML file!\n");
-		MPI::Finalize();
-		return 1;
-	}
-	
-	int nodeCount = MPI::COMM_WORLD.Get_size();
-
-	if (nodeCount == 1) {
-		printf("Number of tasks must be more than 1!\n");
-		MPI::Finalize();
-		return 2;
-	}
+	//int prov = MPI::Init_thread(MPI::THREAD_MULTIPLE);
+	int prov;
+	HPMPI_Init_thread(&argc, &argv, MPI_THREAD_MULTIPLE, &prov);
 
 	int taskId = MPI::COMM_WORLD.Get_rank();
 	
-	char finished;
-	
 	if (taskId == RANK_COORDINATOR) {
 		
+		if (argc == 1) {
+			printf("Must specify an absolute path to the email XML file!\n");
+			MPI::Finalize();
+			return 1;
+		}
+		
+		int nodeCount = MPI::COMM_WORLD.Get_size();
+
+		if (nodeCount == 1) {
+			printf("Number of tasks must be more than 1!\n");
+			MPI::Finalize();
+			return 2;
+		}
+	
 		printf("Thread support provided: %i\n", prov);
 		
 		#ifdef SINGLETHREADED
-		printf("This program running in single-threaded mode.\n");
+		printf("This program compiled in single-threaded mode.\n");
 		#else
-		printf("This program running in fully threaded mode.\n");
+		printf("This program compiled in fully threaded mode.\n");
+		if (prov < MPI::THREAD_MULTIPLE) {
+			printf("Insufficient threading support provided!\n");
+			MPI::Finalize();
+			return 3;
+		}
 		#endif
 		
 		const char *emailSource = argv[1];

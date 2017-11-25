@@ -7,6 +7,7 @@
 #include <sstream>
 #include <vector>
 #include <thread>
+#include <chrono>
 
 #include "Bayesian.h"
 #include "SpamFilter.h"

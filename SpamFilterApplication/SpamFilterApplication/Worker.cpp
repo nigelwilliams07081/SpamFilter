@@ -28,7 +28,7 @@ void Worker::mainLoop() {
 		MPI::COMM_WORLD.Recv(&quantity, 1, MPI::INT, RANK_COORDINATOR, TAG_EMAIL_QUANTITY);
 				
 		// If the coordinator is out of emails, we can exit
-		if (quantity == 0) {
+		if (quantity <= 0) {
 			return;
 		}
 		
@@ -62,6 +62,11 @@ void Worker::mainLoop() {
 void Worker::processEmail(Email e) {
 	// Process the email here
 	//e.SpamPercentage = doSpamSearch(e);
+	
+	// Sleep to simulate processing time for this email
+	std::this_thread::sleep_for(std::chrono::milliseconds(50));
+	
+	// TODO: pass a status flag, let the coordinator know of any exceptions that occured
 	
 	// Pass back to coordinator when we're done
 	MPI_Send_string(e.Sender,  RANK_COORDINATOR, TAG_RETURN_EMAIL_SENDER);
