@@ -152,17 +152,15 @@ void Coordinator::receiveResult() {
 		result.Subject = MPI_Recv_string(node, TAG_RETURN_EMAIL_SUBJECT);
 		result.Body    = MPI_Recv_string(node, TAG_RETURN_EMAIL_BODY);
 		
-		result.NumAttachments;
-		MPI::COMM_WORLD.Recv(&(result.NumAttachments), 1, MPI::INT, node, TAG_RETURN_EMAIL_NUM_ATTACHMENTS);
+		float spamPercent;
+		MPI::COMM_WORLD.Recv(&(result.NumAttachments), 1, MPI::INT,   node, TAG_RETURN_EMAIL_NUM_ATTACHMENTS);
+		MPI::COMM_WORLD.Recv(&spamPercent,             1, MPI::FLOAT, node, TAG_RETURN_EMAIL_SPAM_PERCENTAGE);
+		result.SpamPercentage = spamPercent;
 		
 		result.Attachments = new std::string[result.NumAttachments];
 		for (int i = 0; i < result.NumAttachments; i++) {
 			result.Attachments[i] = MPI_Recv_string(node, TAG_RETURN_EMAIL_ATTACHMENT);
 		}
-		
-		float spamPercent;
-		MPI::COMM_WORLD.Recv(&spamPercent, 1, MPI::FLOAT, node, TAG_RETURN_EMAIL_SPAM_PERCENTAGE);
-		result.SpamPercentage = spamPercent;
 		
 		m_repliesReceived++;
 		
