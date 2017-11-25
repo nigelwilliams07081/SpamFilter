@@ -33,55 +33,55 @@ int main(int argc, char **argv) {
 	
 	//int prov = MPI::Init_thread(MPI::THREAD_MULTIPLE);
 	int prov;
-	HPMPI_Init_thread(&argc, &argv, MPI_THREAD_MULTIPLE, &prov);
-
+	HPMPI_Init_thread(NULL, NULL, MPI_THREAD_MULTIPLE, &prov);
+	
 	int taskId = MPI::COMM_WORLD.Get_rank();
 	
-	if (taskId == RANK_COORDINATOR) {
-		
-		if (argc == 1) {
+	if (argc == 1) {
+		if (taskId == RANK_COORDINATOR)
 			printf("Must specify an absolute path to the email XML file!\n");
-			MPI::Finalize();
-			return 1;
-		}
 		
-		int nodeCount = MPI::COMM_WORLD.Get_size();
-
-		if (nodeCount == 1) {
-			printf("Number of tasks must be more than 1!\n");
-			MPI::Finalize();
-			return 2;
-		}
+		MPI::Finalize();
+		return 1;
+	}
 	
-		printf("Thread support provided: %i\n", prov);
+	int nodeCount = MPI::COMM_WORLD.Get_size();
+	if (nodeCount == 1) {
+		if (taskId == RANK_COORDINATOR)
+			printf("Number of tasks must be more than 1!\n");
 		
+		MPI::Finalize();
+		return 2;
+	}
+	
+	if (taskId == RANK_COORDINATOR) {
 		#ifdef SINGLETHREADED
 		printf("This program compiled in single-threaded mode.\n");
 		#else
 		printf("This program compiled in fully threaded mode.\n");
-		if (prov < MPI::THREAD_MULTIPLE) {
-			printf("Insufficient threading support provided!\n");
-			MPI::Finalize();
-			return 3;
-		}
 		#endif
+		printf("Thread support provided: %i\n", prov);
+	}
+	
+	if (prov < MPI::THREAD_MULTIPLE) {
+		if (taskId == RANK_COORDINATOR)
+			printf("Insufficient threading support provided!\n");
 		
+		MPI::Finalize();
+		return 3;
+	}
+	
+	if (taskId == RANK_COORDINATOR) {
 		const char *emailSource = argv[1];
 		printf("Will load emails from %s\n", emailSource);
 		Coordinator::mainLoop(emailSource);
-		
-		// Finish
 		printf("Coordinator finished\n");
-		MPI::COMM_WORLD.Barrier();
 	} else {
 		Worker::mainLoop();
-		
-		// Wait here for the coordinator to receive all the data
 		printf("Worker finished\n");
-		MPI::COMM_WORLD.Barrier();
 	}
 	
-	
+	MPI::COMM_WORLD.Barrier();
 	MPI::Finalize();
 	return 0;
 }
