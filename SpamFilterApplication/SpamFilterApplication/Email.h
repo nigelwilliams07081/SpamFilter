@@ -15,7 +15,7 @@ struct Email {
 	std::string Sender;
 	std::string Subject;
 	std::string Body;
-	int NumAttachments;
+	unsigned int NumAttachments;
 	std::string *Attachments;
 	float SpamPercentage;
 };

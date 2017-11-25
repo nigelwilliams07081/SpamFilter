@@ -24,6 +24,10 @@ void Coordinator::mainLoop(const char* emailsource) {
 		
 		m_totalEmails = reader.getEmailCount();
 		
+		for (unsigned int i = 0; i < m_totalEmails; i++) {
+			reader.get(i);
+		}
+		
 		// Everything checks out
 		printf("Success: loaded %i emails\n", m_totalEmails);
 	
@@ -109,7 +113,7 @@ void Coordinator::talkWithNode(int nodeId) {
 	MPI::COMM_WORLD.Send(&sendingQuantity, 1, MPI::INT, nodeId, TAG_EMAIL_QUANTITY);
 	
 	// If there are no more emails to send, exit
-	if (sendingQuantity <= 0) {
+	if (sendingQuantity == 0) {
 		printf("Sent termination signal to node #%i\n", nodeId);
 		m_activeWorkers--;
 		return;
@@ -128,16 +132,14 @@ void Coordinator::talkWithNode(int nodeId) {
 		
 		MPI::COMM_WORLD.Send(&(e.NumAttachments), 1, MPI::INT, nodeId, TAG_EMAIL_NUM_ATTACHMENTS);
 		
-		for (int i = 0; i < e.NumAttachments; i++) {
-			MPI_Send_string(e.Attachments[i], nodeId, TAG_EMAIL_ATTACHMENT);
+		for (unsigned int j = 0; j < e.NumAttachments; j++) {
+			MPI_Send_string(e.Attachments[j], nodeId, TAG_EMAIL_ATTACHMENT);
 		}
 		
 		printf("Successfully sent email to node #%i\n", nodeId);
 	}
 	
 	printf("Successfully sent all %i emails to node #%i\n", sendingQuantity, nodeId);
-	
-	return;
 }
 
 void Coordinator::receiveResult() {
@@ -158,8 +160,8 @@ void Coordinator::receiveResult() {
 		result.Body    = MPI_Recv_string(node, TAG_RETURN_EMAIL_BODY    + nonce);
 		
 		float spamPercent;
-		MPI::COMM_WORLD.Recv(&(result.NumAttachments), 1, MPI::INT,   node, TAG_RETURN_EMAIL_NUM_ATTACHMENTS + nonce);
-		MPI::COMM_WORLD.Recv(&spamPercent,             1, MPI::FLOAT, node, TAG_RETURN_EMAIL_SPAM_PERCENTAGE + nonce);
+		MPI::COMM_WORLD.Recv(&(result.NumAttachments), 1, MPI::UNSIGNED, node, TAG_RETURN_EMAIL_NUM_ATTACHMENTS + nonce);
+		MPI::COMM_WORLD.Recv(&spamPercent,             1, MPI::FLOAT,    node, TAG_RETURN_EMAIL_SPAM_PERCENTAGE + nonce);
 		result.SpamPercentage = spamPercent;
 		
 		result.Attachments = new std::string[result.NumAttachments];
@@ -177,5 +179,4 @@ void Coordinator::receiveResult() {
 	
 	//EmailWriter.writeToFile("output.xml");
 	
-	return;
 }

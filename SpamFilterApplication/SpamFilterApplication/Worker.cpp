@@ -30,10 +30,9 @@ void Worker::mainLoop() {
 		MPI::COMM_WORLD.Recv(&quantity, 1, MPI::INT, RANK_COORDINATOR, TAG_EMAIL_QUANTITY);
 				
 		// If the coordinator is out of emails, we can exit
-		if (quantity <= 0) {
+		if (quantity == 0) {
 			return;
 		}
-		
 		
 		// Otherwise, we loop and recieve the emails
 		for (unsigned int i = 0; i < quantity; i++) {
@@ -43,12 +42,11 @@ void Worker::mainLoop() {
 			e.Subject = MPI_Recv_string(RANK_COORDINATOR, TAG_EMAIL_SUBJECT);
 			e.Body    = MPI_Recv_string(RANK_COORDINATOR, TAG_EMAIL_BODY);
 			
-			e.NumAttachments;
-			MPI::COMM_WORLD.Recv(&(e.NumAttachments), 1, MPI::INT, RANK_COORDINATOR, TAG_EMAIL_NUM_ATTACHMENTS);
+			MPI::COMM_WORLD.Recv(&(e.NumAttachments), 1, MPI::UNSIGNED, RANK_COORDINATOR, TAG_EMAIL_NUM_ATTACHMENTS);
 			
 			e.Attachments = new std::string[e.NumAttachments];
-			for (int i = 0; i < e.NumAttachments; i++) {
-				e.Attachments[i] = MPI_Recv_string(RANK_COORDINATOR, TAG_EMAIL_ATTACHMENT);
+			for (unsigned int j = 0; j < e.NumAttachments; j++) {
+				e.Attachments[j] = MPI_Recv_string(RANK_COORDINATOR, TAG_EMAIL_ATTACHMENT);
 			}
 			
 			// Spawn a new thread to process the email
@@ -81,10 +79,10 @@ void Worker::processEmail(Email e) {
 	MPI_Send_string(e.Subject, RANK_COORDINATOR, TAG_RETURN_EMAIL_SUBJECT + m_nonce);
 	MPI_Send_string(e.Body,    RANK_COORDINATOR, TAG_RETURN_EMAIL_BODY    + m_nonce);
 	
-	MPI::COMM_WORLD.Send(&(e.SpamPercentage), 1, MPI::FLOAT, RANK_COORDINATOR, TAG_RETURN_EMAIL_SPAM_PERCENTAGE + m_nonce);
-	MPI::COMM_WORLD.Send(&(e.NumAttachments), 1, MPI::INT,   RANK_COORDINATOR, TAG_RETURN_EMAIL_NUM_ATTACHMENTS + m_nonce);
+	MPI::COMM_WORLD.Send(&(e.SpamPercentage), 1, MPI::FLOAT,    RANK_COORDINATOR, TAG_RETURN_EMAIL_SPAM_PERCENTAGE + m_nonce);
+	MPI::COMM_WORLD.Send(&(e.NumAttachments), 1, MPI::UNSIGNED, RANK_COORDINATOR, TAG_RETURN_EMAIL_NUM_ATTACHMENTS + m_nonce);
 	
-	for (int i = 0; i < e.NumAttachments; i++) {
+	for (unsigned int i = 0; i < e.NumAttachments; i++) {
 		MPI_Send_string(e.Attachments[i], RANK_COORDINATOR, TAG_RETURN_EMAIL_ATTACHMENT + m_nonce);
 	}
 	
