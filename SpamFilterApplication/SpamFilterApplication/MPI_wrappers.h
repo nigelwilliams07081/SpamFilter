@@ -80,3 +80,4 @@ Email MPI_Recv_Email(int source);
 	
 	return result;
 }
+//*/
