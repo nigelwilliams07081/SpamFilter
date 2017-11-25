@@ -22,7 +22,7 @@ emailcount = 1000
 
 print("<emailList>")
 for i in range(emailcount):
-	print("<sender>" + generate_emailaddress() + "</sender>" + "<subject>Test subject #" + str(randrange(0, 10000)) + "</subject><body>" + generate_body() + "</body><attachments>")
+	print("<email><sender>" + generate_emailaddress() + "</sender>" + "<subject>Test subject #" + str(randrange(0, 10000)) + "</subject><body>" + generate_body() + "</body><attachments>")
 	
 	for i in range(randrange(0, 10)):
 		print("<file>" + generate_attachment() + "</file>")
