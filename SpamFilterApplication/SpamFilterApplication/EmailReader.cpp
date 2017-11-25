@@ -6,6 +6,9 @@
 EmailReader::EmailReader() {
 }
 
+EmailReader::~EmailReader() {
+	delete[] m_buffer;
+}
 
 EmailReader::EmailReader(const char* filename) {
 	loadFromFile(filename);
@@ -70,10 +73,17 @@ void EmailReader::loadFromFile(const char* filename) {
 	buffer << xmlFile.rdbuf();
 
 	// Copy file contents into char[] buffer
+	int len = buffer.str().size();
+	m_buffer = new char[len + 1];
+
 	#ifdef WIN32
-	#define strncpy strncpy_s
+	// strncpy throws warnings in Windows compilers
+	strncpy_s(m_buffer, len + 1, buffer.str().c_str(), len);
+	#else
+	strncpy(m_buffer, buffer.str().c_str(), len);
 	#endif
-	strncpy(m_buffer, buffer.str().c_str(), sizeof(m_buffer)/sizeof(char));
+
+	m_buffer[len] = '\0'; // Don't forget to wear your null terminator
 
 	// Free resources
 	xmlFile.close();
@@ -104,6 +114,12 @@ int EmailReader::getEmailCount() {
 }
 
 Email EmailReader::get(int distanceFromStart) {
+	
+	// Out of bounds
+	if (distanceFromStart < 0 || distanceFromStart >= m_emailCount) {
+		printf("Bad email read: %i\n", distanceFromStart);
+		return *(Email*)NULL; // Yuck, don't make anything run this
+	}
 	
 	// Directly get the first last, and current
 	if (distanceFromStart == 0)

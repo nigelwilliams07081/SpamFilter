@@ -10,12 +10,8 @@ class EmailReader {
 private:
 
 	rapidxml::xml_document<> m_emailDocument;
-
-	// Note: RapidXML just creates pointers to this value, so if it is ever deallocated
-	// all the pointers will point to garbage. It is REQUIRED that this char array be here,
-	// and not a pointer to one or a std::string. However you can adjust the buffer size 
-	// to fit the file.
-	char m_buffer[65536];
+	
+	char *m_buffer;
 
 	rapidxml::xml_node<> *m_currentEmail;
 	rapidxml::xml_node<> *m_beginning;
@@ -33,10 +29,12 @@ private:
 
 public:
 	EmailReader();
+	~EmailReader();
+	
 	EmailReader(const char*);
 
 	/**
-	: Load an email iterator from an xml file. Will throw exceptions from rapidxml
+	: Load an email from an xml file. Will throw exceptions from rapidxml
 	: if the xml file is not formatted as expected.
 	*/
 	void loadFromFile(const char*);
