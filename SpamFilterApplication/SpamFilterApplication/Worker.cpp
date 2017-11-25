@@ -3,6 +3,8 @@
 #define RANK_COORDINATOR 0
 #define REQUEST_EMAILS_COUNT 10
 
+unsigned int Worker::m_nonce = 0;
+
 Worker::Worker() {
 }
 
@@ -66,17 +68,25 @@ void Worker::processEmail(Email e) {
 	// Sleep to simulate processing time for this email
 	std::this_thread::sleep_for(std::chrono::milliseconds(50));
 	
-	// TODO: pass a status flag, let the coordinator know of any exceptions that occured
+	// TODO: pass a status flag, let the coordinator know of any exceptions that occurred?
 	
 	// Pass back to coordinator when we're done
-	MPI_Send_string(e.Sender,  RANK_COORDINATOR, TAG_RETURN_EMAIL_SENDER);
-	MPI_Send_string(e.Subject, RANK_COORDINATOR, TAG_RETURN_EMAIL_SUBJECT);
-	MPI_Send_string(e.Body,    RANK_COORDINATOR, TAG_RETURN_EMAIL_BODY);
 	
-	MPI::COMM_WORLD.Send(&(e.SpamPercentage), 1, MPI::FLOAT, RANK_COORDINATOR, TAG_RETURN_EMAIL_SPAM_PERCENTAGE);
-	MPI::COMM_WORLD.Send(&(e.NumAttachments), 1, MPI::INT,   RANK_COORDINATOR, TAG_RETURN_EMAIL_NUM_ATTACHMENTS);
+	// The nonce prevents the coordinator from getting confused when a single node
+	// is sending it 10 emails at once. Just add the nonce to the tags, and use that!
+	// Came up with that at 7am after not sleeping.
+	MPI::COMM_WORLD.Send(&m_nonce, 1, MPI::UNSIGNED, RANK_COORDINATOR, TAG_RETURN_EMAIL_NONCE);
+	
+	MPI_Send_string(e.Sender,  RANK_COORDINATOR, TAG_RETURN_EMAIL_SENDER  + m_nonce);
+	MPI_Send_string(e.Subject, RANK_COORDINATOR, TAG_RETURN_EMAIL_SUBJECT + m_nonce);
+	MPI_Send_string(e.Body,    RANK_COORDINATOR, TAG_RETURN_EMAIL_BODY    + m_nonce);
+	
+	MPI::COMM_WORLD.Send(&(e.SpamPercentage), 1, MPI::FLOAT, RANK_COORDINATOR, TAG_RETURN_EMAIL_SPAM_PERCENTAGE + m_nonce);
+	MPI::COMM_WORLD.Send(&(e.NumAttachments), 1, MPI::INT,   RANK_COORDINATOR, TAG_RETURN_EMAIL_NUM_ATTACHMENTS + m_nonce);
 	
 	for (int i = 0; i < e.NumAttachments; i++) {
-		MPI_Send_string(e.Attachments[i], RANK_COORDINATOR, TAG_RETURN_EMAIL_ATTACHMENT);
+		MPI_Send_string(e.Attachments[i], RANK_COORDINATOR, TAG_RETURN_EMAIL_ATTACHMENT + m_nonce);
 	}
+	
+	m_nonce = (m_nonce + 1) % 2048; // Careful not to overflow the tag (like that'll ever happen, but it's less likely than 2048 concurrent emails)
 }

@@ -146,23 +146,25 @@ void Coordinator::receiveResult() {
 		
 		Email result;
 		MPI::Status status;
+		int nonce;
 		
-		// Receive the Sender (first data point) from any source, then follow up with the rest from the same source only
-		result.Sender = MPI_Recv_string(MPI::ANY_SOURCE, TAG_RETURN_EMAIL_SENDER, status);
+		// Receive the nonce (first data point) from any source, then follow up with the rest from the same source only
+		MPI::COMM_WORLD.Recv(&nonce, 1, MPI::UNSIGNED, MPI::ANY_SOURCE, TAG_RETURN_EMAIL_NONCE, status);
 		
 		int node = status.Get_source();
 		
-		result.Subject = MPI_Recv_string(node, TAG_RETURN_EMAIL_SUBJECT);
-		result.Body    = MPI_Recv_string(node, TAG_RETURN_EMAIL_BODY);
+		result.Sender  = MPI_Recv_string(node, TAG_RETURN_EMAIL_SENDER  + nonce);
+		result.Subject = MPI_Recv_string(node, TAG_RETURN_EMAIL_SUBJECT + nonce);
+		result.Body    = MPI_Recv_string(node, TAG_RETURN_EMAIL_BODY    + nonce);
 		
 		float spamPercent;
-		MPI::COMM_WORLD.Recv(&(result.NumAttachments), 1, MPI::INT,   node, TAG_RETURN_EMAIL_NUM_ATTACHMENTS);
-		MPI::COMM_WORLD.Recv(&spamPercent,             1, MPI::FLOAT, node, TAG_RETURN_EMAIL_SPAM_PERCENTAGE);
+		MPI::COMM_WORLD.Recv(&(result.NumAttachments), 1, MPI::INT,   node, TAG_RETURN_EMAIL_NUM_ATTACHMENTS + nonce);
+		MPI::COMM_WORLD.Recv(&spamPercent,             1, MPI::FLOAT, node, TAG_RETURN_EMAIL_SPAM_PERCENTAGE + nonce);
 		result.SpamPercentage = spamPercent;
 		
 		result.Attachments = new std::string[result.NumAttachments];
 		for (int i = 0; i < result.NumAttachments; i++) {
-			result.Attachments[i] = MPI_Recv_string(node, TAG_RETURN_EMAIL_ATTACHMENT);
+			result.Attachments[i] = MPI_Recv_string(node, TAG_RETURN_EMAIL_ATTACHMENT + nonce);
 		}
 		
 		printf("Analyzed email #%i recieved from node #%i! Subject was %s\n", m_repliesReceived, node, result.Subject.c_str());
@@ -172,6 +174,7 @@ void Coordinator::receiveResult() {
 		// Do something with it here
 		//EmailWriter.add(result);
 	}
+	
 	//EmailWriter.writeToFile("output.xml");
 	
 	return;

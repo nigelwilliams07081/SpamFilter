@@ -3,7 +3,8 @@
 
 class Worker {
 private:
-	Worker();	
+	Worker();
+	static unsigned int m_nonce;
 	static void processEmail(Email);
 public:
 	static void mainLoop();
