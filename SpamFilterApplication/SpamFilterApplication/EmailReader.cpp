@@ -100,12 +100,14 @@ void EmailReader::loadFromFile(const char* filename) {
 	// Get the first and last nodes for iterator
 	m_beginning = rootNode->first_node();
 	m_ending = rootNode->last_node();
-
-	m_currentEmail = rootNode->first_node();
-	m_currentOffset = 0;
 	
 	for (auto node = m_beginning; node != NULL; node = node->next_sibling()) {
 		m_emailCount++;
+	}
+	
+	if (m_emailCount > 1) {
+		m_currentEmail = m_beginning->next_sibling();
+		m_currentOffset = 1;
 	}
 }
 
