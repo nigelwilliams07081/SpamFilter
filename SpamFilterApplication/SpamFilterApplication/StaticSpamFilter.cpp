@@ -162,12 +162,12 @@ void SSpamFilter::PerformAttachmentSearch(Email &e, const std::string spamFileNa
 		{
 			if (e.Attachments[j].find(spamAttachmentList.data()[i]) != std::string::npos)
 			{
-				std::cout << e.Attachments[j] << " is most likely a spam attachment" << std::endl;
+				//std::cout << e.Attachments[j] << " is most likely a spam attachment" << std::endl;
 				spamAttachmentConfidence = 0.2f;
 			}
 			else
 			{
-				std::cout << e.Attachments[j] << " is not a spam attachment" << std::endl;
+				//std::cout << e.Attachments[j] << " is not a spam attachment" << std::endl;
 				spamAttachmentConfidence = 0;
 			}
 		}

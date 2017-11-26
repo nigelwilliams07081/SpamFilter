@@ -16,6 +16,6 @@ private:
 	static void talkWithNode(int);
 	static void receiveResult();
 public:
-	static void mainLoop(const char*, const char*);
+	static void mainLoop(const char*, const char*, bool);
 };
 

@@ -5,7 +5,8 @@ class Worker {
 private:
 	Worker();
 	static unsigned int m_nonce;
-	static void processEmail(Email);
+	static bool *m_workingThreads;
+	static void processEmail(Email, int);
 public:
-	static void mainLoop();
+	static void mainLoop(int, bool);
 };

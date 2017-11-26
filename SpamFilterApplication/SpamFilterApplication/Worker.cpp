@@ -4,12 +4,14 @@
 #define REQUEST_EMAILS_COUNT 10
 
 unsigned int Worker::m_nonce = 0;
+bool *Worker::m_workingThreads = NULL;
 
 Worker::Worker() {
 }
 
-void Worker::mainLoop() {
+void Worker::mainLoop(int threads, bool serialized) {
 	printf("Worker started\n");
+	
 	// Wait for the OK broadcast from the coordinator
 	int OK;
 	MPI::COMM_WORLD.Bcast(&OK, 1, MPI::INT, RANK_COORDINATOR);
@@ -19,11 +21,18 @@ void Worker::mainLoop() {
 		return;
 	}
 	
-	while(true) {
+	m_workingThreads = new bool[threads];
+	
+	while (true) {
 		
+		int availableThreads = 0;
+		for (unsigned int t = 0; t < threads; t++) {
+			if (!m_workingThreads[t])
+				availableThreads++;
+		}
+			
 		// Send how many emails we would like
-		int emailsCount = REQUEST_EMAILS_COUNT;
-		MPI::COMM_WORLD.Send(&emailsCount, 1, MPI::INT, RANK_COORDINATOR, TAG_EMAILS_REQUEST);
+		MPI::COMM_WORLD.Send(&availableThreads, 1, MPI::INT, RANK_COORDINATOR, TAG_EMAILS_REQUEST);
 		
 		// The coordinator tells us how many emails to expect (may be less than how many we asked for)
 		int quantity;
@@ -50,17 +59,25 @@ void Worker::mainLoop() {
 				e.Attachments[j] = MPI_Recv_string(RANK_COORDINATOR, TAG_EMAIL_ATTACHMENT);
 			}
 			
-			#ifdef SINGLETHREADED
-			processEmail(e);
-			#else
-			// Spawn a new thread to process the email
-			std::thread(processEmail, e).detach();
-			#endif
+			if (serialized) {
+				processEmail(e, 0);
+			} else {
+				// Find an empty thread to assign this emai l to
+				for (unsigned int t = 0; t < threads; t++) {
+					if (!m_workingThreads[t]) {
+						std::thread(processEmail, e, t).detach();
+						break;
+					}
+				}
+			}
 		}
 	}
 }
 
-void Worker::processEmail(Email e) {
+void Worker::processEmail(Email e, int threadNum) {
+	
+	// Mark this thread as active
+	m_workingThreads[threadNum] = true;
 	
 	// Remember MPI_Send takes time. Reserve the nonce for this thread immediately
 	int reserved = m_nonce;
@@ -91,4 +108,7 @@ void Worker::processEmail(Email e) {
 	for (unsigned int i = 0; i < e.NumAttachments; i++) {
 		MPI_Send_string(e.Attachments[i], RANK_COORDINATOR, TAG_RETURN_EMAIL_ATTACHMENT + reserved);
 	}
+	
+	// Thread is finished, mark as inactive so it may be replaced
+	m_workingThreads[threadNum] = false;
 }

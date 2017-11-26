@@ -13,7 +13,7 @@ EmailWriter Coordinator::writer;
 Coordinator::Coordinator() {
 }
 
-void Coordinator::mainLoop(const char* emailSource, const char* emailDest) {
+void Coordinator::mainLoop(const char* emailSource, const char* emailDest, bool serialized) {
 	
 	// Load emails from the source file
 	// Send the OK if the file checks out
@@ -49,9 +49,11 @@ void Coordinator::mainLoop(const char* emailSource, const char* emailDest) {
 	}
 		
 	// Start up a thread to receive spam anaylsis results
-	#ifndef SINGLETHREADED
-	std::thread worker(receiveResult);
-	#endif
+	std::thread worker;
+	
+	if (!serialized) {
+		worker = std::thread(receiveResult);
+	}
 	
 	// Get the number of other nodes
 	m_activeWorkers = MPI::COMM_WORLD.Get_size();
@@ -67,23 +69,24 @@ void Coordinator::mainLoop(const char* emailSource, const char* emailDest) {
 		// We recieved a request for emails, spawn a new thread to serve it
 		printf("Detected a data request from node #%i\n", status.Get_source());
 		
-		#ifdef SINGLETHREADED
-		talkWithNode(status.Get_source());
-		#else
-		std::thread(talkWithNode, status.Get_source()).detach();
-		
-		// Sleep. We do not want this loop to be too tight.
-		std::this_thread::sleep_for(std::chrono::milliseconds(2));
-		#endif
+		if (serialized) {
+			talkWithNode(status.Get_source());
+		} else {
+			std::thread(talkWithNode, status.Get_source()).detach();
+			
+			// Sleep. We do not want this loop to be too tight.
+			std::this_thread::sleep_for(std::chrono::milliseconds(2));
+		}
 	}
 	
 	// Wait for the worker to finish
 	printf("Email distribution finished, waiting on results...\n");
-	#ifdef SINGLETHREADED
-	receiveResult();
-	#else
-	worker.join();
-	#endif
+	
+	if (serialized) {
+		receiveResult();
+	} else {
+		worker.join();
+	}
 	
 	return;
 }
@@ -157,8 +160,6 @@ void Coordinator::receiveResult() {
 		MPI::COMM_WORLD.Recv(&nonce, 1, MPI::UNSIGNED, MPI::ANY_SOURCE, TAG_RETURN_EMAIL_NONCE, status);
 		
 		int node = status.Get_source();
-		
-		printf("Received email data nonce %i from node #%i\n", nonce, node);
 		
 		result.Sender  = MPI_Recv_string(node, TAG_RETURN_EMAIL_SENDER  + nonce);
 		result.Subject = MPI_Recv_string(node, TAG_RETURN_EMAIL_SUBJECT + nonce);
