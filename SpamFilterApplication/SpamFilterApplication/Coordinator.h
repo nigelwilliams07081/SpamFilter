@@ -1,9 +1,11 @@
 #pragma once
 #include "EmailReader.h"
+#include "EmailWriter.h"
 
 class Coordinator {
 private:
 	static EmailReader reader;
+	static EmailWriter writer;
 	
 	static int m_emailsSent;
 	static int m_totalEmails;
@@ -14,6 +16,6 @@ private:
 	static void talkWithNode(int);
 	static void receiveResult();
 public:
-	static void mainLoop(const char*);
+	static void mainLoop(const char*, const char*);
 };
 

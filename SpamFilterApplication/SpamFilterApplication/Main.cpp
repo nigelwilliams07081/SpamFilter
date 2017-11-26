@@ -41,9 +41,9 @@ int main(int argc, char **argv) {
 	
 	int taskId = MPI::COMM_WORLD.Get_rank();
 	
-	if (argc == 1) {
+	if (argc < 3) {
 		if (taskId == RANK_COORDINATOR)
-			printf("Must specify an absolute path to the email XML file!\n");
+			printf("Must specify an absolute path to the input and output XML file!\n");
 		
 		MPI::Finalize();
 		return 1;
@@ -78,9 +78,12 @@ int main(int argc, char **argv) {
 	#endif
 	
 	if (taskId == RANK_COORDINATOR) {
+		
 		const char *emailSource = argv[1];
-		printf("Will load emails from %s\n", emailSource);
-		Coordinator::mainLoop(emailSource);
+		const char *emailDest   = argv[2];
+		
+		printf("Will load emails from %s and place output in %s\n", emailSource, emailDest);
+		Coordinator::mainLoop(emailSource, emailDest);
 		printf("Coordinator finished\n");
 	} else {
 		Worker::mainLoop();

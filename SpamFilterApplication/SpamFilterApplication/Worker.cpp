@@ -66,9 +66,7 @@ void Worker::processEmail(Email e) {
 	m_nonce = (m_nonce + 1) % 2048;
 	
 	// Process the email here
-	//e.SpamPercentage = doSpamSearch(e);
-	
-	// TODO: pass a status flag, let the coordinator know of any exceptions that occurred?
+	e.SpamPercentage = 0.5;
 	
 	// Pass back to coordinator when we're done
 	

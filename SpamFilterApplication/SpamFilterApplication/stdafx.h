@@ -8,6 +8,7 @@
 #include <vector>
 #include <thread>
 #include <chrono>
+#include <cassert>
 
 #include "Bayesian.h"
 #include "SpamFilter.h"
@@ -19,5 +20,6 @@
 #include "Coordinator.h"
 #include "tags.h"
 #include "MPI_wrappers.h"
+#include "EmailWriter.h"
 
 //#define SINGLETHREADED 1
