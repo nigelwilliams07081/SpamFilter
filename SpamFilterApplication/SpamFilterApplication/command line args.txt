@@ -1,0 +1,12 @@
+-i			[filepath]	Input file to use. Unsure if absolute path is needed.
+-inputfile	[filepath]
+
+-o			[filepath]	Output file to use. Unsure if absolute path is needed.
+-outputfile	[filepath]
+
+-t			[integer]	Number of threads to use per worker keep under 15?
+-threads	[integer]	Have had bad performance using 20 threads.
+
+--serialized			Run in serialized mode (-t must be 1 or omitted)
+						Serialized mode will not use ANY threads, including 
+						just to structure the flow of data. Use for debugging only.
