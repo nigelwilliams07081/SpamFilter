@@ -73,10 +73,14 @@ void Worker::processEmail(Email e) {
 	spamFilter.SetEmail(e);
 
 	// Process the email here
+<<<<<<< HEAD
 	spamFilter.PerformSpamSearch();
 	e.SpamPercentage = spamFilter.GetOverallSpamConfidence();
 	
 	// TODO: pass a status flag, let the coordinator know of any exceptions that occurred?
+=======
+	e.SpamPercentage = 0.5;
+>>>>>>> 9b35db81f6bda9e0ba5f58773ba30b5da067a6e8
 	
 	// Pass back to coordinator when we're done
 	

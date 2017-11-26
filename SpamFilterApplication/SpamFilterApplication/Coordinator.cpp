@@ -8,11 +8,12 @@ int Coordinator::m_repliesReceived = 0;
 int Coordinator::m_activeWorkers   = 0;
 
 EmailReader Coordinator::reader;
+EmailWriter Coordinator::writer;
 
 Coordinator::Coordinator() {
 }
 
-void Coordinator::mainLoop(const char* emailsource) {
+void Coordinator::mainLoop(const char* emailSource, const char* emailDest) {
 	
 	// Load emails from the source file
 	// Send the OK if the file checks out
@@ -20,7 +21,8 @@ void Coordinator::mainLoop(const char* emailsource) {
 	
 	try {
 		printf("Loading XML data\n");
-		reader.loadFromFile(emailsource);
+		reader.loadFromFile(emailSource);
+		writer.useFile(emailDest);
 		
 		m_totalEmails = reader.getEmailCount();
 		
@@ -181,14 +183,9 @@ void Coordinator::receiveResult() {
 			}
 		}
 		
-		printf("Analyzed email #%i recieved from node #%i! Subject was %s\n", m_repliesReceived, node, result.Subject.c_str());
+		printf("Analyzed email #%i recieved from node #%i\n", m_repliesReceived, node));
 		m_repliesReceived++;
 		
-		// Result now contains an email that has been analyzed for spam
-		// Do something with it here
-		//EmailWriter.add(result);
+		writer.add(result);
 	}
-	
-	//EmailWriter.writeToFile("output.xml");
-	
 }
