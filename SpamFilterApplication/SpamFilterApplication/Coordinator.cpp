@@ -176,7 +176,7 @@ void Coordinator::receiveResult() {
 			}
 		}
 		
-		printf("Analyzed email #%i recieved from node #%i! Subject was %s\n", m_repliesReceived, node, result.Subject.c_str());
+		printf("Analyzed email #%i recieved from node #%i\n", m_repliesReceived, node));
 		m_repliesReceived++;
 		
 		writer.add(result);
