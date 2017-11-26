@@ -56,13 +56,13 @@
     <ClInclude Include="Email.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\MPI\Coordinator.h">
+    <ClInclude Include="Worker.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\MPI\tags.h">
+    <ClInclude Include="Coordinator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\MPI\Worker.h">
+    <ClInclude Include="tags.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

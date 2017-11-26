@@ -132,6 +132,8 @@ void Coordinator::talkWithNode(int nodeId) {
 		MPI_Send_string(e.Body,    nodeId, TAG_EMAIL_BODY);
 		
 		MPI::COMM_WORLD.Send(&(e.NumAttachments), 1, MPI::INT, nodeId, TAG_EMAIL_NUM_ATTACHMENTS);
+		int isValid = (int)(e.IsValid);
+		MPI::COMM_WORLD.Send(&isValid, 1, MPI::INT, nodeId, TAG_EMAIL_VALID);
 		
 		for (unsigned int j = 0; j < e.NumAttachments; j++) {
 			MPI_Send_string(e.Attachments[j], nodeId, TAG_EMAIL_ATTACHMENT);
@@ -164,6 +166,11 @@ void Coordinator::receiveResult() {
 		
 		float spamPercent;
 		MPI::COMM_WORLD.Recv(&(result.NumAttachments), 1, MPI::UNSIGNED, node, TAG_RETURN_EMAIL_NUM_ATTACHMENTS + nonce);
+
+		int isValid = 0;
+		MPI::COMM_WORLD.Recv(&isValid, 1, MPI::INT, node, TAG_RETURN_EMAIL_NUM_ATTACHMENTS + nonce);
+		result.IsValid = isValid;
+
 		MPI::COMM_WORLD.Recv(&spamPercent,             1, MPI::FLOAT,    node, TAG_RETURN_EMAIL_SPAM_PERCENTAGE + nonce);
 		result.SpamPercentage = spamPercent;
 		

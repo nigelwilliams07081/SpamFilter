@@ -38,6 +38,11 @@ public:
 	std::vector<std::string> GetSpamAttachmentList() const;
 
 	/**
+	: Sets the Email struct
+	*/
+	void SetEmail(Email e);
+
+	/**
 	: [bool]
 	: Attempts to open the file specified by <fileString>
 	: returns false if the attempt fails
@@ -61,10 +66,10 @@ public:
 private:
 	void GrabLinesFromFile(std::string fileString, std::vector<std::string>& spamList);
 
-	void PerformSenderSearch(const char sender[256], const std::string& spamFileName);
-	void PerformSubjectSearch(const char subject[998], const std::string& spamFileName);
-	void PerformPhraseSearch(const char body[65535], const std::string& spamFileName);
-	void PerformAttachmentSearch(const char attachments[10][255], const std::string& spamFileName);
+	void PerformSenderSearch(std::string& sender, const std::string& spamFileName);
+	void PerformSubjectSearch(std::string& subject, const std::string& spamFileName);
+	void PerformPhraseSearch(std::string& body, const std::string& spamFileName);
+	void PerformAttachmentSearch(std::string*& attachments, const std::string& spamFileName);
 
 	std::ifstream m_File;
 
@@ -79,6 +84,5 @@ private:
 	float m_SpamAttachmentConfidence;
 	float m_OverallSpamConfidence;
 
-	int m_NumberOfAttachments;
 	Email m_Email;
 };

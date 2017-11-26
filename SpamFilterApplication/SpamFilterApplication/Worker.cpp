@@ -43,7 +43,11 @@ void Worker::mainLoop() {
 			e.Body    = MPI_Recv_string(RANK_COORDINATOR, TAG_EMAIL_BODY);
 			
 			MPI::COMM_WORLD.Recv(&(e.NumAttachments), 1, MPI::UNSIGNED, RANK_COORDINATOR, TAG_EMAIL_NUM_ATTACHMENTS);
-			
+
+			int isValid = 0;
+			MPI::COMM_WORLD.Recv(&isValid, 1, MPI::INT, RANK_COORDINATOR, TAG_EMAIL_VALID);
+			e.IsValid = (bool)isValid;
+
 			e.Attachments = new std::string[e.NumAttachments];
 			for (unsigned int j = 0; j < e.NumAttachments; j++) {
 				e.Attachments[j] = MPI_Recv_string(RANK_COORDINATOR, TAG_EMAIL_ATTACHMENT);
@@ -64,9 +68,13 @@ void Worker::processEmail(Email e) {
 	// Remember MPI_Send takes time. Reserve the nonce for this thread immediately
 	int reserved = m_nonce;
 	m_nonce = (m_nonce + 1) % 2048;
-	
+
+	SpamFilter spamFilter;
+	spamFilter.SetEmail(e);
+
 	// Process the email here
-	//e.SpamPercentage = doSpamSearch(e);
+	spamFilter.PerformSpamSearch();
+	e.SpamPercentage = spamFilter.GetOverallSpamConfidence();
 	
 	// TODO: pass a status flag, let the coordinator know of any exceptions that occurred?
 	

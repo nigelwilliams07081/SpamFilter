@@ -155,16 +155,16 @@
     <ClCompile Include="Worker.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\MPI\Coordinator.h" />
-    <ClInclude Include="..\MPI\tags.h" />
-    <ClInclude Include="..\MPI\Worker.h" />
     <ClInclude Include="Bayesian.h" />
+    <ClInclude Include="Coordinator.h" />
     <ClInclude Include="Email.h" />
     <ClInclude Include="EmailReader.h" />
     <ClInclude Include="rapidxml.hpp" />
     <ClInclude Include="FileNames.h" />
     <ClInclude Include="SpamFilter.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="tags.h" />
+    <ClInclude Include="Worker.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\MPI\compile.sh" />
