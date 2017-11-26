@@ -32,7 +32,7 @@ int main(int argc, char **argv) {
 	}
 	
 	if (taskId == RANK_COORDINATOR) {
-		printf("Spam Filter MPI program version 0.9.00\n");
+		printf("Spam Filter MPI program version 0.9.02\n");
 		#ifdef SINGLETHREADED
 		printf("This program compiled in single-threaded mode.\n");
 		#else

@@ -9,17 +9,19 @@
 #include <thread>
 #include <chrono>
 #include <cassert>
+#include <functional>
 
 #include "Bayesian.h"
-#include "SpamFilter.h"
+//#include "SpamFilter.h"
+#include "StaticSpamFilter.h"
 //#include "EmailReceiver.h"
 #include "EmailReader.h"
+#include "EmailWriter.h"
 #include "FileNames.h"
 #include "Email.h"
 #include "Worker.h"
 #include "Coordinator.h"
 #include "tags.h"
 #include "MPI_wrappers.h"
-#include "EmailWriter.h"
 
 //#define SINGLETHREADED 1

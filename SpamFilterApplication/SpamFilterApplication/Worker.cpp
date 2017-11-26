@@ -41,22 +41,19 @@ void Worker::mainLoop() {
 			e.Sender  = MPI_Recv_string(RANK_COORDINATOR, TAG_EMAIL_SENDER);
 			e.Subject = MPI_Recv_string(RANK_COORDINATOR, TAG_EMAIL_SUBJECT);
 			e.Body    = MPI_Recv_string(RANK_COORDINATOR, TAG_EMAIL_BODY);
+			e.IsValid = MPI_Recv_bool(RANK_COORDINATOR, TAG_EMAIL_VALID);
 			
 			MPI::COMM_WORLD.Recv(&(e.NumAttachments), 1, MPI::UNSIGNED, RANK_COORDINATOR, TAG_EMAIL_NUM_ATTACHMENTS);
-
-			int isValid = 0;
-			MPI::COMM_WORLD.Recv(&isValid, 1, MPI::INT, RANK_COORDINATOR, TAG_EMAIL_VALID);
-			e.IsValid = (bool)isValid;
-
+			
 			e.Attachments = new std::string[e.NumAttachments];
 			for (unsigned int j = 0; j < e.NumAttachments; j++) {
 				e.Attachments[j] = MPI_Recv_string(RANK_COORDINATOR, TAG_EMAIL_ATTACHMENT);
 			}
 			
-			// Spawn a new thread to process the email
 			#ifdef SINGLETHREADED
 			processEmail(e);
 			#else
+			// Spawn a new thread to process the email
 			std::thread(processEmail, e).detach();
 			#endif
 		}
@@ -69,18 +66,13 @@ void Worker::processEmail(Email e) {
 	int reserved = m_nonce;
 	m_nonce = (m_nonce + 1) % 2048;
 
-	SpamFilter spamFilter;
-	spamFilter.SetEmail(e);
+	//SpamFilter spamFilter;
+	//spamFilter.SetEmail(e);
 
 	// Process the email here
-<<<<<<< HEAD
-	spamFilter.PerformSpamSearch();
-	e.SpamPercentage = spamFilter.GetOverallSpamConfidence();
-	
-	// TODO: pass a status flag, let the coordinator know of any exceptions that occurred?
-=======
-	e.SpamPercentage = 0.5;
->>>>>>> 9b35db81f6bda9e0ba5f58773ba30b5da067a6e8
+	//spamFilter.PerformSpamSearch();
+	//e.SpamPercentage = spamFilter.GetOverallSpamConfidence();
+	e.SpamPercentage = SSpamFilter::PerformSpamSearch(e);
 	
 	// Pass back to coordinator when we're done
 	
