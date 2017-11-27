@@ -9,7 +9,7 @@ bool *Worker::m_workingThreads = NULL;
 Worker::Worker() {
 }
 
-void Worker::mainLoop(int threads, bool serialized) {
+void Worker::mainLoop(int threads) {
 	printf("Worker started\n");
 	
 	// Wait for the OK broadcast from the coordinator
@@ -27,8 +27,9 @@ void Worker::mainLoop(int threads, bool serialized) {
 		
 		int availableThreads = 0;
 		for (unsigned int t = 0; t < threads; t++) {
-			if (!m_workingThreads[t])
+			if (!m_workingThreads[t]) {
 				availableThreads++;
+			}
 		}
 			
 		// Send how many emails we would like
@@ -59,10 +60,11 @@ void Worker::mainLoop(int threads, bool serialized) {
 				e.Attachments[j] = MPI_Recv_string(RANK_COORDINATOR, TAG_EMAIL_ATTACHMENT);
 			}
 			
-			if (serialized) {
+			// 1 thread is the same as being serialized for the worker
+			if (threads == 1) {
 				processEmail(e, 0);
 			} else {
-				// Find an empty thread to assign this emai l to
+				// Find an empty thread to assign this email to
 				for (unsigned int t = 0; t < threads; t++) {
 					if (!m_workingThreads[t]) {
 						std::thread(processEmail, e, t).detach();

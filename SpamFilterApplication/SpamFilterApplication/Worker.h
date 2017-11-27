@@ -8,5 +8,5 @@ private:
 	static bool *m_workingThreads;
 	static void processEmail(Email, int);
 public:
-	static void mainLoop(int, bool);
+	static void mainLoop(int);
 };
