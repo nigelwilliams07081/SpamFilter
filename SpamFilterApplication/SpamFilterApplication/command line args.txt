@@ -1,12 +1,13 @@
--i			[filepath]	Input file to use. Unsure if absolute path is needed.
+-i			[filepath]	Full path of input file to use.
 -inputfile	[filepath]
 
--o			[filepath]	Output file to use. Unsure if absolute path is needed.
+-o			[filepath]	Full path of output file to use.
 -outputfile	[filepath]
 
--t			[integer]	Number of threads to use per worker keep under 15?
+-t			[integer]	Number of threads to use per worker. Keep under 15?
 -threads	[integer]	Have had bad performance using 20 threads.
 
---serialized			Run in serialized mode (-t must be 1 or omitted)
-						Serialized mode will not use ANY threads, including 
-						just to structure the flow of data. Use for debugging only.
+--serialized			Run in serialized mode (-t must be 1 or omitted). 
+						Serialized mode will not use ANY threads, including just
+						to structure the flow of data. Use for debugging only. 
+						Very useful if program is behaving unexpectedly.
