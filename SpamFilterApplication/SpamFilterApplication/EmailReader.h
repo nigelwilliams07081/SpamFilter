@@ -50,6 +50,6 @@ public:
 	: [Email]
 	: Returns the email at position X. Returns NULL for out-of-bounds values.
 	*/
-	Email get(int);
+	Email get(int) const;
 	
 };

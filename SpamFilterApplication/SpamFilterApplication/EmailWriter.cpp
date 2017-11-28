@@ -15,6 +15,8 @@ void EmailWriter::useFile(const char *filename) {
 	close();
 	
 	m_file.open(filename);
+	assert(m_file.is_open());
+	
 	m_file << "<emailList>";
 }
 
@@ -34,9 +36,9 @@ void EmailWriter::add(Email e) {
 	
 	m_file 
 	  << "<email spam=\"" << e.SpamPercentage << "\">" 
-	  << "<subject>" << e.Subject << "</subject>"
-	  << "<sender>"  << e.Sender  << "</sender>" 
-	  << "<body>"    << e.Body    << "</body>"
+	  << "<subject>"      << e.Subject        << "</subject>"
+	  << "<sender>"       << e.Sender         << "</sender>" 
+	  << "<body>"         << e.Body           << "</body>"
 	  << "<attachments>";
 	  
 	for (unsigned int i = 0; i < e.NumAttachments; i++) {

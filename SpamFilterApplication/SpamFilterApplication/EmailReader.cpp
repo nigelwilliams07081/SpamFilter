@@ -115,7 +115,7 @@ int EmailReader::getEmailCount() {
 	return m_emailCount;
 }
 
-Email EmailReader::get(int distanceFromStart) {
+Email EmailReader::get(int distanceFromStart) const {
 	
 	// Out of bounds
 	if (distanceFromStart < 0 || distanceFromStart >= m_emailCount) {
@@ -130,60 +130,27 @@ Email EmailReader::get(int distanceFromStart) {
 	if (distanceFromStart == m_emailCount - 1)
 		return constructEmail(m_ending);
 	
-	if (distanceFromStart == m_currentOffset)
-		return constructEmail(m_currentEmail);
-	
 	
 	// Compute how to find the pointer to the requested element the fastest
-	int distanceFromEnd     = abs(m_emailCount    - distanceFromStart);
-	int distanceFromCurrent = abs(m_currentOffset - distanceFromStart);
+	int distanceFromEnd = abs(m_emailCount - distanceFromStart);
 	
-	int smallest = std::min({distanceFromStart, distanceFromCurrent, distanceFromEnd});
-	
-	// Target is closest to the the start
-	if (smallest == distanceFromStart) {
+	if (distanceFromStart < distanceFromEnd) {
 		auto node = m_beginning;
 		
 		// Traverse from the start until we reach the target
-		for (int i = 0; i < smallest; i++) {
+		for (int i = 0; i < distanceFromStart; i++) {
 			node = node->next_sibling();
 		}
 		
-		m_currentEmail = node;
-	}
-	
-	// Target is closest to the end
-	else if (smallest == distanceFromEnd) {
+		return constructEmail(node);
+	} else {
 		auto node = m_ending;
 		
 		// Traverse from the end until we reach the target
-		for (int i = 0; i < smallest; i++) {
+		for (int i = 0; i < distanceFromEnd; i++) {
 			node = node->previous_sibling();
 		}
 		
-		m_currentEmail = node;
+		return constructEmail(node);
 	}
-	
-	// Target is closest to the current email
-	else if (smallest == distanceFromCurrent) {
-		
-		// If it is nearer to the start then the current email, traverse back
-		if (distanceFromStart < m_currentOffset) {
-			for (int i = 0; i < distanceFromCurrent; i++) {
-				m_currentEmail = m_currentEmail->previous_sibling();
-			}
-			
-		// Else traverse forward
-		} else {
-			for (int i = 0; i < distanceFromCurrent; i++) {
-				m_currentEmail = m_currentEmail->next_sibling();
-			}
-		}
-	}
-	
-	// Set the current offset to match the current email
-	m_currentOffset = distanceFromStart;
-	
-	// Return the Email struct
-	return constructEmail(m_currentEmail);
 }
