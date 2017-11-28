@@ -1,10 +1,6 @@
 #pragma once
 #include "rapidxml.hpp"
 
-#define EMAILREADER_EXPERIMENT
-// Experimental changes to the email reader class to make it more thread-friendly
-// Iterator pattern is replaced with simple access
-
 class EmailReader {
 
 private:
