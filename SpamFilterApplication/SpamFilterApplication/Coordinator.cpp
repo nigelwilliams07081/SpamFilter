@@ -75,7 +75,7 @@ void Coordinator::mainLoop(const char* emailSource, const char* emailDest, bool 
 			std::thread(talkWithNode, status.Get_source()).detach();
 			
 			// Sleep. We do not want this loop to be too tight.
-			std::this_thread::sleep_for(std::chrono::milliseconds(2));
+			std::this_thread::sleep_for(std::chrono::milliseconds(5));
 		}
 	}
 	

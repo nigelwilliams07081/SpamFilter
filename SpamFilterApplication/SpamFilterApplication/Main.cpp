@@ -6,6 +6,14 @@
 #define RANK_COORDINATOR 0
 #define THREAD_UNDEFINED -1
 #define THREAD_DEFAULT 5
+#define TIME_UNLIMITED -1
+
+void exitAfter(int seconds) {
+	std::this_thread::sleep_for(std::chrono::seconds(seconds));
+	printf("Time limit expired, aborting...\n");
+	MPI::COMM_WORLD.Abort(1);
+	exit(1);
+}
 
 int main(int argc, char **argv) {
 	
@@ -25,6 +33,7 @@ int main(int argc, char **argv) {
 	const char *emailDest   = NULL;
 	bool serialized         = false;
 	int threads             = THREAD_UNDEFINED;
+	int timelimit           = TIME_UNLIMITED;
 	
 	
 	// Begin parsing command line arguments
@@ -77,6 +86,31 @@ int main(int argc, char **argv) {
 			Log("Will use %i worker threads\n", threads);
 		
 		
+		// Handle max execution time
+		} else if (argv[j] == std::string("-m") || argv[j] == std::string("-maxtime")) {
+			if (++j == argc) {
+				Error("No time limit provided\n");
+			}
+			
+			if (serialized) {
+				Error("Cannot time program while serialized\n");
+			}
+			
+			try {
+				timelimit = std::stoi(argv[j]);
+			} catch (const std::invalid_argument &e) {
+				Error("Time limit is not an integer\n");
+			} catch (const std::out_of_range &e) {
+				Error("Time limit is outside integer range\n");
+			}
+			
+			if (timelimit <= 0) {
+				Error("Time limit is zero or negative\n");
+			}
+			
+			Log("Will exit after %i seconds\n", timelimit);
+		
+		
 		
 		// Handle serialized runtime
 		} else if (argv[j] == std::string("--serialized")) {
@@ -84,6 +118,10 @@ int main(int argc, char **argv) {
 			// In order to be serialized we must have received -t 1 or the -t flag must have not be present
 			if (threads != 1 && threads != THREAD_UNDEFINED) {
 				Error("Cannot have threads while serialized\n");
+			}
+			
+			if (timelimit != TIME_UNLIMITED) {
+				Error("Cannot time program while serialized\n");
 			}
 			
 			serialized = true;
@@ -122,9 +160,14 @@ int main(int argc, char **argv) {
 		threads = THREAD_DEFAULT;
 	}
 	
+	// Set time limit if we are using one
+	if (timelimit != TIME_UNLIMITED) {
+		std::thread(exitAfter, timelimit).detach();
+	}
+	
 	
 	// Everything has checked out - attempt to run the main node-specific code
-	Log("Spam Filter MPI program version 0.9.05\n");
+	Log("Spam Filter MPI program version 0.9.06\n");
 	
 	if (isCoordinator) {
 		Coordinator::mainLoop(emailSource, emailDest, serialized);
