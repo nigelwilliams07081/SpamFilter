@@ -35,9 +35,9 @@ void EmailWriter::add(Email e) {
 	m_lock.lock();
 	
 	std::string spamstatus;
-	if (e.SpamPercentage < 0.4) 
+	if (e.SpamPercentage < 0.4f) 
 		spamstatus = "no";
-	else if (e.SpamPercentage > 0.4 && e.SpamPercentage < 0.7) 
+	else if (e.SpamPercentage > 0.4f && e.SpamPercentage < 0.7f) 
 		spamstatus = "maybe";
 	else 
 		spamstatus = "yes";
