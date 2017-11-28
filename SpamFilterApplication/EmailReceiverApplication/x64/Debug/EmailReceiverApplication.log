@@ -1,5 +1,1 @@
-﻿  EmailReceiver.cpp
-  Generating Code...
-  Skipping... (no relevant changes detected)
-  Main.cpp
-  EmailReceiverApplication.vcxproj -> C:\Users\Nigel\Documents\SpamFilter\SpamFilterApplication\x64\Debug\EmailReceiverApplication.exe
+﻿C:\Users\Nigel\Documents\SpamFilter\SpamFilterApplication\EmailReceiverApplication\EmailReceiverApplication.vcxproj : error MSB4057: The target "Deploy" does not exist in the project.
