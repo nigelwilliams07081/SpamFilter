@@ -56,14 +56,12 @@ bool SpamFilter::OpenFile(std::string fileString)
 
 void SpamFilter::PerformSpamSearch()
 {
-	FileNames fileNames;
-
 	if (m_Email.IsValid)
 	{
-		PerformSenderSearch(m_Email.Sender, fileNames.SpamSenderAddressesFile);
-		PerformSubjectSearch(m_Email.Subject, fileNames.SpamSubjectFile);
-		PerformPhraseSearch(m_Email.Body, fileNames.SpamWordsFile);
-		PerformAttachmentSearch(m_Email.Attachments, fileNames.SpamAttachmentsFile);
+		PerformSenderSearch(m_Email.Sender, FileNames::SpamSenderAddressesFile);
+		PerformSubjectSearch(m_Email.Subject, FileNames::SpamSubjectFile);
+		PerformPhraseSearch(m_Email.Body, FileNames::SpamWordsFile);
+		PerformAttachmentSearch(m_Email.Attachments, FileNames::SpamAttachmentsFile);
 	}
 	else
 	{

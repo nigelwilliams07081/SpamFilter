@@ -98,13 +98,19 @@ void Worker::processEmail(Email e, unsigned int returnId, unsigned int threadNum
 	int reserved = m_nonce;
 	m_nonce = (m_nonce + 1) % 2048;
 
-	//SpamFilter spamFilter;
-	//spamFilter.SetEmail(e);
+	SpamFilter spamFilter;
+	spamFilter.SetEmail(e);
 
 	// Process the email here
-	//spamFilter.PerformSpamSearch();
-	float spamPercent = SSpamFilter::PerformSpamSearch(e);
+	spamFilter.PerformSpamSearch();
+
+	// Calculate Bayesian percentage
+	Bayesian bayesian;
+	bayesian.SetAnyMsgIsSpam(0.8f);
+	bayesian.SetWordAppearsInSpam(spamFilter.GetOverallSpamConfidence());
+	bayesian.CalculateTheorem();
 	
+	float spamPercent = bayesian.GetGivenMsgIsSpam();
 	// Pass back to coordinator when we're done
 	
 	// The nonce prevents the coordinator from getting confused when a single node

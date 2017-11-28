@@ -12,9 +12,8 @@
 #include <functional>
 
 #include "Bayesian.h"
-//#include "SpamFilter.h"
-#include "StaticSpamFilter.h"
-//#include "EmailReceiver.h"
+#include "SpamFilter.h"
+//#include "StaticSpamFilter.h"
 #include "EmailReader.h"
 #include "EmailWriter.h"
 #include "FileNames.h"
