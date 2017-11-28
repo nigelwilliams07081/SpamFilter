@@ -2,9 +2,7 @@
 <html>
 	<head>
 		<style type="text/css">
-		* {
-			box-sizing: border-box;
-		}
+		* {box-sizing: border-box;}
 		
 		html, body {
 			font-family: sans-serif;
@@ -13,13 +11,9 @@
 			color: #333;
 		}
 		
-		td { 
-			padding: 5px 2px;
-		}
+		td {padding: 5px 2px;}
 		
-		hr {
-			margin: 20px 0;
-		}
+		hr {margin: 20px 0;}
 		
 		#error {
 			width: 65%;
@@ -57,9 +51,7 @@
 			border-color: #333;
 		}
 		
-		.xml-button {
-			margin: 5px auto;
-		}
+		.xml-button {margin: 5px auto;}
 		
 		.back-button {
 			width: 5em;
@@ -90,33 +82,31 @@
 			padding: 5px;
 		}
 		
+		.spam:before, .notspam:before, .maybespam:before {
+			display: inline-block;
+			position: absolute;
+			padding: 5px;
+			font-size: 85%;
+			font-weight: thinner;
+		}
+		
 		.spam {
 			background-color: #ECC9C9;
 			border-color: #670606;
 		}
 		
 		.spam:before {
-			display: inline-block;
-			position: absolute;
-			padding: 5px;
-			font-size: 85%;
-			font-weight: thinner;
 			color: #670606;
 			content: 'SPAM';
 		}
 		
 		.maybe {
-			background-color: #f2ee80;
-			border-color: ##918c07;
+			background-color: #F2EE80;
+			border-color: #918C07;
 		}
 		
 		.maybe:before {
-			display: inline-block;
-			position: absolute;
-			padding: 5px;
-			font-size: 85%;
-			font-weight: thinner;
-			color: ##918c07;
+			color: #918C07;
 			content: 'MAYBE SPAM';
 		}
 		
@@ -126,11 +116,6 @@
 		}
 		
 		.notspam:before {
-			display: inline-block;
-			position: absolute;
-			padding: 5px;
-			font-size: 85%;
-			font-weight: thinner;
 			color: #125A23;
 			content: 'NOT SPAM';
 		}
@@ -147,7 +132,7 @@
 		}
 		
 		.icon {
-			background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAQAAAD8fJRsAAAABGdBTUEAALGOfPtRkwAAAwNpQ0NQUGhvdG9zaG9wIElDQyBwcm9maWxlAAA4jWNgYJ7g6OLkyiTAwFBQVFLkHuQYGREZpcB+noGNgZkBDBKTiwscAwJ8QOy8/LxUBlTAyMDw7RqIZGC4rAsyi4E0wJpcUFTCwMBwgIGBwSgltTiZgYHhCwMDQ3p5SUEJAwNjDAMDg0hSNphdAGJnhwQ5MzAwtjAwMPGUpFaA9DI45xdUFmWmZ5QoGFpaWio4puQnpSoEVxaXpOYWK3jmJecXFeQXJZakpjAwMEDtAAFel/wSBffEzDwFIwNVEt1NEIDCEcJChA9CDAGSS4vKICywIgEGBQYDBgeGAIZEhnqGBQxHGd4wijO6MJYyrmC8xyTGFMQ0gekCszBzJPNC5jcsliwdLLdY9VhbWe+xWbJNY/vGHs6+m0OJo4vjC2ci5wUuR64t3JrcC3ikeKbyCvFO4hPmm8Yvw79YQEdgh6Cr4BWhVKEfwr0iKiJ7RcNFv4hNEjcSvyJRISkneUwqX1pa+oRMmay67C25PnkX+T8KWxULlfSU3iqvVSlQNVH9qXZQvUsjVFNJ84PWAe1JOqm6VnqCeq/0jxgsMKw1ijG2NZE3ZTZ9aXbBfKfFEssJVnXWuTZxtoF2rvbWDsaOOk5qzkouCq7ybgruyh7qnrpeJt42Pu6+wX4J/vkB9YETg5YG7wq5GPoynClCLtIqKiK6ImZm7J64BwlsibpJYckNKWtSb6ZzZFhkZmbNzb6Yy55nn19RsKnwXbF2SVbpqrI3FfqVJVW7ahhrveqm1j9s1GuqaT7bKtdW2H60U7qrqPt0r2pfY//diTaTZk/+OzV+2uEZGjP7Z32fkzD39HzzBUsXiSxuXfJtWebyeytDVp1e47J233rLDds2mWzestVk2/YdVjv373bdc3Zf2P4HB3MO/TzSfkz8+IqT1qfOnUk+++v8pIval45eSbz67/qcmza37t6pv6d8/8TDvMdiT/Y/y3wh8vLg6/y38u8ufGj6ZPr51dcF38N/Cvw69af1n+P//wANAA80ri9qxQAAACBjSFJNAAB6JQAAgIMAAPn/AACA6QAAdTAAAOpgAAA6mAAAF2+SX8VGAAAAq0lEQVQoz13NTQqCUBiFYQduw0FraBJ4hQpqI9o2tInb0NpIwyAImmhhmKEl9kdFG3jDS2l2zuw+3+Eqiqp1hSXMsoZpjFq68o3r85N13B58wPbgxZMbOQ8gijtDCY4HISsWzEjkauxXi4yEiIAlc8Cp4cSRjD0xUQleBSk7tmwICZpwoSCXq7QJd66cKWTB9n7+yDnI+6wGd8pf3En5rmp9YelmXWFpPUV9A7tttnBgyYBiAAAAAElFTkSuQmCC);
+			background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAQAAAD8fJRsAAAABGdBTUEAALGOfPtRkwAAAwNpQ0NQUGhvdG9zaG9wIElDQyBwcm9maWxlAAA4jWNgYJ7g6OLkyiTAwFBQVFLkHuQYGREZpcB+noGNgZkBDBKTiwscAwJ8QOy8/LxUBlTAyMDw7RqIZGC4rAsyi4E0wJpcUFTCwMBwgIGBwSgltTiZgYHhCwMDQ3p5SUEJAwNjDAMDg0hSNphdAGJnhwQ5MzAwtjAwMPGUpFaA9DI45xdUFmWmZ5QoGFpaWio4puQnpSoEVxaXpOYWK3jmJecXFeQXJZakpjAwMEDtAAFel/wSBffEzDwFIwNVEt1NEIDCEcJChA9CDAGSS4vKICywIgEGBQYDBgeGAIZEhnqGBQxHGd4wijO6MJYyrmC8xyTGFMQ0gekCszBzJPNC5jcsliwdLLdY9VhbWe+xWbJNY/vGHs6+m0OJo4vjC2ci5wUuR64t3JrcC3ikeKbyCvFO4hPmm8Yvw79YQEdgh6Cr4BWhVKEfwr0iKiJ7RcNFv4hNEjcSvyJRISkneUwqX1pa+oRMmay67C25PnkX+T8KWxULlfSU3iqvVSlQNVH9qXZQvUsjVFNJ84PWAe1JOqm6VnqCeq/0jxgsMKw1ijG2NZE3ZTZ9aXbBfKfFEssJVnXWuTZxtoF2rvbWDsaOOk5qzkouCq7ybgruyh7qnrpeJt42Pu6+wX4J/vkB9YETg5YG7wq5GPoynClCLtIqKiK6ImZm7J64BwlsibpJYckNKWtSb6ZzZFhkZmbNzb6Yy55nn19RsKnwXbF2SVbpqrI3FfqVJVW7ahhrveqm1j9s1GuqaT7bKtdW2H60U7qrqPt0r2pfY//diTaTZk/+OzV+2uEZGjP7Z32fkzD39HzzBUsXiSxuXfJtWebyeytDVp1e47J233rLDds2mWzestVk2/YdVjv373bdc3Zf2P4HB3MO/TzSfkz8+IqT1qfOnUk+++v8pIval45eSbz67/qcmza37t6pv6d8/8TDvMdiT/Y/y3wh8vLg6/y38u8ufGj6ZPr51dcF38N/Cvw69af1n+P//wANAA80ri9qxQAAACBjSFJNAAB6JQAAgIMAAPn/AACA6QAAdTAAAOpgAAA6mAAAF2+SX8VGAAAAq0lEQVQoz13NTQqCUBiFYQduw0FraBJ4hQpqI9o2tInb0NpIwyAImmhhmKEl9kdFG3jDS2l2zuw+3+Eqiqp1hSXMsoZpjFq68o3r85N13B58wPbgxZMbOQ8gijtDCY4HISsWzEjkauxXi4yEiIAlc8Cp4cSRjD0xUQleBSk7tmwICZpwoSCXq7QJd66cKWTB9n7+yDnI+6wGd8pf3En5rmp9YelmXWFpPUVkSuQmCC);
 			
 			display: inline-block;
 			width: 12px;
@@ -173,7 +158,7 @@
 		// Not supported by HTA
 		if (!('endsWith' in String.prototype)) {
 			String.prototype.endsWith = function(target) {
-				return this.substr(target.length * -1) === target;
+				return this.substr(this.length - target.length, target.length) === target;
 			};
 		}
 		
@@ -181,11 +166,9 @@
 			
 			// Ugly ActiveX crap
 			var files = new Enumerator(new ActiveXObject("Scripting.FileSystemObject").GetFolder("./").files); 
-			
 			for (var s = []; !files.atEnd(); files.moveNext()) { 
 				
 				var file = "" + files.item(); // Coerce to string
-				
 				if (file.endsWith(".xml")) {
 					s.push(file.replace(/^.*[\\\/]/, '')); 
 				}
