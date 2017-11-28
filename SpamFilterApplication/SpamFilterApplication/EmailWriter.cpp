@@ -34,11 +34,19 @@ void EmailWriter::add(Email e) {
 	
 	m_lock.lock();
 	
+	std::string spamstatus;
+	if (e.SpamPercentage < 0.4f) 
+		spamstatus = "no";
+	else if (e.SpamPercentage > 0.4f && e.SpamPercentage < 0.7f) 
+		spamstatus = "maybe";
+	else 
+		spamstatus = "yes";
+	
 	m_file 
-	  << "<email spam=\"" << e.SpamPercentage << "\">" 
-	  << "<subject>"      << e.Subject        << "</subject>"
-	  << "<sender>"       << e.Sender         << "</sender>" 
-	  << "<body>"         << e.Body           << "</body>"
+	  << "<email spam=\"" << spamstatus << "\">" 
+	  << "<subject>"      << e.Subject  << "</subject>"
+	  << "<sender>"       << e.Sender   << "</sender>" 
+	  << "<body>"         << e.Body     << "</body>"
 	  << "<attachments>";
 	  
 	for (unsigned int i = 0; i < e.NumAttachments; i++) {
