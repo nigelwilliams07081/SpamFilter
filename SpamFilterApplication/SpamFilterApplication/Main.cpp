@@ -38,32 +38,55 @@ int main(int argc, char **argv) {
 	
 	// Begin parsing command line arguments
 	for (unsigned int j = 1; j != argc; j++) {
-			
+		
+		std::string arg(argv[j]);
+		bool lastArg = j + 1 == argc;
+		
+		
 		// Handle input file
-		if (argv[j] == std::string("-i") || argv[j] == std::string("-inputfile")) {
-			if (++j == argc) {
+		//---------------------------
+		if (
+			arg == "-i" ||
+		    arg == "-inputfile"
+		) {
+			
+			if (lastArg) {
 				Error("No input file provided\n");
 			}
 			
-			emailSource = argv[j];
+			emailSource = argv[++j];
 			Log("Will load input from %s\n", emailSource);
+		}
+		//---------------------------
 		
 		
 		
 		// Handle output file
-		} else if (argv[j] == std::string("-o") || argv[j] == std::string("-outputfile")) {
-			if (++j == argc) {
+		//---------------------------
+		else if (
+			arg == "-o" || 
+			arg == "-outputfile"
+		) {
+			
+			if (lastArg) {
 				Error("No output file provided\n");
 			}
 			
-			emailDest = argv[j];
+			emailDest = argv[++j];
 			Log("Will save output to %s\n", emailDest);
+		}
+		//---------------------------
 		
 		
 		
 		// Handle thread count
-		} else if (argv[j] == std::string("-t") || argv[j] == std::string("-threads")) {
-			if (++j == argc) {
+		//---------------------------
+		else if (
+			arg == "-t" || 
+			arg == "-threads"
+		) {
+			
+			if (lastArg) {
 				Error("No thread count provided\n");
 			}
 			
@@ -72,7 +95,7 @@ int main(int argc, char **argv) {
 			}
 			
 			try {
-				threads = std::stoi(argv[j]);
+				threads = std::stoi(argv[++j]);
 			} catch (const std::invalid_argument &e) {
 				Error("Thread count is not an integer\n");
 			} catch (const std::out_of_range &e) {
@@ -84,11 +107,19 @@ int main(int argc, char **argv) {
 			}
 			
 			Log("Will use %i worker threads\n", threads);
+		}
+		//---------------------------
+		
 		
 		
 		// Handle max execution time
-		} else if (argv[j] == std::string("-m") || argv[j] == std::string("-maxtime")) {
-			if (++j == argc) {
+		//---------------------------
+		else if (
+			arg == "-m" || 
+			arg == "-maxtime"
+		) {
+			
+			if (lastArg) {
 				Error("No time limit provided\n");
 			}
 			
@@ -109,11 +140,14 @@ int main(int argc, char **argv) {
 			}
 			
 			Log("Will exit after %i seconds\n", timelimit);
+		}
+		//---------------------------
 		
 		
 		
 		// Handle serialized runtime
-		} else if (argv[j] == std::string("--serialized")) {
+		//---------------------------
+		else if (arg == "--serialized") {
 			
 			// In order to be serialized we must have received -t 1 or the -t flag must have not be present
 			if (threads != 1 && threads != THREAD_UNDEFINED) {
@@ -127,13 +161,17 @@ int main(int argc, char **argv) {
 			serialized = true;
 			threads = 1;
 			Log("Will run in serialized mode\n");
+		}
+		//---------------------------
 		
 		
 		
-		// Handle invalid argument	
-		} else {
+		// Handle invalid argument
+		//---------------------------
+		else {
 			Error("Invalid argument: %s\n", argv[j]);
 		}
+		//---------------------------
 	}
 	
 	// Post-parsing checks
@@ -167,7 +205,7 @@ int main(int argc, char **argv) {
 	
 	
 	// Everything has checked out - attempt to run the main node-specific code
-	Log("Spam Filter MPI program version 0.9.06\n");
+	Log("Spam Filter MPI program version 0.9.07\n");
 	
 	if (isCoordinator) {
 		Coordinator::mainLoop(emailSource, emailDest, serialized);
