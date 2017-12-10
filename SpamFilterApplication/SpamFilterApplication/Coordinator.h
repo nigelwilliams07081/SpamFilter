@@ -1,4 +1,7 @@
 #pragma once
+#ifndef _COORDINATOR_H
+#define _COORDINATOR_H
+
 #include "EmailReader.h"
 #include "EmailWriter.h"
 
@@ -19,3 +22,4 @@ public:
 	static void mainLoop(const char*, const char*, bool);
 };
 
+#endif

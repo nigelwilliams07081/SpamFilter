@@ -1,4 +1,6 @@
 #pragma once
+#ifndef _FILENAMES_H
+#define _FILENAMES_H
 
 #include <string>
 
@@ -11,3 +13,5 @@ namespace FileNames {
 	const std::string SpamWordsFile           = "spam_words.txt";
 	const std::string SpamAttachmentsFile     = "spam_attachments.txt";
 };
+
+#endif

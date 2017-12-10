@@ -1,4 +1,6 @@
 #pragma once
+#ifndef _TAGS_H
+#define _TAGS_H
 
 #define TAG_EMAILS_REQUEST 525
 #define TAG_EMAIL_QUANTITY 342
@@ -17,3 +19,5 @@
 #define TAG_RETURN_SPAM_PERCENTAGE 83610
 
 #define TAG_OK 107
+
+#endif

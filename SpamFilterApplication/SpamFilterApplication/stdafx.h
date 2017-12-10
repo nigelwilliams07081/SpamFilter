@@ -1,4 +1,7 @@
 #pragma once
+#ifndef _STDAFX_H
+#define _STDAFX_H
+
 #include <mpiCC.h>
 #include <stdio.h>
 #include <string>
@@ -13,7 +16,6 @@
 
 #include "Bayesian.h"
 #include "SpamFilter.h"
-//#include "StaticSpamFilter.h"
 #include "EmailReader.h"
 #include "EmailWriter.h"
 #include "FileNames.h"
@@ -23,4 +25,4 @@
 #include "tags.h"
 #include "MPI_wrappers.h"
 
-//#define SINGLETHREADED 1
+#endif

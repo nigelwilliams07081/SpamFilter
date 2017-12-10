@@ -1,4 +1,6 @@
 #pragma once
+#ifndef _BAYESIAN_H
+#define _BAYESIAN_H
 
 class Bayesian
 {
@@ -116,3 +118,5 @@ private:
 	float m_BayesianNumeratorME;
 	float m_BayesianDenominatorME;
 };
+
+#endif

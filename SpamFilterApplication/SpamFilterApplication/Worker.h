@@ -1,4 +1,7 @@
 #pragma once
+#ifndef _WORKER_H
+#define _WORKER_H
+
 #include "Email.h"
 
 class Worker {
@@ -10,3 +13,5 @@ private:
 public:
 	static void mainLoop(int);
 };
+
+#endif

@@ -1,14 +1,6 @@
 #pragma once
-
-//struct Email
-//{
-//	int IsValid = 0;
-//	char Sender[256];
-//	char Subject[998];
-//	char Body[65535];
-//	char Attachments[10][255];
-//	float SpamPercentage;
-//};
+#ifndef _EMAIL_H
+#define _EMAIL_H
 
 struct Email {
 	bool IsValid = false;
@@ -19,3 +11,5 @@ struct Email {
 	std::string *Attachments;
 	float SpamPercentage;
 };
+
+#endif

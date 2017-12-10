@@ -1,4 +1,7 @@
 #pragma once
+#ifndef _EMAILREADER_H
+#define _EMAILREADER_H
+
 #include "rapidxml.hpp"
 
 class EmailReader {
@@ -49,3 +52,5 @@ public:
 	Email get(int) const;
 	
 };
+
+#endif

@@ -1,4 +1,7 @@
 #pragma once
+#ifndef _EMAILWRITER_H
+#define _EMAILWRITER_H
+
 #include <mutex>
 #include <fstream>
 #include "Email.h"
@@ -15,3 +18,5 @@ public:
 	void useFile(const char*);
 	void add(Email);
 };
+
+#endif
