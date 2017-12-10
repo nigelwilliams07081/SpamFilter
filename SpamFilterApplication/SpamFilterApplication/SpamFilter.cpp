@@ -111,7 +111,6 @@ void SpamFilter::PerformSenderSearch(std::string & sender, const std::string& sp
 	{
 		if (sender == m_SpamAddressList.data()[i])
 		{
-			std::cout << m_SpamAddressList.data()[i] << std::endl;
 			m_SpamAddressConfidence = 0.15f;
 		}
 	}
@@ -132,7 +131,6 @@ void SpamFilter::PerformSubjectSearch(std::string & subject, const std::string& 
 	{
 		if (subject.find(m_SpamSubjectList.data()[i]) != std::string::npos)
 		{
-			std::cout << m_SpamPhraseList.data()[i] << std::endl;
 			if (m_Email.NumAttachments > 0)
 			{
 				m_SpamSubjectConfidence = 0.25f;
@@ -159,7 +157,6 @@ void SpamFilter::PerformPhraseSearch(std::string & body, const std::string& spam
 		// checks the whole Body to see if it finds the m_PhraseList.data()[i] string
 		if (body.find(m_SpamPhraseList.data()[i]) != std::string::npos)
 		{
-			std::cout << m_SpamPhraseList.data()[i] << std::endl;
 			if (m_Email.NumAttachments > 0)
 			{
 				// We will check up to 10 words for full confidence
@@ -201,12 +198,7 @@ void SpamFilter::PerformAttachmentSearch(std::string *& attachments, const std::
 			{
 				if (attachments[j].find(m_SpamAttachmentList.data()[i]) != std::string::npos)
 				{
-					std::cout << attachments[j] << " is most likely a spam attachment" << std::endl;
 					m_SpamAttachmentConfidence = 0.2f;
-				}
-				else
-				{
-					std::cout << attachments[j] << " is not a spam attachment" << std::endl;
 				}
 			}
 		}
