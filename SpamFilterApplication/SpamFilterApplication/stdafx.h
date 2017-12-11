@@ -3,7 +3,6 @@
 #define _STDAFX_H
 
 #include <mpiCC.h>
-#include <stdio.h>
 #include <string>
 #include <iostream>
 #include <fstream>
@@ -11,7 +10,6 @@
 #include <vector>
 #include <thread>
 #include <chrono>
-#include <cassert>
 #include <functional>
 #include <iomanip>
 

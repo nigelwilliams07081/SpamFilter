@@ -15,8 +15,6 @@ void EmailWriter::useFile(const char *filename) {
 	close();
 	
 	m_file.open(filename);
-	assert(m_file.is_open());
-	
 	m_file << "<emailList>";
 }
 
@@ -30,7 +28,6 @@ void EmailWriter::close() {
 }
 
 void EmailWriter::add(Email e) {
-	assert(m_file.is_open());
 	
 	m_lock.lock();
 	
