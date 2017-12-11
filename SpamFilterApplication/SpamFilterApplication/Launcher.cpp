@@ -205,17 +205,20 @@ int main(int argc, char **argv) {
 	
 	
 	// Everything has checked out - attempt to run the main node-specific code
-	Log("Spam Filter MPI program version 0.9.07\n");
+	Log("Spam Filter MPI program version 0.9.08\n");
+	
+	MPI::COMM_WORLD.Barrier();
 	
 	if (isCoordinator) {
 		Coordinator::mainLoop(emailSource, emailDest, serialized);
-		printf("Coordinator finished\n");
+		TimeCout << "Coordinator finished\n";
 	} else {
 		Worker::mainLoop(threads);
-		printf("Worker finished\n");
+		TimeCout << "Worker finished\n";
 	}
 	
 	MPI::COMM_WORLD.Barrier();
+	
 	MPI::Finalize();
 	return 0;
 }

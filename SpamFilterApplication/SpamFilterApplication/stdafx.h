@@ -13,6 +13,7 @@
 #include <chrono>
 #include <cassert>
 #include <functional>
+#include <iomanip>
 
 #include "Bayesian.h"
 #include "SpamFilter.h"
@@ -24,5 +25,6 @@
 #include "Coordinator.h"
 #include "tags.h"
 #include "MPI_wrappers.h"
+#include "TimeCout.h"
 
 #endif

@@ -10,6 +10,8 @@ private:
 	static EmailReader reader;
 	static EmailWriter writer;
 	
+	static std::mutex m_reserver;
+	
 	static int m_emailsSent;
 	static int m_totalEmails;
 	static int m_repliesReceived;

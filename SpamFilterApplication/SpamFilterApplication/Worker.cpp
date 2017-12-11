@@ -10,7 +10,7 @@ Worker::Worker() {
 }
 
 void Worker::mainLoop(int threads) {
-	printf("Worker started\n");
+	TimeCout << "Worker started\n";
 	
 	// Wait for the OK broadcast from the coordinator
 	int OK;

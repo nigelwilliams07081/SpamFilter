@@ -7,6 +7,8 @@ int Coordinator::m_totalEmails     = 0;
 int Coordinator::m_repliesReceived = 0;
 int Coordinator::m_activeWorkers   = 0;
 
+std::mutex Coordinator::m_reserver;
+
 EmailReader Coordinator::reader;
 EmailWriter Coordinator::writer;
 
@@ -20,7 +22,7 @@ void Coordinator::mainLoop(const char* emailSource, const char* emailDest, bool 
 	int OK;
 	
 	try {
-		printf("Loading XML data\n");
+		TimeCout << "Loading XML data\n";
 		reader.loadFromFile(emailSource);
 		writer.useFile(emailDest);
 		
@@ -31,8 +33,8 @@ void Coordinator::mainLoop(const char* emailSource, const char* emailDest, bool 
 		}
 		
 		// Everything checks out
-		printf("Success: loaded %i emails\n", m_totalEmails);
-	
+		TimeCout << "Success: loaded " << m_totalEmails << " emails\n";
+		
 		OK = (int)true;
 	} catch (const std::exception &e) {
 		// Some exception from the XML parser came up
@@ -44,7 +46,7 @@ void Coordinator::mainLoop(const char* emailSource, const char* emailDest, bool 
 	MPI::COMM_WORLD.Bcast(&OK, 1, MPI::INT, RANK_COORDINATOR);
 	
 	if (!OK) {
-		printf("Failure. Exiting\n");
+		TimeCout << "Failure. Exiting\n";
 		return;
 	}
 		
@@ -61,13 +63,13 @@ void Coordinator::mainLoop(const char* emailSource, const char* emailDest, bool 
 	
 	// Wait for threads to ask for a quantity of emails
 	while (m_activeWorkers > 0) {
-		printf("Waiting for worker node...\n");
+		TimeCout << "Waiting for worker node...\n";
 		
 		MPI::Status status;
 		MPI::COMM_WORLD.Probe(MPI::ANY_SOURCE, TAG_EMAILS_REQUEST, status);
 		
 		// We recieved a request for emails, spawn a new thread to serve it
-		printf("Detected a data request from node #%i\n", status.Get_source());
+		TimeCout << "Detected a data request from node #" << status.Get_source() << '\n';
 		
 		if (serialized) {
 			talkWithNode(status.Get_source());
@@ -80,7 +82,7 @@ void Coordinator::mainLoop(const char* emailSource, const char* emailDest, bool 
 	}
 	
 	// Wait for the worker to finish
-	printf("Email distribution finished, waiting on results...\n");
+	TimeCout << "Email distribution finished, waiting on results...\n";
 	
 	if (serialized) {
 		receiveResult();
@@ -97,9 +99,13 @@ void Coordinator::talkWithNode(int nodeId) {
 	unsigned int quantity;
 	MPI::COMM_WORLD.Recv(&quantity, 1, MPI::UNSIGNED, nodeId, TAG_EMAILS_REQUEST);
 	
-	printf("Received request from node #%i for %i emails\n", nodeId, quantity);
+	TimeCout << "Received request from node #" << nodeId << " for " << quantity << " emails\n";
 	
 	// Calculate how many emails are left, and then use the smaller quantity
+	
+	// Lock the reservation control mutex for this
+	m_reserver.lock();
+	
 	unsigned int emailsRemaining = m_totalEmails - m_emailsSent;
 	unsigned int sendingQuantity;
 	
@@ -110,23 +116,26 @@ void Coordinator::talkWithNode(int nodeId) {
 	}
 	
 	// Otherwise we send them all
-	printf("Will send %i emails to node #%i\n", sendingQuantity, nodeId);
+	TimeCout << "Will send " << sendingQuantity << " emails to node #" << nodeId << '\n';
 		
 	// Set this now so other threads will not compete with this one
 	int offset = m_emailsSent;
 	m_emailsSent += sendingQuantity;
+	
+	// Finished allocating emails, unlock this mutex
+	m_reserver.unlock();
 	
 	// Tell the worker node how many emails to expect
 	MPI::COMM_WORLD.Send(&sendingQuantity, 1, MPI::UNSIGNED, nodeId, TAG_EMAIL_QUANTITY);
 	
 	// If there are no more emails to send, exit
 	if (sendingQuantity == 0) {
-		printf("Sent termination signal to node #%i\n", nodeId);
+		TimeCout << "Sent termination signal to node #" << nodeId << '\n';
 		m_activeWorkers--;
 		return;
 	}	
 	
-	printf("Sending emails...\n");
+	TimeCout << "Sending emails...\n";
 	
 	// The worker node is entitled to emails number (emailsSent) till (emailSent + sendingQuantity)
 	// No other nodes should be fighting the node over this
@@ -146,10 +155,10 @@ void Coordinator::talkWithNode(int nodeId) {
 			MPI_Send_string(e.Attachments[j], nodeId, TAG_EMAIL_ATTACHMENT);
 		}
 		
-		printf("Successfully sent email #%i to node #%i\n", emailId, nodeId);
+		TimeCout << "Successfully sent email #" << emailId << " to node #" << nodeId << '\n';
 	}
 	
-	printf("Successfully sent all %i emails to node #%i\n", sendingQuantity, nodeId);
+	TimeCout << "Successfully sent all " << sendingQuantity << " emails to node #" << nodeId << '\n';
 }
 
 void Coordinator::receiveResult() {
@@ -170,7 +179,7 @@ void Coordinator::receiveResult() {
 		Email result = reader.get(emailId);
 		MPI::COMM_WORLD.Recv(&(result.SpamPercentage), 1, MPI::FLOAT, nodeId, TAG_RETURN_SPAM_PERCENTAGE + nonce);
 		
-		printf("Received spam percentage for email #%i from node #%i\n", emailId, nodeId);
+		TimeCout << "Received spam percentage for email #" << emailId << " from node #" << nodeId << '\n';
 		writer.add(result);
 		
 		m_repliesReceived++;
