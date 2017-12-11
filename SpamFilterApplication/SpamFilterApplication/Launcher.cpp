@@ -10,7 +10,7 @@
 
 void exitAfter(int seconds) {
 	std::this_thread::sleep_for(std::chrono::seconds(seconds));
-	printf("Time limit expired, aborting...\n");
+	TimeCout << "Time limit expired, aborting...\n";
 	MPI::COMM_WORLD.Abort(1);
 	exit(1);
 }
@@ -128,7 +128,7 @@ int main(int argc, char **argv) {
 			}
 			
 			try {
-				timelimit = std::stoi(argv[j]);
+				timelimit = std::stoi(argv[++j]);
 			} catch (const std::invalid_argument &e) {
 				Error("Time limit is not an integer\n");
 			} catch (const std::out_of_range &e) {
