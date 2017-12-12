@@ -154,3 +154,9 @@ Email EmailReader::get(int distanceFromStart) const {
 		return constructEmail(node);
 	}
 }
+
+void EmailReader::checkAll() const {
+	for (auto node = m_beginning; node != NULL; node = node->next_sibling()) {
+		constructEmail(node);
+	}
+}

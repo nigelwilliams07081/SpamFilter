@@ -205,7 +205,7 @@ int main(int argc, char **argv) {
 	
 	
 	// Everything has checked out - attempt to run the main node-specific code
-	Log("Spam Filter MPI program version 0.9.08\n");
+	Log("Spam Filter MPI program version 0.9.09\n");
 	
 	MPI::COMM_WORLD.Barrier();
 	

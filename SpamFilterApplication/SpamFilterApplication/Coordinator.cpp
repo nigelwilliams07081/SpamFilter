@@ -28,9 +28,7 @@ void Coordinator::mainLoop(const char* emailSource, const char* emailDest, bool 
 		
 		m_totalEmails = reader.getEmailCount();
 		
-		for (unsigned int i = 0; i < m_totalEmails; i++) {
-			reader.get(i);
-		}
+		reader.checkAll();
 		
 		// Everything checks out
 		TimeCout << "Success: loaded " << m_totalEmails << " emails\n";

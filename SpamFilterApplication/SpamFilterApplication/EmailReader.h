@@ -51,6 +51,11 @@ public:
 	*/
 	Email get(int) const;
 	
+	/**
+	: Checks that all of the emails are valid. Throws an XML parser error if they are not.
+	*/
+	void checkAll() const;
+	
 };
 
 #endif
