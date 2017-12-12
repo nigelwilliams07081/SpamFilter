@@ -47,7 +47,7 @@ bool SpamFilter::OpenFile(std::string fileString)
 
 	if (m_File.fail())
 	{
-		printf("%s\n", "Could not open file");
+		TimeCout << "Could not open file\n";
 		return false;
 	}
 
@@ -59,13 +59,17 @@ void SpamFilter::PerformSpamSearch()
 	if (m_Email.IsValid)
 	{
 		PerformSenderSearch(m_Email.Sender, FileNames::SpamSenderAddressesFile);
+		TimeCout << "Overall spam percentage after sender search: " << m_OverallSpamConfidence << '\n';
 		PerformSubjectSearch(m_Email.Subject, FileNames::SpamSubjectFile);
+		TimeCout << "Overall spam percentage after subject search: " << m_OverallSpamConfidence << '\n';
 		PerformPhraseSearch(m_Email.Body, FileNames::SpamWordsFile);
+		TimeCout << "Overall spam percentage after body search: " << m_OverallSpamConfidence << '\n';
 		PerformAttachmentSearch(m_Email.Attachments, FileNames::SpamAttachmentsFile);
+		TimeCout << "Overall spam percentage after attachments search: " << m_OverallSpamConfidence << '\n';
 	}
 	else
 	{
-		std::cout << "The email object is null" << std::endl;
+		TimeCout << "The email object is null\n";
 	}
 	
 }
@@ -95,7 +99,7 @@ void SpamFilter::GrabLinesFromFile(std::string fileString, std::vector<std::stri
 	}
 	else
 	{
-		printf("%s", "Can't perform spam search. File is not open");
+		TimeCout << "Can't perform spam search. File is not open\n";
 	}
 }
 
@@ -109,8 +113,9 @@ void SpamFilter::PerformSenderSearch(std::string & sender, const std::string& sp
 
 	for (int i = 0; i < m_SpamAddressList.size(); i++)
 	{
-		if (sender == m_SpamAddressList.data()[i])
+		if (sender.find(m_SpamAddressList.data()[i]) != std::string::npos)
 		{
+			TimeCout << "Sender matched known spam address\n";
 			m_SpamAddressConfidence = 0.15f;
 		}
 	}
@@ -131,6 +136,7 @@ void SpamFilter::PerformSubjectSearch(std::string & subject, const std::string& 
 	{
 		if (subject.find(m_SpamSubjectList.data()[i]) != std::string::npos)
 		{
+			TimeCout << "Found subject line that is potentially spam\n";
 			if (m_Email.NumAttachments > 0)
 			{
 				m_SpamSubjectConfidence = 0.25f;
@@ -157,6 +163,7 @@ void SpamFilter::PerformPhraseSearch(std::string & body, const std::string& spam
 		// checks the whole Body to see if it finds the m_PhraseList.data()[i] string
 		if (body.find(m_SpamPhraseList.data()[i]) != std::string::npos)
 		{
+			TimeCout << "Found a potential spam word or phrase\n";
 			if (m_Email.NumAttachments > 0)
 			{
 				// We will check up to 10 words for full confidence
@@ -196,8 +203,13 @@ void SpamFilter::PerformAttachmentSearch(std::string *& attachments, const std::
 		{
 			if (attachments[j] != "")
 			{
-				if (attachments[j].find(m_SpamAttachmentList.data()[i]) != std::string::npos)
+				const char *target = m_SpamAttachmentList[i].c_str();
+				std::string attachment = attachments[j];
+				
+				TimeCout << "Checking attachment " << attachment << " against spam filter " << target << '\n';
+				if (attachment.find(target) != std::string::npos)
 				{
+					TimeCout << "Found a potential spam attachment\n";
 					m_SpamAttachmentConfidence = 0.2f;
 				}
 			}

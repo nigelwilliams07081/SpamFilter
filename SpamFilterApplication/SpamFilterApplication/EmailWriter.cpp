@@ -40,7 +40,7 @@ void EmailWriter::add(Email e) {
 		spamstatus = "yes";
 	
 	m_file 
-	  << "<email spam=\"" << spamstatus << "\">" 
+	  << "<email spam=\"" << spamstatus << "\" spampercent=\"" << e.SpamPercentage << "\">"
 	  << "<subject>"      << e.Subject  << "</subject>"
 	  << "<sender>"       << e.Sender   << "</sender>" 
 	  << "<body>"         << e.Body     << "</body>"
