@@ -1,8 +1,11 @@
-<emailList><email spam="yes"><subject>Test Spam Email Non-MPI 1</subject><sender>cyberthreat1234@gmail.com</sender><body>Hello lucky winner! You have a chance to win a lot of money. Just send us
+<emailList><email spam="yes"><subject>Test 2</subject><sender>cyberthreat1234@gmail.com</sender><body>Hello this is a test.
+
+</body><attachments><file>Linus.png</file></attachments></email><email spam="no"><subject>Your Pictures from Years Ago</subject><sender>nigelwilliams0708@floridapoly</sender><body>Hey there, Your pictures from like 5 years ago are here from when you won the lottery, congratulations!</body><attachments><file>linus.jpg</file><file>openme.jpg.exe</file></attachments></email><email spam="yes"><subject>Test Spam Email Non-MPI 1</subject><sender>cyberthreat1234@gmail.com</sender><body>Hello lucky winner! You have a chance to win a lot of money. Just send us
 your credit card information and you could win some big bucks!
 
 </body><attachments></attachments></email><email spam="yes"><subject>Test</subject><sender>cyberthreat1234@gmail.com</sender><body>Hello this is a test email.
 
-</body><attachments><file>Linus.png</file></attachments></email><email spam="yes"><subject>Test 2</subject><sender>cyberthreat1234@gmail.com</sender><body>Hello this is a test.
+</body><attachments><file>Linus.png</file></attachments></email><email spam="yes"><subject>Test Spam Email Non-MPI 1</subject><sender>cyberthreat1234@gmail.com</sender><body>Hello lucky winner! You have a chance to win a lot of money. Just send us
+your credit card information and you could win some big bucks!
 
-</body><attachments><file>Linus.png</file></attachments></email></emailList>
+</body><attachments></attachments></email></emailList>
