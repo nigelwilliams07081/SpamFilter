@@ -147,6 +147,8 @@ void SpamFilter::PerformSubjectSearch(std::string & subject, const std::string& 
 			}
 		}
 	}
+	
+	m_OverallSpamConfidence += m_SpamSubjectConfidence;
 }
 
 /**
@@ -206,7 +208,6 @@ void SpamFilter::PerformAttachmentSearch(std::string *& attachments, const std::
 				const char *target = m_SpamAttachmentList[i].c_str();
 				std::string attachment = attachments[j];
 				
-				TimeCout << "Checking attachment " << attachment << " against spam filter " << target << '\n';
 				if (attachment.find(target) != std::string::npos)
 				{
 					TimeCout << "Found a potential spam attachment\n";
@@ -215,4 +216,6 @@ void SpamFilter::PerformAttachmentSearch(std::string *& attachments, const std::
 			}
 		}
 	}
+	
+	m_OverallSpamConfidence += m_SpamAttachmentConfidence;
 }
