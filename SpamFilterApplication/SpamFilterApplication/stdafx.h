@@ -1,13 +1,28 @@
 #pragma once
-#include <tchar.h>
+#ifndef _STDAFX_H
+#define _STDAFX_H
+
+#include <mpiCC.h>
 #include <string>
-#include <string.h>
 #include <iostream>
 #include <fstream>
 #include <sstream>
 #include <vector>
+#include <thread>
+#include <chrono>
+#include <functional>
+#include <iomanip>
 
 #include "Bayesian.h"
 #include "SpamFilter.h"
-#include "EmailReceiver.h"
+#include "EmailReader.h"
+#include "EmailWriter.h"
 #include "FileNames.h"
+#include "Email.h"
+#include "Worker.h"
+#include "Coordinator.h"
+#include "tags.h"
+#include "MPI_wrappers.h"
+#include "TimeCout.h"
+
+#endif

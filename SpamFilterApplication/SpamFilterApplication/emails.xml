@@ -1,0 +1,38 @@
+<emailList>
+
+	<email>
+		<sender>Test@spam.website</sender>
+		<subject>You win the whatever lottery</subject>
+		<body>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur mattis, nibh vitae euismod aliquet, purus ligula suscipit dolor, nec posuere neque nisi in tellus. Sed sit amet elit libero. Nullam porta blandit convallis. Donec malesuada enim vel magna posuere volutpat. Vestibulum imperdiet urna eget risus blandit condimentum. Vestibulum tincidunt iaculis justo eu aliquam. Vivamus blandit ante ut porttitor vulputate.
+
+Duis a lectus sem. Curabitur id mauris lorem. Mauris porttitor urna eu lectus dignissim, eu rhoncus dolor mattis. Donec eget nibh semper, sollicitudin leo in, iaculis mauris. Curabitur et nunc quis elit maximus volutpat ac non ex. Nulla ut nisi purus. Suspendisse dui augue, venenatis a sodales quis, varius ut ligula.
+
+Donec orci ligula, aliquam in augue vitae, fermentum dictum est. Suspendisse diam enim, lacinia vel molestie sit amet, ultricies ut sapien. Nulla ante odio, viverra at turpis quis, condimentum vulputate velit. Aliquam sed nisi sed nulla pharetra commodo. Duis sit amet sem ut nisi commodo ullamcorper sed non neque. Phasellus at tortor sit amet dui vulputate luctus vel et dui. Vivamus blandit ut magna eu pulvinar. Aliquam et mauris eu risus auctor tristique et in nisl. Nam felis eros, bibendum ut ante ac, rutrum semper lectus. Aenean magna odio, sodales sed viverra a, ullamcorper sed leo. Nulla facilisi. Sed tincidunt erat eu ligula tincidunt, et molestie urna dapibus. Mauris rhoncus, nulla a sollicitudin efficitur, sem lorem sagittis est, eget dignissim quam nisi ut mauris. Aliquam erat volutpat. Cras tellus est, congue eu dictum aliquet, blandit vel dolor. Mauris malesuada nunc et ligula eleifend pulvinar.</body>
+		<attachments>
+			<file>vacationphotos.jpg</file>
+			<file>openme.jpg.exe</file>
+		</attachments>
+	</email>
+	
+	<email>
+		<sender>grandma@hotmail.co.uk</sender>
+		<subject>Re: Skydiving</subject>
+		<body>Fusce facilisis egestas urna sed vestibulum. Aenean ultricies accumsan maximus. Pellentesque et mi rhoncus, malesuada metus sit amet, sagittis metus. Maecenas eleifend, urna commodo efficitur hendrerit, velit ligula accumsan elit, non euismod velit mi eu mi. Vestibulum ipsum ex, mattis ut arcu quis, tincidunt placerat turpis. Donec in diam aliquet, laoreet lorem at, viverra enim. Etiam tincidunt mauris id facilisis volutpat. Nullam mattis nibh nec faucibus tristique. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Donec ut congue augue, vitae accumsan erat. Nam facilisis porttitor viverra. Aliquam erat volutpat. Curabitur sit amet dolor in leo lobortis hendrerit eget a erat. Fusce fringilla id ex venenatis rutrum. Sed facilisis lectus vitae magna commodo lobortis. Nam aliquam ultrices semper.
+
+In posuere laoreet lacus a faucibus. Nulla luctus pulvinar nibh, vel congue massa fringilla molestie. Morbi tincidunt mi et condimentum porta. Suspendisse quis fermentum est, in tincidunt purus. Quisque non pulvinar sem. Vestibulum tincidunt ac neque eget iaculis. Ut aliquet dapibus augue, sit amet cursus neque aliquet in. Cras ac pellentesque lorem. Fusce luctus ipsum eu erat ultrices, quis ultrices massa tempor. In scelerisque eleifend nisi, vel venenatis elit interdum posuere. Praesent eu aliquam elit, quis ullamcorper enim. Mauris tincidunt nibh quis suscipit ultrices.</body>
+		<attachments>
+			<file>info.pdf</file>
+		</attachments>
+	</email>
+	
+	<email>
+		<sender>free.viagra.for.you.@chgk.co.ur.fl</sender>
+		<subject>VIAGRA 0.34 PER PILL</subject>
+		<body>Quisque sit amet libero hendrerit, vestibulum urna eget, porttitor nunc. Vestibulum lacinia, mauris et volutpat congue, sem mauris luctus sapien, commodo suscipit est diam non ante. Fusce eget ex sit amet sapien scelerisque tincidunt id nec ipsum. Quisque vulputate dolor nulla. Sed quis ligula vitae lacus lobortis ornare eget eu velit. Donec tempor tortor id lectus cursus tincidunt. Sed sagittis malesuada diam, et ultricies ante tincidunt eu. Maecenas sit amet ipsum ut lectus gravida vestibulum. Nam sed lorem magna. Donec ornare leo augue, nec vestibulum orci blandit sit amet. Integer pulvinar est id ultricies porta. Maecenas dignissim augue eget sapien imperdiet, nec rhoncus metus faucibus.
+
+Ut porta nulla in nunc ullamcorper dignissim. Cras dapibus porta vulputate. Ut cursus ex a orci dignissim feugiat. Nam tincidunt nulla sed dui rutrum tincidunt ac et metus. Donec vitae consequat mi. Nullam congue ante in placerat sollicitudin. Integer nec suscipit elit. In aliquam blandit fermentum. Nulla rhoncus dapibus vehicula. Sed imperdiet et lacus vitae vulputate.</body>
+		<attachments>
+		</attachments>
+	</email>
+	
+</emailList>

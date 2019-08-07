@@ -1,0 +1,19 @@
+-i          [filepath]  Full path of input file to use.
+-inputfile  [filepath]
+
+-o          [filepath]  Full path of output file to use.
+-outputfile [filepath]
+
+-t          [integer]   Number of threads to use per worker. Higher numbers are better
+-threads    [integer]   up to a point, depending on how many emails there are to process
+                        and how many nodes are running.
+
+-m          [integer]   Cap the execution time of the program to so many seconds.
+-maxtime    [integer]   After this cap expires, it will call MPI_Abort() and then
+                        attempt to exit the program.
+
+--serialized            Run in serialized mode (-t must be 1 or omitted and -m must
+                        be omitted). Serialized mode will not use ANY threads, 
+                        including just to structure the flow of data. Use for 
+                        debugging only. Very useful if program is behaving unexpectedly.
+ 

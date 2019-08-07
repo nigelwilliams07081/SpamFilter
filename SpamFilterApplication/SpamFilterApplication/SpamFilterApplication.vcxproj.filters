@@ -24,7 +24,13 @@
     <ClCompile Include="Bayesian.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="EmailReceiver.cpp">
+    <ClCompile Include="EmailReader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Coordinator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Worker.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -35,17 +41,35 @@
     <ClInclude Include="Bayesian.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="EmailReceiver.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="stdafx.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="FileNames.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="EmailReader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="rapidxml.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Email.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Worker.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Coordinator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="tags.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="..\MPI\compile.sh">
+      <Filter>Header Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

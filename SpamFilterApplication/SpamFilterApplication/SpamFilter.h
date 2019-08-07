@@ -1,6 +1,7 @@
 #pragma once
 
-#include "EmailReceiver.h"
+#include "Email.h"
+
 class SpamFilter
 {
 public:
@@ -37,6 +38,11 @@ public:
 	std::vector<std::string> GetSpamAttachmentList() const;
 
 	/**
+	: Sets the Email struct
+	*/
+	void SetEmail(Email e);
+
+	/**
 	: [bool]
 	: Attempts to open the file specified by <fileString>
 	: returns false if the attempt fails
@@ -50,26 +56,20 @@ public:
 	void PerformSpamSearch();
 
 	/**
-	: (No Current Description)
-	: (Not Complete)
-	*/
-	void NotifyUserOfPossibleSpam();
-
-	/**
 	: Used for testing to see if the body is lowercase
 	*/
 	void PrintEmailBody();
 
-	const float POSSIBLE_SPAM_THRESHOLD = 0.3f;
-	const float SPAM_THRESHOLD = 0.6f;
+	const float POSSIBLE_SPAM_THRESHOLD = 0.4f;
+	const float SPAM_THRESHOLD = 0.7f;
 
 private:
 	void GrabLinesFromFile(std::string fileString, std::vector<std::string>& spamList);
 
-	void PerformSenderSearch(const char sender[256], const std::string& spamFileName);
-	void PerformSubjectSearch(const char subject[998], const std::string& spamFileName);
-	void PerformPhraseSearch(const char body[65535], const std::string& spamFileName);
-	void PerformAttachmentSearch(const char attachments[10][255], const std::string& spamFileName);
+	void PerformSenderSearch(std::string& sender, const std::string& spamFileName);
+	void PerformSubjectSearch(std::string& subject, const std::string& spamFileName);
+	void PerformPhraseSearch(std::string& body, const std::string& spamFileName);
+	void PerformAttachmentSearch(std::string*& attachments, const std::string& spamFileName);
 
 	std::ifstream m_File;
 
@@ -84,5 +84,5 @@ private:
 	float m_SpamAttachmentConfidence;
 	float m_OverallSpamConfidence;
 
-	EmailReceiver m_EmailReceiver;
+	Email m_Email;
 };

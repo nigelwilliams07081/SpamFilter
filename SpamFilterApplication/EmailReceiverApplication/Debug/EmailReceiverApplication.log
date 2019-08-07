@@ -1,0 +1,5 @@
+﻿  Main.cpp
+  EmailReceiver.cpp
+c:\users\nigel\documents\spamfilter\spamfilterapplication\emailreceiverapplication\emailreceiver.cpp(221): warning C4018: '<': signed/unsigned mismatch
+  Generating Code...
+  EmailReceiverApplication.vcxproj -> C:\Users\Nigel\Documents\SpamFilter\SpamFilterApplication\Debug\EmailReceiverApplication.exe

@@ -148,18 +148,26 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Bayesian.cpp" />
-    <ClCompile Include="EmailReceiver.cpp" />
+    <ClCompile Include="Coordinator.cpp" />
+    <ClCompile Include="EmailReader.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="SpamFilter.cpp" />
+    <ClCompile Include="Worker.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Bayesian.h" />
-    <ClInclude Include="EmailReceiver.h" />
+    <ClInclude Include="Coordinator.h" />
+    <ClInclude Include="Email.h" />
+    <ClInclude Include="EmailReader.h" />
+    <ClInclude Include="rapidxml.hpp" />
     <ClInclude Include="FileNames.h" />
     <ClInclude Include="SpamFilter.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="tags.h" />
+    <ClInclude Include="Worker.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\MPI\compile.sh" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
